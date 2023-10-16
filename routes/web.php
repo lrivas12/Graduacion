@@ -9,7 +9,9 @@ use App\Http\Controllers\ProveedoresController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\ComprasController;
-use App\Http\Controllers\DetallecomprasController;
+use App\Http\Controllers\PagoController;
+use App\Http\Controllers\VentaControlller;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -25,8 +27,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
-
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
@@ -37,4 +37,7 @@ Route::resource('/cliente', (clienteController::class));
 Route::resource('/producto', (ProductoController::class));
 Route::post('usuario/{id}/', [UsuarioController::class, 'DesactivarUsuario'])->name('usuario.desactivate');
 Route::resource('/compras', (ComprasController::class));
+Route::resource('/pago', (PagoController::class));
 Route::get('api/compras/{producto}', [ComprasController::class, 'apiShowProductos']);
+Route::resource('/factura', (VentaControlller::class));
+Route::get('api/factura/{producto}', [VentaControlller::class, 'apiShowProductos']);

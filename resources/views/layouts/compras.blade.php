@@ -137,6 +137,7 @@
                                 </div>
                             </div>
                         </div>
+                        
                         <div class="card-body">
                             <div class="table-responsive">
 
@@ -192,19 +193,6 @@
                     "language": {
                         "url": '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json', // Ruta al archivo de idioma en español
                     },
-                dom:'Bfrtilp',
-                    buttons:[{
-                        extend:'print',
-                        text: '<i class="fas fa-print"> Imprimir</i>',
-                        className:'btn btn-info'
-                    },
-                    {
-                        extend: 'excelHtml5',
-                        text: '<i class="fas fa-file-excel"> Exportar a Excel</i>',
-                        className: 'btn btn-success'
-                    },
-                ] 
-                    
             });
         });
 

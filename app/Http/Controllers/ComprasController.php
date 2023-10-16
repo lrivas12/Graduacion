@@ -77,7 +77,8 @@ class ComprasController extends Controller
        // return redirect()->route('compras.create')->with('successC', 'Compra creado con éxito');
     }       
 
-        public function apiShowProductos(producto $producto){
+        public function apiShowProductos(producto $producto)
+    {
     
         return $producto;
     }
