@@ -10,6 +10,8 @@ use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\ComprasController;
 use App\Http\Controllers\PagoController;
+use App\Http\Controllers\ReportesController;
+use App\Http\Controllers\StockController;
 use App\Http\Controllers\VentaControlller;
 
 /*
@@ -24,7 +26,7 @@ use App\Http\Controllers\VentaControlller;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('layouts.reportes');
 });
 
 Auth::routes();
@@ -36,8 +38,11 @@ Route::resource('/proveedores', (ProveedoresController::class));
 Route::resource('/cliente', (clienteController::class));
 Route::resource('/producto', (ProductoController::class));
 Route::post('usuario/{id}/', [UsuarioController::class, 'DesactivarUsuario'])->name('usuario.desactivate');
+Route::resource('/stock', (StockController::class));
 Route::resource('/compras', (ComprasController::class));
 Route::resource('/pago', (PagoController::class));
 Route::get('api/compras/{producto}', [ComprasController::class, 'apiShowProductos']);
+Route::get('api/factura/{producto}', [ComprasController::class, 'apiShowProductos']);
 Route::resource('/factura', (VentaControlller::class));
 Route::get('api/factura/{producto}', [VentaControlller::class, 'apiShowProductos']);
+Route::resource('/reporte', (ReportesController::class));

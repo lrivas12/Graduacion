@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->date('fechafactura');
             $table->decimal('descuentoventa');
+            $table->string('tipoventa');
             $table->decimal('totalventa');
             $table->unsignedBigInteger('clientes_id');
             $table->foreign('clientes_id')->references('id')->on('clientes');

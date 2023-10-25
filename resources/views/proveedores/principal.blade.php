@@ -101,7 +101,7 @@
                         <td>{{ $proveedor->telefonoproveedor }}</td>
                         <td>
                             {{-- <a href="{{ route('medidas.edit', $medida->id) }}" class="btn btn-primary">Editar</a> --}}
-                            <button class="btn btn-warning btn-edit" data-toggle="modal" data-target="#editarModal{{$proveedor->id}}"><i class="fas fa-edit"></i> Editar</button>
+                            <button class="btn btn-warning btn-edit" data-toggle="modal" data-target="#editarproveedorModal{{$proveedor->id}}"><i class="fas fa-edit"></i> Editar</button>
                         </td>
                     </tr>
                     <div class="modal fade" id="editarproveedorModal{{ $proveedor->id }}" tabindex="-1" aria-labelledby="editarModalLabel{{ $proveedor->id }}" aria-hidden="true">

@@ -9,6 +9,6 @@ class detallepago extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'cantidadmodopago',
+        'fechadetallepago', 'cantidaddetallepago', 'saldodetallepago',
     ];
 }

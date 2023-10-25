@@ -27,7 +27,7 @@
 @stop
 @section('content_header')
     <section class="section">
-        <h1> Compras</h1>
+        <h1>Editar Compras</h1>
     <i class="btn far fa-question-circle" title="Ayuda"></i>
     </section>
     <hr class="my-2" />
@@ -37,11 +37,12 @@
 
     <div class="card">
         <div class="card-body">
-            <form method="POST" action="{{route ('compras.store')}}">
+            <form method="POST" action="{{route ('compras.update', $compra->id)}}">
                 <div class="row">
                     <div class="col-md-6">
                         <div class="overflow-auto">
                                 <div class="card-body">
+                                    @method('PUT')
                                     @csrf
                                             <input type="hidden" id="detalleCompra" name="detalleCompra">
                                             <div class="border border p-2">
@@ -57,7 +58,7 @@
 
                                             <label for="proveedor">Proveedor: <span class="text-danger">*</span></label>
                                             <select class="form-control @error('proveedor_id') is-invalid @enderror" id="proveedor_id"
-                                                name="proveedor_id" required>
+                                                name="proveedor_id"  required>
                                                 <option value="{{ old('proveedor_id') }}">Seleccionar proveedor</option>
                                                 @foreach ($proveedores as $proveedor)
                                                     <option value="{{ $proveedor->id }}">{{ $proveedor->razonsocialproveedor }}</option>
@@ -71,18 +72,18 @@
                                             @enderror
 
                                             <label for="nombreproducto">Nombre del Producto: <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control" id="nombreproducto" name="nombreproducto" placeholder="Nombre del Producto" readonly>
+                                            <input type="text" class="form-control" key="" original="" id="nombreproducto" name="nombreproducto" placeholder="Nombre del Producto" value="{{old('nombreproducto')}}" readonly>
                                             <div class="row">
                                                 <div class="col-md-6">
                                                 <label for="cantidadcompra">Cantidad:<span class="text-danger">*</span></label>
-                                                <input type="number" class="form-control" id="cantidadcompra" name="cantidadcompra" min="1" onkeypress="return event.charCode >= 48 && event.charCode<=57">
+                                                <input type="number" class="form-control" id="cantidadcompra" name="cantidadcompra" min="1" onkeypress="return event.charCode >= 48 && event.charCode<=57" value="{{old('cantidadcompra', $compra->cantidadcompra)}}" autocomplete="cantidadcompra" autofocus>
                                                 <div id="cantidadcompraError" style="color: red;"></div>
                                                 </div>
                                                 <div class="col-md-6">
                                                 <label for="costocompra">Costo: <span class="text-danger">*</span></label>
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text">C$</span>
-                                                    <input type="number" class="form-control" id="costocompra" name="costocompra" min="1" onkeypress="return event.charCode >= 48 && event.charCode<=57">
+                                                    <input type="number" class="form-control" id="costocompra" name="costocompra" min="1" onkeypress="return event.charCode >= 48 && event.charCode<=57" value="{{old('costocompra', $compra->costocompra)}}" autocomplete="costocompra" autofocus>
                                                     <div id="costocompraError" style="color: red;"></div>        
                                                 </div>
                                                 </div>
@@ -90,7 +91,7 @@
                                                 <label for="precioproducto">Precio venta: <span class="text-danger">*</span></label>
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text">C$</span>
-                                                    <input type="precioproducto" class="form-control" id="precioproducto" name="precioproducto" min="1" onkeypress="return event.charCode >= 48 && event.charCode<=57">
+                                                    <input type="precioproducto" class="form-control" id="precioproducto" name="precioproducto" min="1" onkeypress="return event.charCode >= 48 && event.charCode<=57" value="{{old('precioproducto', $compra->precioproducto)}}" autocomplete="precioproducto" autofocus>
                                                     <div id="precioVentaError" style="color: red;"></div>        
                                     </div>
                                             <br>
@@ -171,28 +172,9 @@
 @endsection
 
 @section('js')
-<script>
-        $(document).ready(function() {
-                $('#productosComprados').DataTable({
-                    "language": {
-                        "url": '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json', // Ruta al archivo de idioma en español
-                    },
-                dom:'Bfrtilp',
-                    buttons:[{
-                        extend:'print',
-                        text: '<i class="fas fa-print"> Imprimir</i>',
-                        className:'btn btn-info'
-                    },
-                    {
-                        extend: 'excelHtml5',
-                        text: '<i class="fas fa-file-excel"> Exportar a Excel</i>',
-                        className: 'btn btn-success'
-                    },
-                ] 
-            });
-        });
 
-        $(document).ready(function() {
+<script>
+    $(document).ready(function() {
                 $('#productosExistentes').DataTable({
                     "language": {
                         "url": '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json', // Ruta al archivo de idioma en español
@@ -200,9 +182,19 @@
             });
         });
 
+        $(document).ready(function() {
+                $('#productosComprados').DataTable({
+                    "language": {
+                        "url": '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json', // Ruta al archivo de idioma en español
+                    },
+            });
+        });
+
+</script>
+
+<script>
         $("#productosExistentes").on("click","#btnAdd",function(){
-            
-                let id = $(this).attr("cod");
+            let id = $(this).attr("cod");
                 //Peticion al servidor con el id
                 fetch('http://motoflor.com/api/compras/'+id)
             
@@ -216,18 +208,19 @@
                 });
             })
 
-            var tablaDatos = [];
+            var tablaDatos = JSON.parse('@json($productosjson)');
             
-
-            $("#btnAddProducto").click(function(){
+            
+            $("#btnAdd").click(function(){
                 
                 let id = $("#nombreproducto").attr("key");
+                let original = $("#nombreproducto").attr("original");
                 let nombreproducto = $("#nombreproducto").val();
                 let cantidadcompra = $("#cantidadcompra").val();
                 let costocompra = $("#costocompra").val();
                 let precioproducto = $("#precioproducto").val();
                 
-                let subtotal = parseFloat(cantidadcompra) * parseFloat(costocompra);
+                let subtotalcompra = parseFloat(cantidadcompra) * parseFloat(costocompra);
                 
                 if (!id || id.trim() === "") {
                     Swal.fire({
@@ -250,39 +243,38 @@
                     return;
                 }
 
-                /* if(precioproducto > 0)
-                {
-                    $("#precioproductoError").html("El precio de venta no puede ir vacío");
-                    return;
-                } */
-
-                // Agrega la condición para verificar que los precios de venta sean mayores que el costo
-                if (parseFloat(precioproducto) <= parseFloat(costocompra) ) {
+                 // Agrega la condición para verificar que los precios de venta sean mayores que el costo
+                 if (parseFloat(precioproducto) <= parseFloat(costocompra) ) {
                     $("#precioproductoError").html("El precio de venta deben ser mayores que el costo de compra");
                     return;
                 }
                 // Agrega una validación para asegurarte de que se haya seleccionado al menos un producto
             
                 let datos = {
-                    id,
+                    id:parseInt(id),
                     nombreproducto,
                     cantidadcompra,
                     costocompra,
                     precioproducto,
-                    subtotal
+                    original,
+                    subtotalcompra,
+                    nuevo: original === "true" ? false : true
                 }
                 //Busca el indice del arreglo para sustituirlo
-                let indice = tablaDatos.findIndex(objeto => objeto.id === id);
+                let indice = tablaDatos.findIndex(objeto => parseInt(objeto.id) === parseInt(id));
                 //console.log(indice);
                 if (indice == -1) { //sino el indice lo agrega
                     tablaDatos.push(datos);
                 }else{
                     tablaDatos[indice] = datos; // si existe lo sustituye
+                    if(!original) tablaDatos[indice].nuevo =false
                 }
                 showTable();// Muestra la tabla actualizada
 
                 //vacia las cajas de texto
                     $("#nombreproducto").attr("key", "");
+                    $('#nombreproducto').attr('original',false);
+
                     $("#nombreproducto").val("");
                     $("#precioproducto").val("");
                     $("#cantidadcompra").val("");
@@ -308,7 +300,7 @@
                             <td>${x.nombreproducto}</td>
                             <td>${x.cantidadcompra}</td>
                             <td>${x.costocompra}</td>
-                            <td>${x.subtotal}</td>
+                            <td>${x.subtotalcompra}</td>
 
                             <td>
                                 <div class="d-flex align-items-center"
@@ -322,7 +314,7 @@
                             </td>
                         </tr>
                     `;
-                    total += x.subtotal;
+                    total += parseFloat(x.subtotalcompra);
                 });
                 m += `
                     <tr>
@@ -332,25 +324,23 @@
                     </tr>
                 `;
                 $("#cuerpoCompra").html(m);
-                $("#detalleCompra").val(JSON.stringify({
-                    datos:tablaDatos,
-                    total
-                }));//convierte objeto en string
+                $("#detalleCompra").val(JSON.stringify(tablaDatos));
+                console.log(tablaDatos);
                 
             }
+            showTable();
+            console.log(tablaDatos);
             $("#cuerpoCompra").on("click", "#btnEditCompra", function(){
                 let id = $(this).attr("key");
-                let producto = tablaDatos.filter(x => x.id === id);
+                let producto = tablaDatos.find(x =>parseInt (x.id) === parseInt(id));
 
-                $("#nombreproducto").attr("key", producto[0].id);
-                $("#nombreproducto").val(producto[0].nombreproducto);
-                $("#precioproducto").val(producto[0].precioproducto);
-                $("#cantidadcompra").val(producto[0].cantidadcompra);
-                $("#costocompra").val(producto[0].costocompra);
+                $("#nombreproducto").attr("key", producto.id);
+                $("#nombreproducto").attr("original", producto.original);
+                $("#nombreproducto").val(producto.nombreproducto);
+                $("#precioproducto").val(producto.precioproducto);
+                $("#cantidadcompra").val(producto.cantidadcompra);
+                $("#costocompra").val(producto.costocompra);
 
-
-                console.log(producto);
-                
 
             });
             $("#cuerpoCompra").on("click", "#btnDelCompra", function(){
@@ -382,14 +372,13 @@
                     event.preventDefault(); // Evitar el envío del formulario si no se han agregado productos
                 }
             });
+</script>  
 
 
-</script>
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
-
 @endsection

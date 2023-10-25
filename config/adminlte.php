@@ -30,7 +30,7 @@ return [
     |
     */
 
-    'use_ico_only' => false,
+    'use_ico_only' => true,
     'use_full_favicon' => false,
 
     /*
@@ -336,7 +336,6 @@ return [
                 ['text'   => 'Control de Crédito',
                 'url'     => '#',
                 'icon'    => 'far fa-credit-card',
-            
             ],
                 
             ],
@@ -350,7 +349,7 @@ return [
             'submenu' => [
                 [
                     'text' => 'Nuevo Recibo',
-                    'url'  => '#',
+                    'route'  => 'factura.index',
                     'icon' => 'fas fa-money-bill-wave-alt',
             
                 ],
@@ -398,11 +397,16 @@ return [
                 ],
                 [
                     'text'    => 'Stock',
-                    'url'     => '#',
+                    'route'     => 'stock.index',
                     'icon'    => 'fas fa-box',
                 ],
                 [
                     'text' => 'Compras',
+                    'route'  => 'compras.create',
+                    'icon' => 'fas fa-shopping-cart',
+                ],
+                [
+                    'text' => 'Historial Compras',
                     'route'  => 'compras.index',
                     'icon' => 'fas fa-shopping-cart',
                 ],
@@ -414,7 +418,7 @@ return [
             'icon'    => 'far fa-credit-card',
             'submenu' => [
                 [
-                    'text' => 'Nuevo Crédito',
+                    'text' => 'Agregar Abono',
                     'url'  => '#',
                     'icon' => 'fas fa-credit-card',
                 ],
@@ -422,11 +426,6 @@ return [
                     'text'    => 'Historial de Créditos',
                     'url'     => '#',
                     'icon'    => 'far fa-list-alt',
-                ],
-                [
-                    'text' => 'Agendar Crédito',
-                    'url'  => '#',
-                    'icon' => 'fas fa-calendar-alt	',
                 ],
             ],
         ],

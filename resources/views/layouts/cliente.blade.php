@@ -43,7 +43,8 @@
         <!-- Formulario para crear un nuevo Cliente -->
             <form method="POST" action="{{ route('cliente.store') }}">
                 @csrf
-                    <div class="form-group">
+                <div class="row">
+                    <div class="col-md-4">
                         <label for="nombre">Nombre del cliente: <span class="text-danger">*</span></label>
                         <input type="text" class="form-control @error('nombrecliente') is-invalid @enderror" id="nombrecliente" name="nombrecliente" required autocomplete="nombrecliente" value="{{ old('nombrecliente')}}" autofocus>
                         @error('nombrecliente')
@@ -52,7 +53,7 @@
                             </span>
                         @enderror
                     </div>
-                    <div class="form-group">
+                    <div class="col-md-4">
                         <label for="nombre">Apellido del cliente: <span class="text-danger">*</span></label>
                         <input type="text" class="form-control @error('apellidocliente') is-invalid @enderror" id="apellidocliente" name="apellidocliente" required autocomplete="apellidocliente" value="{{ old('apellidocliente')}}" autofocus>
                         @error('apellidocliente')
@@ -61,7 +62,9 @@
                             </span>
                         @enderror
                     </div>
-                    <div class="form-group">
+                </div>
+                    <div class="row">
+                    <div class="col-md-8">
                         <label for="nombre">Dirección del cliente: </label>
                         <input type="text" class="form-control @error('direccioncliente') is-invalid @enderror" id="direccioncliente" name="direccioncliente" autocomplete="direccioncliente" value="{{ old('direccioncliente')}}" autofocus>
                         @error('direccioncliente')
@@ -70,24 +73,27 @@
                             </span>
                         @enderror
                     </div>
-                    <div class="form-group">
-                        <label for="nombre">Teléfono del cliente: </label>
-                        <input type="text" class="form-control @error('telefonocliente') is-invalid @enderror" id="telefonocliente" name="telefonocliente" autocomplete="telefonocliente" value="{{ old('telefonocliente')}}" autofocus>
-                        @error('telefonocliente')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
+                </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="nombre">Teléfono del cliente: </label>
+                            <input type="text" class="form-control @error('telefonocliente') is-invalid @enderror" id="telefonocliente" name="telefonocliente" autocomplete="telefonocliente" value="{{ old('telefonocliente')}}" autofocus>
+                            @error('telefonocliente')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        <div class="col-md-4">
+                            <label for="nombre">Correo eléctronico del cliente: </label>
+                            <input type="email" class="form-control @error('correocliente') is-invalid @enderror" id="correocliente" name="correocliente" autocomplete="correocliente" value="{{ old('correocliente')}}" autofocus>
+                            @error('correocliente')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>     
                     </div>
-                    <div class="form-group">
-                        <label for="nombre">Correo eléctronico del cliente: </label>
-                        <input type="email" class="form-control @error('correocliente') is-invalid @enderror" id="correocliente" name="correocliente" autocomplete="correocliente" value="{{ old('correocliente')}}" autofocus>
-                        @error('correocliente')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>     
                     <br>
                     <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Agregar</button>
                 </form>
@@ -116,7 +122,7 @@
                                     <td>{{$cliente->correocliente }}</td>
                                     <td>
                                     {{-- <a href="{{ route('cliente.edit', $cliente->id) }}" class="btn btn-primary">Editar</a> --}}
-                                    <button class="btn btn-warning btn-edit" data-toggle="modal" data-target="#editarModal{{$cliente->id}}"><i class="fas fa-edit"></i> Editar</button>
+                                    <button class="btn btn-warning btn-edit" data-toggle="modal" data-target="#editarclienteModal{{$cliente->id}}"><i class="fas fa-edit"></i> Editar</button>
                                     <button class="btn btn-danger btn-delete" data-toggle="modal" data-target="#eliminarModal{{ $cliente->id }}"><i class="fa fa-trash"></i> Eliminar</button>
                             
                                 </td>

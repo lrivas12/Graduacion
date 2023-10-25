@@ -15,8 +15,9 @@ class ComprasController extends Controller
     public function index()
     {
         $proveedores = proveedores::all();
-        $compras = compra::all();
-        return view('layouts.stock', compact('compras','proveedores'));
+        $compra = compra::all();
+        $productos = producto::all();
+        return view('layouts.comprasm', compact('compra','productos', 'proveedores'));
     }
     public function create(){
         
@@ -28,13 +29,34 @@ class ComprasController extends Controller
 
     public function show($id)
     {
-        $compras = compra::findOrFail($id);
+        $compra = compra::findOrFail($id);
         $proveedores = proveedores::all();
-        $detallecompras = detallecompra::where('compras_id', $compras->id)->get();
-        return view('layouts.compras', compact('compras','detallecompras','proveedores'));
+        $detallecompras = detallecompra::where('compra_id', $compra->id)->get();
+        return view('layouts.comprasv', compact('compra','detallecompras','proveedores'));
     }
 
-    
+    public function edit($id)
+    {
+        $proveedores = proveedores::all();
+        $compra = compra::findOrFail($id);
+        $productos = producto::where('estadoproducto', '1')->get();
+        $detallecompras = detallecompra::where('compra_id', $compra->id)->get();
+        $productosjson =[];
+        foreach($detallecompras as $item)
+        {
+            $pr = producto::find($item->productos_id);
+            $pr["cantidadcompra"]= $item->cantidadcompra;
+            $pr["costocompra"]= $item->costocompra;
+            $pr["subtotalcompra"]= $item->subtotalcompra;
+            $pr["original"]=true;
+        
+            $productosjson[] = $pr;
+        }
+        $productosjson[] = $pr;
+        //$productosjson = json_encode($productosjson);
+        
+        return view('layouts.comprase', compact('compra', 'detallecompras', 'productos', 'productosjson', 'proveedores'));
+    }
 
     public function store(Request $request)
     {
@@ -48,7 +70,7 @@ class ComprasController extends Controller
         if($validator->fails())
         {
 
-        return redirect()->route('compras.create') ->withErrors($validator)->withInput()->with('errorC','Error al crear compra, revise e intente nuevamente.');   
+        return redirect()->route('compras.index') ->withErrors($validator)->withInput()->with('errorC','Error al crear compra, revise e intente nuevamente.');   
         }
         $compras = new compra();
         $compras->fechacompra = $request->fechacompra;
@@ -73,9 +95,85 @@ class ComprasController extends Controller
             $prod->save();
 
         }
-        return "compra exitosa";
-       // return redirect()->route('compras.create')->with('successC', 'Compra creado con éxito');
-    }       
+
+         return redirect()->route('compras.index')->with('successC', 'Compra creado con éxito');
+    }
+    
+    public function update(Request $request, $id)
+    {
+        $products = json_decode($request->detallecompras);
+        $validator = Validator::make($request->all(),[
+            'fechacompra' => 'required|date',
+            'cliente_id' => 'required|exists:clientes,id',
+        ]);
+        if($validator->fails())
+        {
+        return redirect()->route('compras.edit', $id)->withErrors($validator)->withInput()->with('error', 'Error al actualizar el producto, revise e intente nuevamente');
+        }
+
+        $total = 0;
+        foreach ($products as $item) {
+            $total += (double) ($item->costocompra * $item->cantidadcompra);
+        }
+        
+       $compras = compra::findOrFail($id);
+
+       $compras->proveedores_id = $request->input('proveedor_id');
+       $compras->fechacompra = $request->input('fechacompra');
+       $compras->total =$total;
+       $compras->update();
+
+       // Itera sobre los detalles de compra y guárdalos en la base de datos
+       foreach ($products as $item) {
+        //Actualizar producto
+        $prod = producto::findOrFail($item->id);
+        $prod->precioproducto = $item->precioproducto;
+        if(property_exists($item,'nuevo') && $item->nuevo){
+            $detallecompras = new detallecompra();
+            $detallecompras->productos_id=$item->id;
+            $detallecompras->cantidadcompra=$item->cantidadcompra;
+            $detallecompras->costocompra=$item->costocompra;
+            $detallecompras->subtotal=$item->subtotal;
+            $detallecompras->compras_id=$compras->id;
+            $detallecompras->save();
+        //Suma la cantidad a stock productos
+        $prod->existenciaproducto += $item->cantidadcompra;
+        
+        }
+        else
+        {
+
+
+        $detallecompras = detallecompra::where("compras_id", $compras->id)
+        ->where("productos_id", (int) $item->id)
+        ->first();
+
+        $detallecompras["costocompra"] = $item->costocompra;
+        $detallecompras["subtotal"] = (float)($item->costocompra * $item->cantidadcompra);
+
+            if($item->cantidadcompra > $detallecompras["cantidadcompra"])
+            {
+                $prod->cantidadproducto += ($item->cantidadcompra - $detallecompras["cantidadcompra"]);
+            }
+            if($item->cantidadcompra < $detallecompras["cantidadcompra"])
+            {
+                $prod->cantidadproducto -= ($detallecompras["cantidadcompra"] - $item->cantidadcompra);
+                
+                if($prod->cantidadproducto <= 0)
+                {
+                    $prod->cantidadproducto = 0;
+                }
+                
+            }
+        }
+
+            $prod->update();
+            $detallecompras["cantidadcompra"] = $item->cantidadcompra;
+            $detallecompras->update();
+            
+        return redirect()->route('compras.index', $id)->with('successC', 'Compra actualizada exitosamente.');
+        }       
+    }
 
         public function apiShowProductos(producto $producto)
     {
@@ -84,4 +182,5 @@ class ComprasController extends Controller
     }
 
 }
+
 

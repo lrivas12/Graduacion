@@ -11,7 +11,7 @@ class factura extends Model
 
     protected $fillable =[
 
-        'fechafactura', 'descuentoventa', 'totalventa', 'clientes_id', 'users_id'
+        'fechafactura', 'descuentoventa', 'tipoventa', 'totalventa', 'clientes_id', 'users_id'
     ];
 
     public function cliente()
