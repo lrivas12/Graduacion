@@ -17,6 +17,6 @@ class detallecompra extends Model
 
     public function producto()
     {
-        return $this->belongsTo(producto::class);
+        return $this->belongsTo(producto::class, 'productos_id');
     }
 }

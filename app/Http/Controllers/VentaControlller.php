@@ -18,17 +18,17 @@ class VentaControlller extends Controller
     {
         $clientes = cliente::all();
         $productos = producto::all();
-        $ventas = factura::all();
+        $ventas = factura::orderBy('id', 'desc')->get();;
+
         return view ('layouts.factura', compact ('ventas','productos', 'clientes'));
     }
 
     public function create()
     {
-
         $productos = producto::where('estadoproducto','1')->get();
-        $clientes = cliente::where('estadocliente', '1')->get();
+        $clientes = cliente::all();
         $pagos = pago::all();
-        return view ('layouts.factura', compact ('ventas','productos', 'pagos', 'clientes'));
+        return view ('layouts.factura', compact ('productos', 'pagos', 'clientes'));
     }
 
     public function show($id)
@@ -36,32 +36,29 @@ class VentaControlller extends Controller
         $ventas = factura::findOrFail($id);
         $productos = producto::all();
         $clientes = cliente::all();
-        return view ('layouts.factura', compact ('ventas','productos', 'clientes'));
+        return view ('layouts.facturav', compact ('ventas','productos', 'clientes'));
     }
     public function store(Request $request)
     {
         $users = Auth::user();
-        $products = json_decode($request ->detalleventa);
+        $products = json_decode($request ->detalleVenta);
         $validator = Validator::make($request->all(),[
-            'facturaventa' => 'required|date',
-            'descuentoventa' => 'numeric|min:0',
+            'fechafactura' => 'required|date',
             'tipoventa' => 'required|string',
-            'clientes_id' => 'required|exists:clientes_id',
-            'users_id' => 'required|exists:users_id',
+            'clientes_id' => 'required|exists:clientes,id',
         ]);
         if($validator->fails())
         {
-            return redirect()->route('factura.index')->withErrors($validator)->withInput()->with('errorC', 'Error al crear venta, revise e intente nuevamente.');
+            return redirect()->route('factura.create')->withErrors($validator)->withInput()->with('errorC', 'Error al crear venta, revise e intente nuevamente.');
         }
         $ventas = new factura();
-        $ventas->fechaventa=$request->fechaventa;
-        $ventas->descuentoventa=$request->descuentoventa;
+        $ventas->fechafactura=$request->fechafactura;
+        $ventas->descuentoventa=$request->descuento;
         $ventas->tipoventa= $request->tipoventa;
         $ventas->clientes_id=$request->clientes_id;
-        $ventas->users_id=$request->users_id;
         $totaldescuento = $products->total - $ventas->descuentoventa;
-        $ventas->total = $totaldescuento;
-
+        $ventas->totalventa = $totaldescuento;
+        $ventas->users_id = 1;
         $ventas->save();
         foreach($products->datos as $key =>$value)
         {
@@ -73,35 +70,30 @@ class VentaControlller extends Controller
             $detalleventas->save();
             
             $prod = producto::findOrFail($value->id);
-            $prod->cantidadproducto += $value->cantidadcompra;
+            $prod->cantidadproducto += $value->cantidadventa;
             $prod->precioproducto = $value->precioproducto;
             $prod->save();
 
-            if($request->tipoventa=== 'credito'){
-                $pagos = new pago();
-                $pagos->facturas_id = $ventas->id;
-                $pagos->cantidadpago = $ventas->totalventa;
-                $pagos->save();
-            }
-            else
-            {
+            
+        }
 
-                $prod = producto::findOrFail($value->id);
-                $prod->cantidadproducto -= $value->cantidadventa;
-                $prod->save();
-            }
-
-            if($request->tipoventa=== 'credito'){
-                $detallepago = new detallepago();
-                $detallepago->fechadetallepago = $ventas->fechaventa;
-                $detallepago->cantidaddetallepago = $request->adelanto;
-                $detallepago->saldodetallepago = $request->saldo;
-                $detallepago->pagos_id = $pagos->id;
-                $detallepago->save();
-            }
+        if($request->tipoventa=== 'credito'){
+            $pagos = new pago();
+            $pagos->facturas_id = $ventas->id;
+            $pagos->cantidadpago = $ventas->totalventa;
+            $pagos->fechapago = $ventas->fechafactura;
+            $pagos->estadopago = 1;
+            $pagos->save();
+            
+            $detallepago = new detallepago();
+            $detallepago->fechadetallepago = $ventas->fechafactura;
+            $detallepago->cantidaddetallepago = $request->adelanto;
+            $detallepago->saldodetallepago = $request->saldo;
+            $detallepago->pagos_id = $pagos->id;
+            $detallepago->save();
         }
     
-        return redirect()->route('factura.index')->with('successC', 'Venta creado con éxito');
+        return redirect()->route('factura.create')->with('successC', 'Venta creado con éxito');
     
     }
     
@@ -109,6 +101,20 @@ class VentaControlller extends Controller
     {
     
         return $producto; 
+    }
+
+    public function pdf()
+    {
+        $venta = factura::findOrFail();
+
+        $productos = producto::all();
+        $clientes = cliente::all();
+        // Obtén los detalles de la compra
+        $detalles = detallefactura::where('facturas_id', $venta->id)->get();
+
+       return view('layouts.facturav', compact('venta', 'detalles', 'productos', 'clientes', 'rutas'));
+         
+
     }
 
 }

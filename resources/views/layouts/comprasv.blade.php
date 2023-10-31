@@ -73,6 +73,7 @@
                         <thead class = "text-center">
                             <tr>
                                 <th>Código</th>
+                                <th>Descripción</th>
                                 <th>Cantidad</th>
                                 <th>Costo</th>
                                 <th>Subtotal</th>
@@ -83,20 +84,19 @@
                             @foreach ($detallecompras as $detallecompra)
                                 <tr class="text-center">
                                     <td>{{ $detallecompra->id }}</td>
+                                    <td>{{ $detallecompra->producto->nombreproducto}}</td>
                                     <td>{{ $detallecompra->cantidadcompra }}</td>
-                                    <td>C${{ $detallecompra->costocompra }}</td>
-                                    <td>C${{ $detallecompra->subtotalcompra }}</td>
+                                    <td>C$ {{ $detallecompra->costocompra }}</td>
+                                    <td>C$ {{ $detallecompra->subtotalcompra }}</td>
  
                                 </tr>
-                               
                             @endforeach
                         </tbody>
                         <tfoot>
                             <tr class="text-center"> 
-                                <td class = "text-right" colspan="5"> <strong>Total </strong></td> <!-- Celdas vacías para alinear correctamente -->
+                                <td class = "text-right" colspan="4"> <strong>Total </strong></td> <!-- Celdas vacías para alinear correctamente -->
                                 <td><strong> C$ {{ $compra->totalcompra }}</strong></td>
                             </tr>
-                           
                         </tfoot>
                        
                     </table>
@@ -117,12 +117,15 @@
     
     @section('js')
     <script>
-        $(document).ready(function() {
-                $('#showCompra').DataTable({
-                    "language": {
-                        "url": '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json', // Ruta al archivo de idioma en español
-                    },
-            });
+       $(document).ready(function () {
+            var config = {
+                "language": {
+                    "url": '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json' // Ruta al archivo de idioma en español
+                }
+            };
+
+            $('#showCompra').DataTable(config);
+            
         });
     </script>
     

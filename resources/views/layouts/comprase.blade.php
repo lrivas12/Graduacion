@@ -44,7 +44,7 @@
                                 <div class="card-body">
                                     @method('PUT')
                                     @csrf
-                                            <input type="hidden" id="detalleCompra" name="detalleCompra">
+                                            <input type="hidden" id="detallecompra" name="detallecompra">
                                             <div class="border border p-2">
                                             <h2>Datos de compra</h2>
                                             <label for="fechacompra">Fecha de compra: <span class="text-danger">*</span></label>
@@ -58,13 +58,20 @@
 
                                             <label for="proveedor">Proveedor: <span class="text-danger">*</span></label>
                                             <select class="form-control @error('proveedor_id') is-invalid @enderror" id="proveedor_id"
-                                                name="proveedor_id"  required>
+                                                name="proveedor_id" readonly>
                                                 <option value="{{ old('proveedor_id') }}">Seleccionar proveedor</option>
                                                 @foreach ($proveedores as $proveedor)
-                                                    <option value="{{ $proveedor->id }}">{{ $proveedor->razonsocialproveedor }}</option>
-                                                @endforeach
-
+                                                @if ($proveedor->id == $compra->proveedor_id)
+                                                <option value="{{ $proveedor->id }}" selected >{{ $proveedor->razonsocialproveedor }}</option>
+                                                @else
+                                                <option value="{{ $proveedor->id }}">{{ $proveedor->razonsocialproveedor }}</option>
+                                                @endif
+                                            @endforeach
                                             </select>
+
+                                            <label for="proveedorSeleccionado"></label>
+                                            <input id="proveedorSeleccionado" type="text" class="form-control" readonly style="display: none;">
+
                                             @error('proveedor_id')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -165,6 +172,7 @@
                             <button type="submit" class="btn btn-primary"><i class="fas fa-shopping-cart"></i> Registrar compra</button>
                 
                         </div>
+
             </form>
         </div>
     </div>
@@ -193,185 +201,230 @@
 </script>
 
 <script>
-        $("#productosExistentes").on("click","#btnAdd",function(){
-            let id = $(this).attr("cod");
-                //Peticion al servidor con el id
-                fetch('http://motoflor.com/api/compras/'+id)
-            
-                .then(x => {return x.json()})
-                .then(x => {
-                    console.log(x);
-                    $("#nombreproducto").attr("key", x.id);
-                    $("#nombreproducto").val(x.nombreproducto);
-                    $("#precioproducto").val(x.precioproducto);
-                
-                });
-            })
 
-            var tablaDatos = JSON.parse('@json($productosjson)');
-            
-            
-            $("#btnAdd").click(function(){
-                
-                let id = $("#nombreproducto").attr("key");
-                let original = $("#nombreproducto").attr("original");
-                let nombreproducto = $("#nombreproducto").val();
-                let cantidadcompra = $("#cantidadcompra").val();
-                let costocompra = $("#costocompra").val();
-                let precioproducto = $("#precioproducto").val();
-                
-                let subtotalcompra = parseFloat(cantidadcompra) * parseFloat(costocompra);
-                
-                if (!id || id.trim() === "") {
+    document.addEventListener('DOMContentLoaded', function () {
+
+        $(document).ready(function () {
+            $("#proveedor_id").change(function () {
+                // Obtener el valor seleccionado en el campo proveedor_id
+                const selectedProveedor = $("#proveedor_id option:selected").val();
+                const selectedProveedorT = $("#proveedor_id option:selected").text();
+                if (selectedProveedor.trim() === "") {
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
-                        text:'Debes seleccionar al menos un producto antes de guardar la compra.',
+                        text: 'Debe seleccionar un proveedor',
                         allowOutsideClick: false, // No permitir que se cierre haciendo clic fuera del modal
                         showCancelButton: false, // No mostrar el botón de cancelar
                         confirmButtonText: 'OK' // Personaliza el texto del botón "OK"
-                    });
-                    return;
-                    
-                }
-                
 
-                if(cantidadcompra <= 0 || costocompra <= 0)
-                {
-                    $("#cantidadcompraError").html("La cantidad debe ser mayor que cero");
-                    $("#costocompraError").html("El costo debe ser mayor que cero");
-                    return;
+                    });                   
                 }
-
-                 // Agrega la condición para verificar que los precios de venta sean mayores que el costo
-                 if (parseFloat(precioproducto) <= parseFloat(costocompra) ) {
-                    $("#precioproductoError").html("El precio de venta deben ser mayores que el costo de compra");
-                    return;
-                }
-                // Agrega una validación para asegurarte de que se haya seleccionado al menos un producto
+                else if (selectedProveedor.trim() !== "") {
+                        // Si se seleccionó un proveedor, mostrar el valor seleccionado en un campo de texto visible
+                        $("#proveedorSeleccionado").val(selectedProveedorT);
+                        
+                        // Ocultar el campo proveedor_id
+                        $("#proveedor_id").hide();
+                        $("#proveedorSeleccionado").show();
             
-                let datos = {
-                    id:parseInt(id),
-                    nombreproducto,
-                    cantidadcompra,
-                    costocompra,
-                    precioproducto,
-                    original,
-                    subtotalcompra,
-                    nuevo: original === "true" ? false : true
-                }
-                //Busca el indice del arreglo para sustituirlo
-                let indice = tablaDatos.findIndex(objeto => parseInt(objeto.id) === parseInt(id));
-                //console.log(indice);
-                if (indice == -1) { //sino el indice lo agrega
-                    tablaDatos.push(datos);
-                }else{
-                    tablaDatos[indice] = datos; // si existe lo sustituye
-                    if(!original) tablaDatos[indice].nuevo =false
-                }
-                showTable();// Muestra la tabla actualizada
-
-                //vacia las cajas de texto
-                    $("#nombreproducto").attr("key", "");
-                    $('#nombreproducto').attr('original',false);
-
-                    $("#nombreproducto").val("");
-                    $("#precioproducto").val("");
-                    $("#cantidadcompra").val("");
-                    $("#costocompra").val("");
-                    $("#cantidadcompraError").html("");
-                    $("#costocompraError").html("");
-                    $("#precioVentaError").html("");
-                
-
-            });
-            //Funcion para mostrar los datos en la tabla, const:funcion unica
-            const showTable = () =>{
-                
-                let m = "";
-                let total = 0;
-                let cont = 1;
-                tablaDatos.forEach(x => {
-                $("#productosComprados button[cod='"+x.id+"']").prop("disabled",true);
-
-                    m += `
-                        <tr >
-                            <td>${cont++}</td>
-                            <td>${x.nombreproducto}</td>
-                            <td>${x.cantidadcompra}</td>
-                            <td>${x.costocompra}</td>
-                            <td>${x.subtotalcompra}</td>
-
-                            <td>
-                                <div class="d-flex align-items-center"
-                                    <a key="${x.id}" id="btnEditCompra" class = "mx-3" title="Editar producto" >
-                                        <i class="fas fa-pencil-alt text-success"></i> 
-                                    </a>
-                                    <a key="${x.id}" id="btnDelCompra" class = "mx-3" title="Eliminar producto">
-                                        <i class="fas fa-trash text-danger"></i> 
-                                    </a>
-                                </div> 
-                            </td>
-                        </tr>
-                    `;
-                    total += parseFloat(x.subtotalcompra);
-                });
-                m += `
-                    <tr>
-                        <td colspan=8>
-                            Total = C$ ${total}
-                        </td>
-                    </tr>
-                `;
-                $("#cuerpoCompra").html(m);
-                $("#detalleCompra").val(JSON.stringify(tablaDatos));
-                console.log(tablaDatos);
-                
-            }
-            showTable();
-            console.log(tablaDatos);
-            $("#cuerpoCompra").on("click", "#btnEditCompra", function(){
-                let id = $(this).attr("key");
-                let producto = tablaDatos.find(x =>parseInt (x.id) === parseInt(id));
-
-                $("#nombreproducto").attr("key", producto.id);
-                $("#nombreproducto").attr("original", producto.original);
-                $("#nombreproducto").val(producto.nombreproducto);
-                $("#precioproducto").val(producto.precioproducto);
-                $("#cantidadcompra").val(producto.cantidadcompra);
-                $("#costocompra").val(producto.costocompra);
-
-
-            });
-            $("#cuerpoCompra").on("click", "#btnDelCompra", function(){
-                let id = $(this).attr("key");
-                $("#productosExistentes button[cod='"+id+"']").prop("disabled",false);
-
-                tablaDatos = tablaDatos.filter(objeto => objeto.id !== id);
-                            
-                //renderiza la tabla
-                showTable();
-            });
-            // Esta función verifica si se ha agregado al menos un producto a la compra
-            function validarProductosAgregados() {
-                if (tablaDatos.length === 0) {
-                    // Mostrar un mensaje de error utilizando SweetAlert2
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'Debes agregar al menos un producto a la compra antes de guardar.',
-                    });
-                    return false;
-                }
-                return true;
-            }
-
-            // Agregar un manejador de eventos al formulario para validar antes de enviar
-            $("form").submit(function (event) {
-                if (!validarProductosAgregados()) {
-                    event.preventDefault(); // Evitar el envío del formulario si no se han agregado productos
                 }
             });
+        });
+
+        
+    });
+
+
+    $("#productosExistentes").on("click","#btnAdd",function(){
+        let id = $(this).attr("cod");
+               
+        //Peticion al servidor con el id
+        fetch('http://motoflor.com/api/compras/'+id)
+        .then(x => {return x.json()})
+        .then(x => {
+            console.log(x);
+            $("#nombreproducto").attr("key", x.id);
+            $("#nombreproducto").val(x.nombreproducto);
+            $("#precioproducto").val(x.precioproducto);
+            
+            
+        });
+    })
+
+    
+    
+    var tablaDatos = JSON.parse('@json($productosjson)');
+    
+    $("#btnAddProducto").click(function(){
+        
+        let id = $("#nombreproducto").attr("key");
+        let original = $("#nombreproducto").attr("original");
+        let nombreproducto = $("#nombreproducto").val();
+        let cantidadcompra = $("#cantidadcompra").val();
+        let costocompra = $("#costocompra").val();
+        let precioproducto = $("#precioproducto").val();
+        
+        let subtotalcompra = parseFloat(cantidadcompra) * parseFloat(costocompra);
+        
+        if (!id || id.trim() === "") {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text:'Debes seleccionar al menos un producto antes de guardar la compra.',
+                allowOutsideClick: false, // No permitir que se cierre haciendo clic fuera del modal
+                showCancelButton: false, // No mostrar el botón de cancelar
+                confirmButtonText: 'OK' // Personaliza el texto del botón "OK"
+            });
+            return;
+            
+        }
+        
+        if(cantidadcompra <= 0 || costocompra <= 0)
+        {
+            $("#cantidadcompraError").html("La cantidad debe ser mayor que cero");
+            $("#costocompraError").html("El costo debe ser mayor que cero");
+            return;
+        }
+
+            // Agrega la condición para verificar que los precios de venta sean mayores que el costo
+            if (parseFloat(precioproducto) <= parseFloat(costocompra) ) {
+            $("#precioproductoError").html("El precio de venta deben ser mayores que el costo de compra");
+            return;
+        }
+    
+
+        // Agrega una validación para asegurarte de que se haya seleccionado al menos un producto
+    
+        let datos = {
+            id:parseInt(id),
+            nombreproducto,
+            cantidadcompra,
+            costocompra,
+            precioproducto,
+            original,
+            subtotalcompra,
+            nuevo: original === "true" ? false : true
+        }
+        //Busca el indice del arreglo para sustituirlo
+        let indice = tablaDatos.findIndex(objeto => parseInt(objeto.id) === parseInt(id));
+        //console.log(indice);
+        if (indice == -1) { //sino el indice lo agrega
+            tablaDatos.push(datos);
+        }else{
+            tablaDatos[indice] = datos; // si existe lo sustituye
+            if(!original) tablaDatos[indice].nuevo =false
+        }
+        showTable();// Muestra la tabla actualizada
+
+        //vacia las cajas de texto
+            $("#nombreproducto").attr("key", "");
+            $('#nombreproducto').attr('original',false);
+
+            $("#nombreproducto").val("");
+            $("#precioproducto").val("");
+            $("#cantidadcompra").val("");
+            $("#costocompra").val("");
+            $("#cantidadcompraError").html("");
+            $("#costocompraError").html("");
+            $("#precioVentaError").html("");
+        
+    });
+            
+
+    //Funcion para mostrar los datos en la tabla, const:funcion unica
+    const showTable = () =>{
+        
+        let m = "";
+        let total = 0;
+        let cont = 1;
+        tablaDatos.forEach(x => {
+        $("#productosComprados button[cod='"+x.id+"']").prop("disabled",true);
+
+            m += `
+                <tr >
+                    <td>${cont++}</td>
+                    <td>${x.nombreproducto}</td>
+                    <td>${x.cantidadcompra}</td>
+                    <td>${x.costocompra}</td>
+                    <td>${x.subtotalcompra}</td>
+
+                    <td>
+                        <div class="d-flex align-items-center"
+                            <a key="${x.id}" id="btnEditCompra" class = "mx-3" title="Editar producto" >
+                                <i class="fas fa-pencil-alt text-success"></i> 
+                            </a>
+                            <a key="${x.id}" id="btnDelCompra" class = "mx-3" title="Eliminar producto">
+                                <i class="fas fa-trash text-danger"></i> 
+                            </a>
+                        </div> 
+                    </td>
+                </tr>
+            `;
+            total += parseFloat(x.subtotalcompra);
+        });
+        m += `
+            <tr>
+                <td colspan=8>
+                    Total = C$ ${total}
+                </td>
+            </tr>
+        `;
+        $("#cuerpoCompra").html(m);
+        $("#detallecompra").val(JSON.stringify(tablaDatos));
+        console.log(tablaDatos);
+        
+    }
+    showTable();
+    console.log(tablaDatos);
+    
+
+
+    $("#cuerpoCompra").on("click", "#btnEditCompra", function(){
+        let id = $(this).attr("key");
+        let producto = tablaDatos.find(x =>parseInt (x.id) === parseInt(id));
+
+        $("#nombreproducto").attr("key", producto.id);
+        $("#nombreproducto").attr("original", producto.original);
+        $("#nombreproducto").val(producto.nombreproducto);
+        $("#precioproducto").val(producto.precioproducto);
+        $("#cantidadcompra").val(producto.cantidadcompra);
+        $("#costocompra").val(producto.costocompra);
+    });
+
+    $("#cuerpoCompra").on("click", "#btnDelCompra", function(){
+        let id = $(this).attr("key");
+        $("#productosExistentes button[cod='"+id+"']").prop("disabled",false);
+
+        tablaDatos = tablaDatos.filter(objeto => objeto.id !== id);
+                    
+        //renderiza la tabla
+        showTable();
+    });
+    
+
+    // Agregar un manejador de eventos al formulario para validar antes de enviar
+    
+    $("form").submit(function (event) {
+        if (!validarProductosAgregados()) {
+            event.preventDefault(); // Evitar el envío del formulario si no se han agregado productos
+        }
+    });
+
+    // Esta función verifica si se ha agregado al menos un producto a la compra
+    function validarProductosAgregados() {
+        if (tablaDatos.length === 0) {
+            // Mostrar un mensaje de error utilizando SweetAlert2
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Debes agregar al menos un producto a la compra antes de guardar.',
+            });
+            return false;
+        }
+        return true;
+    }
+
 </script>  
 
 

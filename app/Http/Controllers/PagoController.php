@@ -12,24 +12,20 @@ class PagoController extends Controller
     public function index()
     {
     $pagos = pago::all();
-    return view ('layouts.credito',compact('pagos'));
+    $ventas = factura::all();
+    $detallepagos = detallepago::all();
+    return view ('layouts.credito',compact('pagos, ventas, detallepagos'));
     }
 
-    public function store(Request $request)
+    public function edit($id)
     {
-        $validator = Validator::make($request->all(),[
+        $pagos = pago::findOrFail($id);
 
-        'fechapago'=> 'required|date',
-        'cantidadpago' =>  'required|integer|min:1',
-        'estadopago' => 'required|',
-        'detallepagos_id' => 'required|exists:detallepago,id',
 
-        ]);
+    }
 
-        if ($validator -> fails()) {
-        
-        return redirect()->route('pago.index')->with('errorC','Error al crear el credito, revise e intente nuevamente.');
-        }
-
+    public function update(Request $request, $id)
+    {
+      $pagos = pago::findOrFail($id);
     }
 }

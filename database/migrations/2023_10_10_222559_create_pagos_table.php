@@ -16,12 +16,8 @@ return new class extends Migration
             $table->date('fechapago');
             $table->integer('cantidadpago');
             $table->boolean('estadopago');
-            $table->unsignedBigInteger('detallepagos_id');
-            $table->foreign('detallepagos_id')->references('id')->on('detallepagos');
-
-            
-
-            
+            $table->unsignedBigInteger('facturas_id');
+            $table->foreign('facturas_id')->references('id')->on('facturas');            
             $table->timestamps();
         });
     }

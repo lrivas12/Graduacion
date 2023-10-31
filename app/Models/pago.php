@@ -11,12 +11,12 @@ class pago extends Model
 
     protected $fillable = [
 
-        'fechapago', 'cantidadpago', 'estadopago', 'detallepagos_id',
+        'fechapago', 'cantidadpago', 'estadopago',  'facturas_id',
     ];
 
-    public function detallepago()
+    public function factura()
     {
-        return $this->belongsTo(detallepago::class); 
+        return $this->belongsTo(factura::class,'facturas_id'); 
     }
 
 }

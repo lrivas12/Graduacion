@@ -16,6 +16,8 @@ return new class extends Migration
             $table->date('fechadetallepago');
             $table->decimal('cantidaddetallepago');
             $table->decimal('saldodetallepago');
+            $table->unsignedBigInteger('pagos_id');
+            $table->foreign('pagos_id')->references('id')->on('pagos'); 
             $table->timestamps();
         });
     }

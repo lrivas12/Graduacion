@@ -26,7 +26,7 @@ use App\Http\Controllers\VentaControlller;
 */
 
 Route::get('/', function () {
-    return view('layouts.reportes');
+    return view('home');
 });
 
 Auth::routes();

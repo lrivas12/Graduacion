@@ -16,7 +16,7 @@ class factura extends Model
 
     public function cliente()
     {
-        return $this->belongsTo(cliente::class);
+        return $this->belongsTo(cliente::class, 'clientes_id');
     }
 
     public function User()

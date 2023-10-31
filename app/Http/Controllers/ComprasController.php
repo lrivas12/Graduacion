@@ -40,9 +40,9 @@ class ComprasController extends Controller
         $proveedores = proveedores::all();
         $compra = compra::findOrFail($id);
         $productos = producto::where('estadoproducto', '1')->get();
-        $detallecompras = detallecompra::where('compra_id', $compra->id)->get();
+        $detalles = detallecompra::where('compra_id', $compra->id)->get();
         $productosjson =[];
-        foreach($detallecompras as $item)
+        foreach($detalles as $item)
         {
             $pr = producto::find($item->productos_id);
             $pr["cantidadcompra"]= $item->cantidadcompra;
@@ -52,10 +52,10 @@ class ComprasController extends Controller
         
             $productosjson[] = $pr;
         }
-        $productosjson[] = $pr;
+       
         //$productosjson = json_encode($productosjson);
         
-        return view('layouts.comprase', compact('compra', 'detallecompras', 'productos', 'productosjson', 'proveedores'));
+        return view('layouts.comprase', compact('compra', 'detalles', 'productos', 'productosjson', 'proveedores'));
     }
 
     public function store(Request $request)
@@ -70,7 +70,7 @@ class ComprasController extends Controller
         if($validator->fails())
         {
 
-        return redirect()->route('compras.index') ->withErrors($validator)->withInput()->with('errorC','Error al crear compra, revise e intente nuevamente.');   
+        return redirect()->route('compras.create') ->withErrors($validator)->withInput()->with('errorC','Error al crear compra, revise e intente nuevamente.');   
         }
         $compras = new compra();
         $compras->fechacompra = $request->fechacompra;
@@ -101,10 +101,10 @@ class ComprasController extends Controller
     
     public function update(Request $request, $id)
     {
-        $products = json_decode($request->detallecompras);
+        $products = json_decode($request->detallecompra);
         $validator = Validator::make($request->all(),[
             'fechacompra' => 'required|date',
-            'cliente_id' => 'required|exists:clientes,id',
+           
         ]);
         if($validator->fails())
         {
@@ -118,64 +118,64 @@ class ComprasController extends Controller
         
        $compras = compra::findOrFail($id);
 
-       $compras->proveedores_id = $request->input('proveedor_id');
+       $compras->proveedor_id = $request->input('proveedor_id');
        $compras->fechacompra = $request->input('fechacompra');
-       $compras->total =$total;
+       $compras->totalcompra =$total;
        $compras->update();
 
        // Itera sobre los detalles de compra y guárdalos en la base de datos
-       foreach ($products as $item) {
-        //Actualizar producto
-        $prod = producto::findOrFail($item->id);
-        $prod->precioproducto = $item->precioproducto;
-        if(property_exists($item,'nuevo') && $item->nuevo){
-            $detallecompras = new detallecompra();
-            $detallecompras->productos_id=$item->id;
-            $detallecompras->cantidadcompra=$item->cantidadcompra;
-            $detallecompras->costocompra=$item->costocompra;
-            $detallecompras->subtotal=$item->subtotal;
-            $detallecompras->compras_id=$compras->id;
-            $detallecompras->save();
-        //Suma la cantidad a stock productos
-        $prod->existenciaproducto += $item->cantidadcompra;
-        
-        }
-        else
-        {
-
-
-        $detallecompras = detallecompra::where("compras_id", $compras->id)
-        ->where("productos_id", (int) $item->id)
-        ->first();
-
-        $detallecompras["costocompra"] = $item->costocompra;
-        $detallecompras["subtotal"] = (float)($item->costocompra * $item->cantidadcompra);
-
-            if($item->cantidadcompra > $detallecompras["cantidadcompra"])
-            {
-                $prod->cantidadproducto += ($item->cantidadcompra - $detallecompras["cantidadcompra"]);
+        foreach ($products as $item) {
+            //Actualizar producto
+            $prod = producto::findOrFail($item->id);
+            $prod->precioproducto = $item->precioproducto;
+            if(property_exists($item,'nuevo') && $item->nuevo){
+                $detallecompras = new detallecompra();
+                $detallecompras->productos_id=$item->id;
+                $detallecompras->cantidadcompra=$item->cantidadcompra;
+                $detallecompras->costocompra=$item->costocompra;
+                $detallecompras->subtotalcompra=$item->subtotalcompra;
+                $detallecompras->compra_id=$compras->id;
+                $detallecompras->save();
+                //Suma la cantidad a stock productos
+            $prod->cantidadproducto += $item->cantidadcompra;
+            
             }
-            if($item->cantidadcompra < $detallecompras["cantidadcompra"])
+            else
             {
-                $prod->cantidadproducto -= ($detallecompras["cantidadcompra"] - $item->cantidadcompra);
-                
-                if($prod->cantidadproducto <= 0)
+
+
+                $detallecompras = detallecompra::where("compra_id", $compras->id)
+                ->where("productos_id", (int) $item->id)
+                ->first();
+
+                $detallecompras["costocompra"] = $item->costocompra;
+                $detallecompras["subtotalcompra"] = (float)($item->costocompra * $item->cantidadcompra);
+
+                if($item->cantidadcompra > $detallecompras["cantidadcompra"])
                 {
-                    $prod->cantidadproducto = 0;
+                    $prod->cantidadproducto += ($item->cantidadcompra - $detallecompras["cantidadcompra"]);
                 }
-                
+                if($item->cantidadcompra < $detallecompras["cantidadcompra"])
+                {
+                    $prod->cantidadproducto -= ($detallecompras["cantidadcompra"] - $item->cantidadcompra);
+                    
+                    if($prod->cantidadproducto <= 0)
+                    {
+                        $prod->cantidadproducto = 0;
+                    }
+                    
+                }
             }
-        }
 
             $prod->update();
             $detallecompras["cantidadcompra"] = $item->cantidadcompra;
             $detallecompras->update();
-            
-        return redirect()->route('compras.index', $id)->with('successC', 'Compra actualizada exitosamente.');
-        }       
+                
+        }
+        return redirect()->route('compras.show', $id)->with('successC', 'Compra actualizada exitosamente.');       
     }
 
-        public function apiShowProductos(producto $producto)
+    public function apiShowProductos(producto $producto)
     {
     
         return $producto;

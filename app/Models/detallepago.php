@@ -9,6 +9,12 @@ class detallepago extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'fechadetallepago', 'cantidaddetallepago', 'saldodetallepago',
+        'fechadetallepago', 'cantidaddetallepago', 'saldodetallepago','pagos_id',
     ];
+
+    
+    public function pago()
+    {
+        return $this->belongsTo(pago::class, 'pagos_id'); 
+    }
 }

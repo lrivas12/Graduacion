@@ -42,44 +42,53 @@
             <h2>Datos del crédito</h2>
             <br>
             <div class="row">
-                <div class="col-md-4">
-                    <label for="codigo">No de Crédito: </label>
-                    <input type="text" class="form-control" id="creditCode" name="creditCode" value="" readonly>
+                <div class="col-md-3">
+                    <label for="numerocredito">N° de Crédito: <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" name="numerocredito" id="numerocredito" readonly>
                 </div>
-                <div class="col-md-4">
-                    <label for="fecha">Fecha de Abono:</label>
-                    <input type="date" class="form-control" name="fecha" id="fecha" readonly>
+                <div class="col-md-3">
+                    <label for="fechacredito">Fecha Crédito: <span class="text-danger">*</span></label>
+                    <input type="date" class="form-control" name="fechacredito" id="fechacredito" readonly>
                 </div>
-                <div class="col-md-4">
-                    <label for="monto">Monto a Abonar: </label>
-                    <div class="input-group-prepend">
-                    <span class="input-group-text">C$</span>
-                    <input type="number" step=".01" min="0.01" id="monto" name="monto">
+                <div class="col-md-3">
+                    <label for="cliente">Cliente: <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" name="cliente" id="cliente" readonly>
                 </div>
-                </div>
-            </div>
-            <br>
-            <div class="row">
-                    <div class="col-md-4">
-                        <label for="cliente">Cliente: </label>
-                        <select class="form-control" name="cliente" id="cliente">
-                            <option value="">Seleccionar Cliente</option>
-                        </select>
-                    </div>
-                    <div class="col-md-4">
-                        <label for="saldo">Total pendiente: </label>
+                <div class="col-md-3">
+                    <label for="saldo">Monto Crédito: <span class="text-danger">*</span></label>
+                    <div class="input-group">
                         <div class="input-group-prepend">
-                        <span class="input-group-text">C$</span>
-                        <input type="text" id="totalpendiente" name="totalpendiente" readonly> 
-                    </div>
-                    </div>
+                            <span class="input-group-text">C$</span>
+                        </div>
+                    <input type="text" class="form-control" name="saldo" id="saldo" readonly>
+                </div>
+        </div>
+    </div>
+    <br>
+        <div class="row">
+            <div class="col-md-4">
+                <label for="fechacredito">Fecha Abono: <span class="text-danger">*</span></label>
+                <input type="date" class="form-control" name="fechacredito" id="fechacredito" > 
             </div>
-            <br>
-            <div class="row">
-                <div class="col-md-12 mt-2 ">
-                    <button type="button" class="btn btn-primary" id="btnAddProducto"> <i class="fas fa-plus"></i> Agregar</button>
+            <div class="col-md-4">
+                <label for="abono">Monto Abono: <span class="text-danger">*</span></label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">C$</span>
+                        </div>
+                    <input type="text" class="form-control" name="saldo" id="abono" >
                 </div>
             </div>
+            <div class="col-md-4">
+                <label for="total">Saldo Pendiente: <span class="text-danger">*</span></label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">C$</span>
+                    </div>
+                <input type="text" class="form-control" name="total" id="total" readonly>
+            </div>
+        </div>
+    </div>            
             <br>
             <h2>Pagos Abonados</h2>
             <br>
@@ -88,14 +97,12 @@
                 <thead class="text-center">
                     <tr>
                         <th>#</th>
-                        <th>Cliente</th>
+                        <th>Fecha Abono</th>
                         <th>Pagos</th>
                         <th>Saldo Pendiente</th>
-                        <th>Acciones</th>
                     </tr>
                 </thead>
             </table>
-
         </div>
     </div>
 @endsection
