@@ -22,22 +22,40 @@
         .fa-question-circle {
             font-size: 27px;
         }
+
+        .sectionT2 {
+            background-color: rgb(17, 0, 94);
+            /* Fondo azul */
+            color: white;
+            /* Texto blanco */
+            padding: 10px;
+            /* Espaciado interior */
+            border-radius: 10px 10px 0 0;
+            /* Bordes redondeados */
+        }
     </style>
 
 @stop
 @section('content_header')
     <section class="section">
-        <h1>Mostar Compras</h1>
+        <h1>Compras</h1>
     <i class="btn far fa-question-circle" title="Ayuda"></i>
     </section>
     <hr class="my-2" />
 @stop
 
 @section('content')
+
+<section class="sectionT2">
+    <div class="header">
+        <h3><i class="fas fa-shopping-cart"></i> Lista de Compras </h3>
+    </div>
+    </section>
+
 <div class="containe-fluid">
         <div class="card" style="border: 1px solid black;">
             <div class="card-header">
-                <strong>Listado de compras &nbsp;&nbsp;&nbsp;
+                <strong>
 
                     <a  href="{{ route('compras.create') }}"  type="button">
                         <i class="fas fa-plus fa-lg text-info" ></i>

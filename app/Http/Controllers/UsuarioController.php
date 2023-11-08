@@ -36,7 +36,7 @@ class UsuarioController extends Controller
             'email' => 'required|string|email|max:255|unique:users,email,',
             'estado'=> 'required|string',
             'privilegios'=>'required|string|max:255',
-            'foto'=>'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'foto'=>'nullable|image|mimes:jpeg,png,jpg,gif|max:2002048',
             'password'=> ['required',
             'string',
             'max:20',

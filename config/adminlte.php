@@ -355,24 +355,15 @@ return [
                 ],
                 [
                     'text'    => 'Historial de Recibo',
-                    'url'     => '#',
+                    'url'     => 'factura.edit',
                     'icon'    => 'fas fa-clipboard-list',
                 ],
-                ['text' => 'Nueva Proforma',
-                'url'  => '#',
-                'icon' => 'fas fa-money-bill',
-            ],
-            [
-            'text' => 'Historial de Proforma',
-            'url'  => '#',
-            'icon' => 'fas fa-clipboard-list',
-            ],
             [
                 'text' => 'Clientes',
                 'route'  => 'cliente.index',
                 'icon' => 'fas fa-address-book',
             ],
-                ],
+            ],
         ],
         [
             'text'    => 'Inventario',
@@ -419,15 +410,21 @@ return [
             'submenu' => [
                 [
                     'text' => 'Agregar Abono',
-                    'url'  => '#',
+                    'url'  => 'pago.edit',
                     'icon' => 'fas fa-credit-card',
                 ],
                 [
                     'text'    => 'Historial de Créditos',
-                    'url'     => '#',
+                    'url'     => 'pago.index',
                     'icon'    => 'far fa-list-alt',
                 ],
             ],
+        ],
+        ['header' => 'Reportes'],
+        [
+            'text' => 'Generar Reporte',
+            'url'  => 'reportes.index',
+            'icon' => 'fas fa-print	',
         ],
         ['header' => 'Configuración'],
         [
@@ -471,6 +468,11 @@ return [
                     'text'    => 'Acerca de',
                     'url'     => '#',
                     'icon'    => 'fas fa-user-tie',
+                ],
+                [
+                    'text'    => 'Empresa',
+                    'route'     => 'empresa.index',
+                    'icon'    => 'fas fa-store',
                 ],
             ],
         ],

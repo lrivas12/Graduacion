@@ -23,6 +23,17 @@
         .fa-question-circle {
             font-size: 27px;
         }
+
+        .sectionT2 {
+            background-color: rgb(17, 0, 94);
+            /* Fondo azul */
+            color: white;
+            /* Texto blanco */
+            padding: 10px;
+            /* Espaciado interior */
+            border-radius: 10px 10px 0 0;
+            /* Bordes redondeados */
+        }
     </style>
 
 @stop
@@ -38,13 +49,18 @@
 
 @section('content')
 
+<section class="sectionT2">
+    <div class="header">
+        <h3><i class="fas fa-user-plus"></i> Generar  Usuarios </h3>
+    </div>
+</section>
+<div class="card">
+        <div class="col-md-15x">
+        <div class="card-body">
     <a id="userModalBtn" class="btn btn-primary" data-toggle="modal" data-target="#createUserModal" data-whatever="@mdo">
         <i class="fas fa-user-plus"></i> Crear
         Usuario</a><br><br>
 
-    <div class="row justify-content-center card">
-        <div class="col-md-15x">
-            <div class="card-body">
                 <h3>Listado de Usuarios</h3>
                 <div>
                     <table id="userTable" class="table table-hover table-bordered">
@@ -67,7 +83,7 @@
                                             <img src="{{ asset('storage/usuarios/' . $user->foto) }}"
                                                 style="max-width: 50px; border-radius: 50%;">
                                         @else
-                                            <img src="{{ asset('storage/usuarios/PlaceholderUser.jpg') }}"
+                                            <img src="{{ asset('img/PlaceholderUser.jpg') }}"
                                                 alt="Imagen por defecto">
                                     </td>
                             @endif

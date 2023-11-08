@@ -22,12 +22,23 @@
         .fa-question-circle {
             font-size: 27px;
         }
+
+        .sectionT2 {
+            background-color: rgb(17, 0, 94);
+            /* Fondo azul */
+            color: white;
+            /* Texto blanco */
+            padding: 10px;
+            /* Espaciado interior */
+            border-radius: 10px 10px 0 0;
+            /* Bordes redondeados */
+        }
     </style>
 
 @stop
 @section('content_header')
     <section class="section">
-        <h1>Editar Compras</h1>
+        <h1>Compras</h1>
     <i class="btn far fa-question-circle" title="Ayuda"></i>
     </section>
     <hr class="my-2" />
@@ -35,6 +46,12 @@
 
 @section('content')
 
+<section class="sectionT2">
+    <div class="header">
+        <h3><i class="fas fa-shopping-cart"></i> Editar de Compra </h3>
+    </div>
+    </section>
+    
     <div class="card">
         <div class="card-body">
             <form method="POST" action="{{route ('compras.update', $compra->id)}}">
@@ -119,7 +136,7 @@
                                         <div class="border border rounded p-2">
                                             <div class="table-responsive">
                                                 <h2>Productos existentes</h2>
-                                                <table id="productosExistentes" class="table table-bordered">
+                                                <table id="productosExistentes" class="table table-bordered table-responsive">
                                                     <thead class="text-center">
                                                         <tr>
                                                             <th>#</th>
@@ -153,7 +170,7 @@
                         <div class="card-body">
                             <div class="table-responsive">
 
-                                <table id="productosComprados" class="table table-bordered">
+                                <table id="productosComprados" class="table table-bordered table-responsive">
                                     <thead class = "text-center">
                                         <tr>
                                             <th>#</th>

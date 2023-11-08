@@ -22,6 +22,17 @@
         .fa-question-circle {
             font-size: 27px;
         }
+
+        .sectionT2 {
+            background-color: rgb(17, 0, 94);
+            /* Fondo azul */
+            color: white;
+            /* Texto blanco */
+            padding: 10px;
+            /* Espaciado interior */
+            border-radius: 10px 10px 0 0;
+            /* Bordes redondeados */
+        }
     </style>
 
 @stop
@@ -37,6 +48,12 @@
 @stop
 
 @section('content')
+
+<section class="sectionT2">
+    <div class="header">
+        <h3><i class="fas fa-address-book"></i> Generar Cliente </h3>
+    </div>
+    </section>
 
 <div class="card">
    <div class="card-body">

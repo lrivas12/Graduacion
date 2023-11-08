@@ -22,6 +22,17 @@
         .fa-question-circle {
             font-size: 27px;
         }
+
+        .sectionT2 {
+            background-color: rgb(17, 0, 94);
+            /* Fondo azul */
+            color: white;
+            /* Texto blanco */
+            padding: 10px;
+            /* Espaciado interior */
+            border-radius: 10px 10px 0 0;
+            /* Bordes redondeados */
+        }
     </style>
 
 @stop
@@ -35,11 +46,17 @@
 
 @section('content')
 
+<section class="sectionT2">
+    <div class="header">
+        <h3><i class="fas fa-box"></i> Stock de Producto </h3>
+    </div>
+    </section>
+
 <div class="card">
     <div class="card-body">
             <h2>Stock de Productos</h2>
             <!-- Tabla de Compras -->
-            <table id="stockTable" class="table table-bordered">
+            <table id="stockTable" class="table table-bordered ">
                 <thead>
                     <tr>
                         <th>#</th>
@@ -52,9 +69,25 @@
                 <tbody>
                     @foreach ($productos as $producto)
                     <tr>
+                        @php
+                            $existenciaClase = '';
+                                    
+                            if ($producto->cantidadproducto <= $producto->stockminimo) {
+                            $existenciaClase = 'btn btn-danger'; // Clase danger de AdminLTE (rojo)
+                            } elseif ($producto->cantidadproducto <= 10) {
+                            $existenciaClase = 'btn btn-warning'; // Clase warning de AdminLTE (amarillo)
+                            } else {
+                            $existenciaClase = 'btn btn-success'; // Clase success de AdminLTE (verde)
+                            }
+                        @endphp
+
                     <td>{{$producto->id}}</td>
                     <td>{{$producto->nombreproducto}}</td>
-                    <td>{{$producto->cantidadproducto}}</td>
+                    <td>
+                        <button class="{{ $existenciaClase }}" >
+                            {{ $producto->cantidadproducto }}
+                        </button>
+                    </td>
                     <td>{{$producto->categoria->nombrecategoria}}</td>
                     <td>{{$producto->stockminimo}}</td>
                 </tr>

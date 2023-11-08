@@ -22,6 +22,17 @@
         .fa-question-circle {
             font-size: 27px;
         }
+
+        .sectionT2 {
+            background-color: rgb(17, 0, 94);
+            /* Fondo azul */
+            color: white;
+            /* Texto blanco */
+            padding: 10px;
+            /* Espaciado interior */
+            border-radius: 10px 10px 0 0;
+            /* Bordes redondeados */
+        }
     </style>
 
 @stop
@@ -34,6 +45,12 @@
 @stop
 
 @section('content')
+
+<section class="sectionT2">
+    <div class="header">
+        <h3><i class="fas fa-shopping-bag"></i> Generar Producto </h3>
+    </div>
+    </section>
 
 <div class="card">
     <div class="card-body">
@@ -168,7 +185,7 @@
         <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#modelId"><i class="fas fa-plus"></i> Agregar Nuevo Producto</button>
         <br><br>
         <h2>Lista de productos</h2>
-        <table id="productosTable" class="table table-bordered">
+        <table id="productosTable" class="table table-bordered table-responsive">
             <thead>
                 <tr>
                     <th>#</th>
@@ -188,29 +205,45 @@
                 <tbody>
                     @foreach($productos as $producto)
                         <tr>
-                        <td>{{$loop->iteration}}</td> 
-                        <td>
-                            @if ($producto->fotoproducto)
-                                <img src="{{ asset('storage/productos/' . $producto->fotoproducto) }}"
-                                    style="max-width: 50px; border-radius: 50%;">
-                            @else
-                                <img src="{{ asset('img/Placeholderproducto.jpg') }}"
-                                    alt="Imagen por defecto">
-                            @endif
-                        </td>
-                        <td>{{ $producto->nombreproducto }}</td>
-                        <td>{{$producto->categoria->nombrecategoria}}</td>
-                        <td>{{ $producto->descripcionproducto }}</td>
-                        <td>{{$producto->clasificacionproducto}}</td>
-                        <td>{{ $producto->cantidadproducto }}</td>
-                        <td>{{ $producto->precioproducto }}</td>
-                        <td>{{ $producto->marcaproducto }}</td>
-                        <td>{{ $producto->stockminimo }}</td>
-                        <td>{{ $producto->unidadmedidaproducto }}</td>
-                        
-                        <td>
-                            <button class="btn btn-warning btn-edit" data-toggle="modal" data-target="#editarproductoModal{{$producto->id}}"><i class="fas fa-edit"></i> Editar</button>
-                        </td>
+                            
+                            @php
+                                $existenciaClase = '';
+                                        
+                                if ($producto->cantidadproducto <= $producto->stockminimo) {
+                                $existenciaClase = 'btn btn-danger'; // Clase danger de AdminLTE (rojo)
+                                } elseif ($producto->cantidadproducto <= 30) {
+                                $existenciaClase = 'btn btn-warning'; // Clase warning de AdminLTE (amarillo)
+                                } else {
+                                $existenciaClase = 'btn btn-success'; // Clase success de AdminLTE (verde)
+                                }
+                            @endphp
+                            <td>{{$loop->iteration}}</td> 
+                            <td>
+                                @if ($producto->fotoproducto)
+                                    <img src="{{ asset('storage/productos/' . $producto->fotoproducto) }}"
+                                        style="max-width: 50px; border-radius: 50%;">
+                                @else
+                                    <img src="{{ asset('img/Placeholderproducto.jpg') }}"
+                                        alt="Imagen por defecto">
+                                @endif
+                            </td>
+                            <td>{{ $producto->nombreproducto }}</td>
+                            <td>{{$producto->categoria->nombrecategoria}}</td>
+                            <td>{{ $producto->descripcionproducto }}</td>
+                            <td>{{$producto->clasificacionproducto}}</td>
+                            <td>      
+                                <button class="{{ $existenciaClase }}" >
+                                    {{ $producto->cantidadproducto }}
+                                </button>
+                            </td>
+                            <td>{{ $producto->precioproducto }}</td>
+                            <td>{{ $producto->marcaproducto }}</td>
+                            <td>{{ $producto->stockminimo }}</td>
+                            <td>{{ $producto->unidadmedidaproducto }}</td>
+                            
+                            <td>
+                                <button class="btn btn-warning btn-edit" data-toggle="modal" data-target="#editarproductoModal{{$producto->id}}"><i class="fas fa-edit"></i> Editar</button>
+                            </td>
                         </tr>
 
                         <div class="modal fade" id="editarproductoModal{{ $producto->id }}" tabindex="-1" aria-labelledby="editarModalLabel{{ $producto->id }}" aria-hidden="true">

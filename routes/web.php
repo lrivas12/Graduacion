@@ -9,6 +9,8 @@ use App\Http\Controllers\ProveedoresController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\ComprasController;
+use App\Http\Controllers\EmpresaController;
+use App\Http\Controllers\MantenimientoController;
 use App\Http\Controllers\PagoController;
 use App\Http\Controllers\ReportesController;
 use App\Http\Controllers\StockController;
@@ -45,4 +47,6 @@ Route::get('api/compras/{producto}', [ComprasController::class, 'apiShowProducto
 Route::get('api/factura/{producto}', [ComprasController::class, 'apiShowProductos']);
 Route::resource('/factura', (VentaControlller::class));
 Route::get('api/factura/{producto}', [VentaControlller::class, 'apiShowProductos']);
-Route::resource('/reporte', (ReportesController::class));
+Route::resource('/reportes', (ReportesController::class));
+Route::resource('/backup', (MantenimientoController::class));
+Route::resource('/empresa', (EmpresaController::class));
