@@ -16,7 +16,7 @@ class ProveedoresController extends Controller
 
    public function store(Request $request)
    {
-        $validator = Validator::make ($request->all(),[
+        $validator = Validator::make($request->all(),[
             'razonsocialproveedor' => 'required|string|max:40',
             'numerorucproveedor' => 'string|max:20',
             'telefonoproveedor'=> 'string|max:8',
@@ -63,10 +63,10 @@ class ProveedoresController extends Controller
    {
     $proveedores = proveedores::findOrFail($id);
     
-    $validator = Validator::make ($request->all(),[
+    $validator = Validator::make($request->all(),[
         'razonsocialproveedor' => 'required|string|max:40',
         'numerorucproveedor' => 'string|max:20',
-        'estadoproveedor' => 'required|bolean',
+        'estadoproveedor' => 'required|boolean',
         'telefonoproveedor'=> 'string|max:8',
     ]);
     
@@ -99,7 +99,7 @@ class ProveedoresController extends Controller
         'telefonoproveedor' => $request->input('telefonoproveedor'),
        
     ]);
-    $proveedores->save();
+    
     return redirect()->route('proveedores.index')->with('success','Proveedor actualizado con exito');
    }
 

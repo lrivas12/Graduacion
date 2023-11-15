@@ -23,7 +23,7 @@
 
 
 @section('footer')
-<p class="text-center ">Derechos Reservados © 2023 | Creado por Techno Advanced</p>
+<p class="text-center "><strong>Derechos Reservados UNAN - Managua, FAREM - Matagalpa © 2023 </strong></p>
 @stop
 
 @section('js')

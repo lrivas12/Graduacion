@@ -34,6 +34,11 @@
             border-radius: 10px 10px 0 0;
             /* Bordes redondeados */
         }
+
+        .imguser img{
+            height: 50px;
+            width: 50px;
+        }
     </style>
 
 @stop
@@ -78,12 +83,12 @@
                             @foreach ($users as $user)
                                 <tr>
                                     <td>{{ $user->id }}</td>
-                                    <td>
+                                    <td class="imguser">
                                         @if ($user->foto)
-                                            <img src="{{ asset('storage/usuarios/' . $user->foto) }}"
+                                            <img src="{{ asset('storage/usuarios/'. $user->foto) }}"
                                                 style="max-width: 50px; border-radius: 50%;">
                                         @else
-                                            <img src="{{ asset('img/PlaceholderUser.jpg') }}"
+                                            <img src="{{ asset('storage/usuarios/PlaceholderUser.jpg') }}"
                                                 alt="Imagen por defecto">
                                     </td>
                             @endif
@@ -113,15 +118,6 @@
                                         </form>
                                     </a>
                                 </div>
-
-                                {{--  @csrf
-                                                @method('PUT')
-                                                @if ($user->is_active)
-                                                    <a href="{{ route('users.deactivate', $user->id) }}" class="btn btn-danger btn-sm">Desactivar</a>
-                                                @else
-                                                @method('PUT')
-                                                    <a href="{{ route('users.activate', $user->id) }}"   class="btn btn-success btn-sm">Activar</a>
-                                                @endif --}}
 
                             </td>
                             </tr>
@@ -221,7 +217,7 @@
                                                                 value="Administrador"{{ old('privilegios', $user->privilegios) === 'Administrador' ? ' selected' : '' }}>
                                                                 Administrador</option>
                                                             <option
-                                                                value="Doctor"{{ old('privilegios', $user->privilegios) === 'Editor' ? ' selected' : '' }}>
+                                                                value="Editor"{{ old('privilegios', $user->privilegios) === 'Editor' ? ' selected' : '' }}>
                                                                 Editor</option>
                                                             
                                                         </select>
@@ -232,8 +228,22 @@
                                                         @enderror
                                                     </div>
                                                 </div>
-
-
+                                            
+                                                
+                                                <div class="form-group row">
+                                                    <label for="estado" class="col-md-4 col-form-label text-md-right">{{ __('Estado') }}<span class="text-danger">*</span></label>
+                                                    <div class="col-md-6">
+                                                        <select id="estado" class="form-control @error('estado') is-invalid @enderror" name="estado" required autocomplete="estado">
+                                                            <option value="1"{{ old('estado', $user->estado) ? ' selected' : '' }}>Activo</option>
+                                                            <option value="0"{{ !old('estado', $user->estado) ? ' selected' : '' }}>Inactivo</option>
+                                                        </select>
+                                                        @error('estadousuario')
+                                                            <span class="invalid-feedback" role="alert">
+                                                                <strong>{{ $message }}</strong>
+                                                            </span>
+                                                        @enderror
+                                                    </div>
+                                                </div>
 
 
                                                 <div class="form-group row">
@@ -377,39 +387,6 @@
                                 @enderror
                             </div>
                         </div>
-                        {{-- <div class="mini-formulario" id="miniFormulario">
-                            <h3 class="text-center">Datos del Doctor</h3>
-                            <div class="form-group row">
-                                <label for=""
-                                    class="col-md-4 col-form-label text-md-right">{{ __('Nombre:') }}</label>
-                                <div class="col-md-6">
-                                    <input id="" type="text"
-                                        class="form-control @error('') is-invalid @enderror" name=""
-                                        value="" required autocomplete="usuario" autofocus>
-
-                                    @error('username')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label for="privilegios"
-                                    class="col-md-4 col-form-label text-md-right">{{ __('Especialidad:') }}</label>
-                                <div class="col-md-6">
-                                    <input id="usuario" type="text"
-                                        class="form-control @error('usuario') is-invalid @enderror" name="usuario"
-                                        value="{{ old('usuario') }}" required autocomplete="usuario" autofocus>
-
-                                    @error('username')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div> --}}
                         <div class="form-group row">
                             <label for="estado"
                                 class="col-md-4 col-form-label text-md-right">{{ __('Estado:') }} <span class="text-danger">*</span></label>
@@ -477,18 +454,8 @@
 
 
 @section('js')
-    <script>
-        function mostrarMiniFormulario() {
-            const seleccion = document.getElementById("seleccion").value;
-            const miniFormulario = document.getElementById("miniFormulario");
-
-            if (seleccion === "Doctor") {
-                miniFormulario.style.display = "block";
-            } else {
-                miniFormulario.style.display = "none";
-            }
-        }
-    </script>
+    
+    
     <script>
         const userModalBtn = document.getElementById("userModalBtn");
         const createUserModal = document.getElementById("createUserModal");
@@ -564,7 +531,7 @@ $('#showPasswordBtn').click(function () {
             function showAlert(icon, title, text) {
                 // Mostrar el mensaje de éxito
                 Swal.fire({
-                    imageUrl: 'vendor/adminlte/dist/img/dent.png',
+                    imageUrl: 'vendor/adminlte/dist/img/PlaceholderUser.jpg',
                     imageHeight: 100,
                     imageAlt: 'A tall image',
                     title: title,
@@ -633,11 +600,6 @@ $('#showPasswordBtn').click(function () {
                         className: 'btn btn-success'
                     },
                     {
-                        extend: 'pdfHtml5',
-                        text: '<i class="fas fa-file-pdf"> Exportar a PDF</i>',
-                        className: 'btn btn-danger'
-                    },
-                    {
                         extend: 'print',
                         text: '<i class="fas fa-print"> Imprimir Tabla</i>',
                         className: 'btn btn-info'
@@ -652,7 +614,5 @@ $('#showPasswordBtn').click(function () {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
-
-
 @stop
 @endsection

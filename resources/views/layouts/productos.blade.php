@@ -32,6 +32,12 @@
             /* Espaciado interior */
             border-radius: 10px 10px 0 0;
             /* Bordes redondeados */
+
+        }
+
+        .imgprod img{
+            height: 50%;
+            width: 50%;
         }
     </style>
 
@@ -218,12 +224,12 @@
                                 }
                             @endphp
                             <td>{{$loop->iteration}}</td> 
-                            <td>
+                            <td class="imgprod">
                                 @if ($producto->fotoproducto)
                                     <img src="{{ asset('storage/productos/' . $producto->fotoproducto) }}"
                                         style="max-width: 50px; border-radius: 50%;">
                                 @else
-                                    <img src="{{ asset('img/Placeholderproducto.jpg') }}"
+                                    <img src="{{ asset('storage/productos/Placeholderproducto.jpg') }}"
                                         alt="Imagen por defecto">
                                 @endif
                             </td>

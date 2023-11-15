@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 class UsuarioController extends Controller
 {
     /**
@@ -36,7 +38,7 @@ class UsuarioController extends Controller
             'email' => 'required|string|email|max:255|unique:users,email,',
             'estado'=> 'required|string',
             'privilegios'=>'required|string|max:255',
-            'foto'=>'nullable|image|mimes:jpeg,png,jpg,gif|max:2002048',
+            'foto'=>'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'password'=> ['required',
             'string',
             'max:20',
@@ -77,7 +79,7 @@ class UsuarioController extends Controller
         'password'=>$hashedPassword,
         ]);
 
-        $users->sendEmailVerificationNotification();
+       // $users->sendEmailVerificationNotification();
 
         if($request->hasFile('foto')){
             $uploadedFile=$request->file('foto');
@@ -110,17 +112,17 @@ class UsuarioController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, User $user)
+    public function update(Request $request, $id)
     {
+        $user= User::findOrFail($id);
         $validator = Validator::make($request->all(), [
-            'usuario'=> 'required|string|max:255|unique:users,usuario,' .$user->id,
-            'email' => 'required|string|email|max:255|unique:users,email,'  .$user->id,
+            'usuario'=> 'required|string|max:255|unique:users,usuario,'. $id,
+            'email' => 'required|string|email|max:255|unique:users,email,'. $id,
+            'estado'=> 'required|string',
             'privilegios'=>'required|string|max:255',
             'foto'=>'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'password'=> 'nullable|string|min:8|max:20',
-            
         ]);
-        
         $customMessages = [
             'required' => 'El campo :attribute es obligatorio.',
             'max' => 'El campo :attribute no debe superar :max caracteres.',
@@ -131,41 +133,33 @@ class UsuarioController extends Controller
             'image' => 'El campo :attribute debe ser una imagen válida.',
             'mimes' => 'El campo :attribute debe ser una imagen con formato: :values.',
         ];
-        
+
         $validator->setCustomMessages($customMessages);
 
-
-        if($validator->fails()){
-
-            session(['error_id'=>$user->id]);
-            return redirect()->route('usuario.index',$user->id)->withErrors($validator)->withInput()->with('error', 'Error al Actualizar Usuario, revise e intente nuevamente');
+        if ($validator->fails()) {
+            session(['error_id' => $user->id]);
+            return redirect()->route('usuario.index', $user->id)
+                ->withErrors($validator)->withInput()
+                ->with('error', 'Error al Actualizar Usuario, revise e intente nuevamente');
         }
 
-        $user->update([
-            'usuario'=>$request->input('usuario'),
-            'email'=>$request->input('email'),
-            'password'=>$request->input('password'),
-            'privilegios'=>$request->input('privilegios'),
-            'estado'=>$request->input('estado'),
-        ]);
+        $user->usuario = $request->input('usuario');
+        $user->email = $request->input('email');
+        $user->privilegios = $request->input('privilegios');
+        $user->estado = $request->input('estado');
 
-        $user->sendEmailVerificationNotification();
-
-        if($request->has('password')){
-            $hashedPassword=bcrypt($request->input('password'));
-            $user->update(['password'=> $hashedPassword]);
+        if ($request->has('password')) {
+            $user->password = bcrypt($request->input('password'));
         }
 
-        if($request->hasFile('foto')){
-            if(Storage::disk('public')->exists($user->foto)){
-                 Storage::disk('public')->delete($user->foto);
+        if ($request->hasFile('foto')) {
+            if (!is_null($user->foto) && Storage::disk('public')->exists($user->foto)) {
+                Storage::disk('public')->delete($user->foto);
             }
 
-            $uploadedFile=$request->file('foto');
-            $photoName=$request->input('usuario') . '.' . $uploadedFile->getClientOriginalExtension();
-            $photoPath=$uploadedFile->storeAs('public/usuarios', $photoName);
-            $user->foto=$photoName;
+            $user->foto = $request->file('foto')->storeAs('public/usuarios', $user->usuario . '.' . $request->file('foto')->getClientOriginalExtension());
         }
+
         $user->save();
 
         return redirect()->route('usuario.index')->with('success', '¡Usuario Actualizado Exitosamente!');

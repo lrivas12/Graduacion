@@ -16,83 +16,55 @@ class EmpresaController extends Controller
         return view('layouts.empresa', compact('empresas'));
     }
 
-    public function store(Request $request)
-    {
-
-        $validator = Validator::make ($request->all(),[
-            'nombreempresa' => 'required|string|max:255',
-            'rucempresa' => 'required|string|max:255',
-            'contactoempresa' => 'required|string|max:255',
-            'direccionempresa' => 'required|string|max:255',
-            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2002048',
-        ]);
-
-        if($validator->fails())
-        {
-            return redirect()->route('empresa.index') ->withErrors($validator)->withInput()->with('errorC','Error al crear la entidad, revise e intente nuevamente.');
-        }
-
-        $empresas = empresa::create([
-            'nombreempresa'=>$request->input('nombreempresa'),
-            'rucempresa'=>$request->input('rucempresa'),
-            'direccionempresa'=>$request->input('direccionempresa'),
-            'contactoempresa'=>$request->input('contactoempresa'),
-
-        ]);
-
-    // Manejo de carga de nuevo logo
-    if ($request->hasFile('logo')) {
-        // Elimina el logo anterior si existe
-        if (!empty($empresas->logo) && file_exists(public_path($empresas->logo))) {
-            unlink(public_path($empresas->logo));
-        }
-
-        $nuevoLogoPath = 'vendor/adminlte/dist/img';
-        $nuevoLogoNombre = 'logo.' . $request->file('logo')->getClientOriginalExtension();
-        $request->file('logo')->move($nuevoLogoPath, $nuevoLogoNombre);
-        $empresas->logo = $nuevoLogoPath . '/' . $nuevoLogoNombre;
-    }
-
-        
-        $empresas->save();
-
-       return redirect()->route('empresa.index', $empresas)->with('successC', 'Entidad Creado Correctamente!');
-    }
 
     public function update(Request $request, $id)
     {
         $empresas = empresa::findOrFail($id);
         $validator = Validator::make ($request->all(),[
-            'nombreempresa' => 'required|string|max:255',
-            'rucempresa' => 'required|string|max:255',
-            'contactoempresa' => 'required|string|max:255',
-            'direccionempresa' => 'required|string|max:255',
-            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2002048',
+            'nombreempresa' => 'required|string|max:50',
+            'rucempresa' => 'required|string|max:30',
+            'contactoempresa' => 'required|string|min:8|max:20',
+            'direccionempresa' => 'required|string|max:100',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         if($validator->fails())
         {
             return redirect()->route('empresa.index', $empresas->id) ->withErrors($validator)->withInput()->with('errorC','Error al actualizar la entidad, revise e intente nuevamente.');
         }
-        
-        $empresas->update([
+        $empresas = empresa::find($id);
+        $empresas->nombreempresa = $request->input('nombreempresa');
+        $empresas->rucempresa = $request->input('rucempresa');
+        $empresas->contactoempresa = $request->input('contactoempresa');
+        $empresas->direccionempresa = $request->input('direccionempresa');
 
-            'nombreempresa'=>$request->input('nombreempresa'),
-            'rucempresa'=>$request->input('rucempresa'),
-            'direccionempresa'=>$request->input('direccionempresa'),
-            'contactoempresa'=>$request->input('contactoempresa'),
-
-        ]);
-            
-        if($request->hasFile('logo')){
-            $uploadedFile=$request->file('logo');
-            $photoName=Str::slug($empresas->nombreempresa) . '.' . $uploadedFile->getClientOriginalExtension();
-            $photoPath=$uploadedFile->storeAs('public/empresa', $photoName);
-            $empresas->logo=$photoName;
+        // Manejo de carga de nuevo logo
+        if ($request->hasFile('logo')) {
+            // Elimina el logo anterior si existe
+            if (!empty($empresas->logo) && file_exists(public_path($empresas->logo))) {
+                unlink(public_path($empresas->logo));
+        }
+            $nuevoLogoPath = 'vendor/adminlte/dist/img';
+            $nuevoLogoNombre = 'logo.' . $request->file('logo')->getClientOriginalExtension();
+            $request->file('logo')->move($nuevoLogoPath, $nuevoLogoNombre);
+            $empresas->logo = $nuevoLogoPath . '/' . $nuevoLogoNombre;
         }
 
         $empresas->save();
         
         return redirect()->route('empresa.index')->with('success','Entidad actualizado con exito');  
+    }
+
+    public function ObtenerDatos()
+    {
+        $empresas = empresa::first();
+        if($empresas)
+        {
+            return response()->json($empresas);
+        }
+        else
+        {
+            return response()->json(['error'=>'Empresa no encontrada'], 404);
+        }
     }
 }

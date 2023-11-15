@@ -4,27 +4,80 @@
 
 @section('css')
     <style>
-        .modal {
+        .hidden {
             display: none;
-        }
-
-        .mini-formulario {
-            display: none;
-            margin-top: 20px;
-            border: 1px solid #ccc;
-            padding: 10px;
+            animation: slideDown 0.5s ease-in-out;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
         }
 
         .section {
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-end;
+        }
+
+        .section1 {
+            display: flex;
+            justify-content: center;
+        }
+
+        .form {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-gap: 10px;
         }
 
         .fa-question-circle {
             font-size: 27px;
         }
 
+        .sectionT {
+            display: flex;
+            justify-content: space-between;
+        }
+
         .sectionT2 {
+            background-color: var(--primary);
+            /* Fondo azul */
+            color: white;
+            /* Texto blanco */
+            padding: 10px;
+            /* Espaciado interior */
+            border-radius: 10px 10px 0 0;
+            /* Bordes redondeados */
+        }
+
+        .header {
+            display: flex;
+            /* Mostrar elementos en línea */
+            align-items: center;
+            /* Centrar verticalmente */
+            justify-content: space-between;
+            /* Espacio entre elementos */
+        }
+
+        .header label {
+            margin-right: 10px;
+            /* Espacio entre la etiqueta y el input de fecha */
+        }
+
+        .card {
+            border: none;
+            /* Eliminar bordes de la card */
+            border-radius: 10px;
+            /* Bordes redondeados */
+            margin: 0;
+            /* Eliminar márgenes */
+            box-shadow: none;
+            /* Eliminar sombra */
+        }
+
+        .overflow-auto {
+            overflow: hidden;
+            /* Ocultar desbordamiento */
+        }
+
+        .sectionT3 {
             background-color: rgb(17, 0, 94);
             /* Fondo azul */
             color: white;
@@ -35,287 +88,222 @@
             /* Bordes redondeados */
         }
     </style>
-
 @stop
 
 @section('content_header')
-    <section class="section">
-        <h1>Empresa</h1>
-        <i class="btn far fa-question-circle" title="Ayuda"></i>
-    </section>
-    <hr class="my-2" />
+    @foreach ($empresas as $emp)
+        <section class="sectionT">
+                <h1><i class="fas fa-store"></i> {{$emp->nombreempresa}}</h1>
+                <i class="btn far fa-question-circle" title="Ayuda"></i>
+        </section>
+        <hr class="my-2" />
+   
 @stop
 
+
 @section('content')
-
-
-<section class="sectionT2">
+<section class="sectionT3">
     <div class="header">
-        <h3><i class="fas fa-store"></i> Registrar Empresa </h3>
+        <h3><i class="fas fa-store"></i> Información del negocio </h3>
     </div>
     </section>
-
-<div class="card">
-    <div class="card-body">
-        <form method="POST" action="{{ route('empresa.store') }}" enctype="multipart/form-data">
-            @csrf
-            
-            <div class="row">
-                {{-- <div class="col-md-4">
-                    <label for="logo">{{ __('Logo Actual') }}</label><br>
-                    @if ($empresa->logo)
-                        <img src="{{ asset($empresa->logo) }}" alt="Logo actual de la empresa" style="max-width: 100px;"><br>
-                    @else
-                        <p>No hay logo actual</p>
-                    @endif
-                </div> --}}
-                <div class="col-md-4">
-                    <label for="logo">Logo de Empresa: <span class="text-danger">*</span></label>
-                    <input type="file" name="logo" id="logo" class="form-control @error('logo') is-invalid @enderror" {{-- onchange="previewLogo(this);" --}}>
-                    @error('logo')
-                    <span class="invalid-feedback" role="alert">
-                    <strong>{{ $message }}</strong>
-                    </span>
-                    @enderror
-                </div>
-                <div class="col-md-4">
-                    <label for="nombre">Nombre de Empresa: <span class="text-danger">*</span></label>
-                    <input class="form-control @error('nombreempresa') is-invalid @enderror" type="text" id="nombreempresa" name="nombreempresa">
-                    @error('nombreempresa')
-                    <span class="invalid-feedback" role="alert">
-                    <strong>{{ $message }}</strong>
-                    </span>
-                    @enderror
-                </div>
-                <div class="col-md-4">
-                    <label for="telefono">Teléfono de Empresa: <span class="text-danger">*</span></label>
-                    <input class="form-control @error('contactoempresa') is-invalid @enderror" type="text" id="contactoempresa" name="contactoempresa">
-                    @error('contactoempresa')
-                    <span class="invalid-feedback" role="alert">
-                    <strong>{{ $message }}</strong>
-                    </span>
-                    @enderror
-                </div>  
-            </div>
-            <div class="row">
-                <div class="col-md-4">
-                    <label for="ruc">Numero RUC de Empresa: <span class="text-danger">*</span></label>
-                    <input class="form-control @error('rucempresa') is-invalid @enderror" type="text" id="rucempresa" name="rucempresa">
-                    @error('rucempresa')
-                    <span class="invalid-feedback" role="alert">
-                    <strong>{{ $message }}</strong>
-                    </span>
-                    @enderror
-                </div>
-                <div class="col-md-4">
-                    <label for="direccion">Dirección de Empresa: <span class="text-danger">*</span></label>
-                    <input class="form-control @error('direccionempresa') is-invalid @enderror" type="text" id="direccionempresa" name="direccionempresa">
-                    @error('direccionempresa')
-                    <span class="invalid-feedback" role="alert">
-                    <strong>{{ $message }}</strong>
-                    </span>
-                    @enderror
-                </div>
-            </div>
-            <br>
-            <button type="submit" class="btn btn-primary"> <i class="fas fa-save"></i> Agregar</button>
-        </form>
-        <br>
-        
-        <table id="empresaTable" class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Id</th>
-                        <th>Foto</th>
-                        <th>Nombre</th>
-                        <th>Teléfono</th>
-                        <th>RUC</th>
-                        <th>Direccion</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($empresas as $empresa)
-                    <tr>
-                        <td>{{$loop->iteration}}</td>
-                        <td>
-                            @if ($empresa->logo) 
-                            <img src="{{ asset('storage/empresa/' . $empresa->logo) }}"
-                            style="max-width: 50px; border-radius: 50%;">
-                    @else
-                        <img src="{{ asset('img/Placeholderlogo.jpg') }}"
-                            alt="Imagen por defecto">
-                    @endif</td>
-                        <td>{{$empresa->nombreempresa}}</td>
-                        <td>{{$empresa->contactoempresa}}</td>
-                        <td>{{$empresa->rucempresa}}</td>
-                        <td>{{$empresa->direccionempresa}}</td>
-                        <td>
-                            <button class="btn btn-warning btn-edit" data-toggle="modal" data-target="#editarModal{{$empresa->id}}"><i class="fas fa-edit"></i> Editar</button>
-                        </td>
-                    </tr>
-                    <div class="modal fade" id="editarModal{{ $empresa->id }}" tabindex="-1" aria-labelledby="editarModalLabel{{ $empresa->id }}" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="editarModalLabel{{ $empresa->id }}">Editar Empresa</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                            <div class="modal-body">
-                                    <!-- Formulario de edición de empresa -->
-                                    <form id="editarForm{{ $empresa->id }}" method="POST" action="{{ route('empresa.update', $empresa->id) }}">
-                                        @csrf
-                                        @method('PUT')
-                                        <div class="form-group">
-                                            <label for="logo">Logo empresa: </label>
-                                            <input type="file" name="logo" id="logo" class="form-control @error('logo') is-invalid @enderror" value="{{ old('logo', $empresa->logo)}}">
-                                            <br>
-                                            @if ($empresa->logo)
-                                                <div class="current-image">
-                                                <img src="{{ asset('storage/producto/' . $empresa->logo) }}"
-                                                alt="Vista previa de "
-                                                style="display: none; max-width: 100px; border-radius: 50%;">
-                                            
-                                            @else
-                                             <p>No hay imagen</p>
-                                            @endif   
-                                            @error('logo')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                             @enderror
-                                        </div> 
-                                        <div class="form-group">
-                                            <label for="nombre">Nombre de la Empresa: <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control @error('nombreempresa') is-invalid @enderror" id="nombreempresa" name="nombreempresa" value="{{ old('nombreempresa', $empresa->nombreempresa )}}" required autocomplete="nombreempresa" autofocus>
-                                            @error('nombreempresa')
-                                                 <span class="invalid-feedback" role="alert">
-                                                     <strong>{{ $message }}</strong>
-                                                 </span>
-                                             @enderror    
-                                         </div>
-                                         <div class="form-group">
-                                            <label for="nombre">Teléfono de la Empresa: <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control @error('contactoempresa') is-invalid @enderror" id="contactoempresa" name="contactoempresa" value="{{ old('contactoempresa', $empresa->contactoempresa )}}" required autocomplete="contactoempresa" autofocus>
-                                            @error('contactoempresa')
-                                                 <span class="invalid-feedback" role="alert">
-                                                     <strong>{{ $message }}</strong>
-                                                 </span>
-                                             @enderror    
-                                         </div>
-                                         <div class="form-group">
-                                            <label for="nombre">Numero RUC de la Empresa: <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control @error('rucempresa') is-invalid @enderror" id="rucempresa" name="rucempresa" value="{{ old('rucempresa', $empresa->rucempresa )}}" required autocomplete="rucempresa" autofocus>
-                                            @error('rucempresa')
-                                                 <span class="invalid-feedback" role="alert">
-                                                     <strong>{{ $message }}</strong>
-                                                 </span>
-                                             @enderror    
-                                         </div>
-                                         <div class="form-group">
-                                            <label for="nombre">Dirección de la Empresa: <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control @error('direccionempresa') is-invalid @enderror" id="direccionempresa" name="direccionempresa" value="{{ old('direccionempresa', $empresa->direccionempresa )}}" required autocomplete="direccionempresa" autofocus>
-                                            @error('direccionempresa')
-                                                 <span class="invalid-feedback" role="alert">
-                                                     <strong>{{ $message }}</strong>
-                                                 </span>
-                                             @enderror    
-                                         </div>
-                                        <div class="modal-footer">
-                                            <button type="submit" class="btn btn-primary btn-submit"><i class="fas fa-save"></i> Guardar Cambios</button>
-                                            <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="far fa-window-close"></i> Cancelar</button>
-                                        </div>
-                                    </div>
-                                </div>
+        <div class="card">
+            <div class="overflow-auto">
+                <div class="card-body">
+                    <br>
+                    <div class="text-center">
+                        @if ($emp->logo)
+                            <div class="form-group">
+                                <img src="{{ asset($emp->logo) }}" alt="Logo de la empresa" style="max-width: 300px;">
+                            </div>
+                        @endif 
+                        <br>
+                        <div class="form-group row">
+                            <div class="col-md-6">
+                                <h3><i class="fas fa-store"></i> Nombre del negocio:</h3>
+                                <h4>{{$emp->nombreempresa}}</h4>
+                            </div>
+                            <br>
+                            <div class="col-md-6">
+                                <h3><i class="fas fa-id-badge"></i> N° RUC del negocio:</h3>
+                                <h4>{{$emp->rucempresa}}</h4>
                             </div>
                         </div>
-                    @endforeach
-                </tbody>
-        </table>
+                        <br>
+                        <div class="form-group row">
+                            <div class="col-md-6">
+                                <h3><i class="fas fa-phone-alt"></i> Contacto del negocio:</h3>
+                                <h4>{{$emp->contactoempresa}}</h4>
+                            </div>
+                            <br>
+                            <div class="col-md-6">
+                                <h3><i class="far fa-address-card"></i> Dirección del negocio:</h3>
+                                <h4>{{$emp->direccionempresa}}</h4>
+                            </div>
+                        </div>
+                        <br>
+                        <button id="updateButton" class="btn btn-warning btn1" onclick="mostrarFormulario()"><i
+                                class="fas fa-edit"></i>
+                            Actualizar
+                            Datos del negocio</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <br>
+    @endforeach
+    <div class="card">
+        <div class="overflow-auto">
+            <div class="card-body hidden" id="updateFormCard" style="display:none">
+                <div class="text-center">
+                    <h3>Datos de la Empresa</h3>
+                </div>
+                <br>
+                <form method="POST" action="{{ route('empresa.update', $emp->id) }}" enctype="multipart/form-data">
+                    @csrf
+                    @method('PUT')
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <label for="logo">{{ __('Logo Actual') }}</label><br>
+                            @if ($emp->logo)
+                                <img src="{{ asset($emp->logo) }}" alt="Logo actual de la empresa"
+                                    style="max-width: 200px;"><br>
+                            @else
+                                <p>No hay logo actual</p>
+                            @endif
+                        </div>
+                        <br>
+                        <div class="col-md-6">
+                            <label for="logo">{{ __('Nuevo Logo') }}</label>
+                            <input id="logo" type="file" class="form-control @error('logo') is-invalid @enderror"
+                                name="logo" onchange="previewLogo(this);">
+                            @error('logo')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        <br>
+                        <div class="col-md-6">
+                            <span class="text-danger">*</span><label
+                                for="nombreempresa">{{ __('Nombre de la empresa: ') }}</label>
+                            <input id="nombreempresa" type="text"
+                                class="form-control @error('nombreempresa') is-invalid @enderror" name="nombreempresa"
+                                value="{{ old('nombreempresa', $emp->nombreempresa) }}" required
+                                autocomplete="nombreempresa" autofocus>
+                            @error('nombreempresa')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        <br>
+
+                        <div class="col-md-6">
+                            <span class="text-danger">*</span><label for="rucempresa">{{ __('N° RUC: ') }}</label>
+                            <input id="rucempresa" type="text"
+                                class="form-control @error('rucempresa') is-invalid @enderror" name="rucempresa"
+                                value="{{ old('rucempresa', $emp->rucempresa) }}" required autocomplete="rucempresa">
+                            @error('rucempresa')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        <br>
+
+                        <div class="col-md-6">
+                            <span class="text-danger">*</span><label for="contactoempresa">{{ __('Contacto: ') }}</label>
+                            <input id="contactoempresa" type="text"
+                                class="form-control @error('contactoempresa') is-invalid @enderror" name="contactoempresa"
+                                value="{{ old('contactoempresa', $emp->contactoempresa) }}" required
+                                autocomplete="contactoempresa">
+                            @error('contactoempresa')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        <br>
+                        <br>
+                        <div class="col-md-6">
+                            <label for="direccionempresa">{{ __('Dirección: ') }}</label>
+                            <input id="direccionempresa" type="text"
+                                class="form-control @error('direccionempresa') is-invalid @enderror" name="direccionempresa"
+                                value="{{ old('direccionempresa', $emp->direccionempresa) }}" required
+                                autocomplete="direccionempresa">
+                            @error('direccionempresa')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        <br>
+                    </div>
+                    <div class="float-right">
+                        <button id="" type="submit" class="btn btn-primary"><i class="fas fa-save"></i>
+                            {{ __(' Guardar Cambios') }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-</div>
+    <br>
 @endsection
 
 @section('js')
-<script>
-    function showAlert(icon, title, text, position, isError) {
-                const options = {
-                position: position,
-                icon: icon,
-                title: title,
-                text: text,
-                showConfirmButton: isError, // Mostrar el botón "OK" solo en alertas de error
-                allowOutsideClick: false, // Evitar cerrar el modal haciendo clic fuera de él
-                timer: isError ? null : 2000, // Cerrar automáticamente después de 2 segundos en alertas de éxito
-                };
+    <script>
+        // Esta función se llama cuando se hace clic en el botón "Editar/Cancelar"
+        function mostrarFormulario() {
+            const formularioContainer = document.getElementById(
+                'updateFormCard'); // Obtiene el contenedor del formulario
+            const mostrarBoton = document.getElementById('updateButton'); // Obtiene el botón "Editar/Cancelar"
 
-                // Mostrar la alerta de SweetAlert2 con las opciones configuradas
-                Swal.fire(options).then((result) => {
-                if (!isError && result.dismiss === Swal.DismissReason.timer) {
-                // Cerrar el modal si la alerta es de éxito y se cierra automáticamente
-                $('#editarForm').modal('hide');
-             }
-        });
-    }
-
-    $(document).ready(function() {
-        $('#empresaTable').DataTable({
-            "language": {
-                "url": '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json', // Ruta al archivo de idioma en español
-            },
-                responsive:"true",
-                dom:'Bfrtilp',
-                buttons:[{
-                    extend:'print',
-                    text: '<i class="fas fa-print"> Imprimir</i>',
-                    className:'btn btn-info'
-                },  
-                {
-                    extend: 'excelHtml5',
-                    text: '<i class="fas fa-file-excel"> Exportar a Excel</i>',
-                    className: 'btn btn-success'
-                },
-            ] 
-        });
-    });
-
-    
-    document.addEventListener('DOMContentLoaded', function () {
-        
-
-        // Función para mostrar mensajes de SweetAlert2
-        function showAlert(icon, title, text, isError, position) {
-            const options = {
-                position: position,
-                icon: icon,
-                title: title,
-                text: text,
-                showConfirmButton: isError, // Mostrar el botón "OK" solo en alertas de error
-                allowOutsideClick: false, // Evitar que se cierre el mensaje al hacer clic fuera del alerta
-                timer: isError ? null : 2000, // Cerrar automáticamente después de 2 segundos en alertas de éxito
-            };
-
-            Swal.fire(options);
+            // Comprueba si el contenedor del formulario está oculto
+            if (formularioContainer.style.display === 'none') {
+                formularioContainer.style.display = 'block'; // Muestra el contenedor del formulario
+                mostrarBoton.textContent = 'Cancelar'; // Cambia el texto del botón a "Cancelar"
+            } else {
+                formularioContainer.style.display = 'none'; // Oculta el contenedor del formulario
+                mostrarBoton.textContent = 'Actualizar Datos de la neogocio'; // Cambia el texto del botón a "Editar"
+            }
         }
 
-        // Mostrar mensaje de éxito o error si existe
-        @if(session('successC'))
-        showAlert('success', 'Éxito', '{{ session('successC') }}', false, 'top-end');
-        @elseif (session('errorC'))
-        showAlert('error', 'Error', '{{ session('errorC') }}', true, 'top-center');
-        @endif
-    });
+        function previewLogo(input) {
+            var reader = new FileReader();
+            var logoPreview = $('#logo_preview');
+            reader.onload = function(e) {
+                logoPreview.attr('src', e.target.result).css('display', 'block');
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    </script>
 
-</script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Función para mostrar mensajes de SweetAlert2
+            function showAlert(type, icon, title, text, isError) {
+                const options = {
+                    type: type,
+                    icon: icon,
+                    title: title,
+                    text: text,
+                    showConfirmButton: isError, // Mostrar el botón "OK" solo en alertas de error
+                    allowOutsideClick: false, // Evitar que se cierre el mensaje al hacer clic fuera del alerta
+                    timer: isError ? null :
+                    3000, // Cerrar automáticamente después de 2 segundos en alertas de éxito
+                };
 
-<script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
+                Swal.fire(options);
+            }
 
-
+            // Mostrar mensaje de éxito o error si existe
+            @if (session('successC'))
+                showAlert('success', 'success', 'Clínica Actualizada', '{{ session('successC') }}', false);
+            @elseif (session('errorC'))
+                showAlert('error', 'error', 'Error', '{{ session('errorC') }}', true);
+            @endif
+        });
+    </script>
 @endsection

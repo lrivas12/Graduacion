@@ -68,17 +68,20 @@
                 </thead>
                 <tbody>
                     @foreach ($pagos as $pago)
-                    <td>{{$loop->iteration}}</td>
-                    <td>{{$pago->fechapago}}</td>
-                    <td>{{$pago->factura->cliente->nombrecliente}} {{$pago->factura->cliente->apellidocliente}}</td> 
-                    <td>{{$pago->factura->totalventa}}</td>
-                    <td>
-                        <div class="d-flex align-items-center">
-                            <a  href ="{{ route('pago.edit', $pago->id)}}"  title="Abonar">
-                                <i class="fab fa-algolia fa-lg text-success" > Abonar</i>
-                            </a> 
-                        </div>
-                    </td> 
+                    <tr>
+                        <td>{{$loop->iteration}}</td>
+                        <td>{{$pago->fechapago}}</td>
+                        <td>{{$pago->factura->cliente->nombrecliente}} {{$pago->factura->cliente->apellidocliente}}</td> 
+                        <td>{{$pago->factura->totalventa}}</td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <a  href ="{{ route('pago.edit', $pago->id)}}"  title="Abonar">
+                                    <i class="fab fa-algolia fa-lg text-success" > Abonar</i>
+                                </a> 
+                            </div>
+                        </td> 
+                        
+                    </tr>
                     @endforeach
                 </tbody>
             </table>

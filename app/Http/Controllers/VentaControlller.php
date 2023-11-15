@@ -70,9 +70,9 @@ class VentaControlller extends Controller
             $detalleventas->save();
             
             $prod = producto::findOrFail($value->id);
-            $prod->cantidadproducto += $value->cantidadventa;
+            $prod->cantidadproducto -= $value->cantidadventa;
             $prod->precioproducto = $value->precioproducto;
-            $prod->save();
+            $prod->save(); 
 
             
         }

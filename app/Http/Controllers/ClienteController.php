@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\cliente;
+use App\Models\detallepago;
+use App\Models\factura;
+use App\Models\pago;
 use Illuminate\Support\Facades\Validator;
 
 class clienteController extends Controller
@@ -115,5 +118,40 @@ class clienteController extends Controller
         $clientes->delete();
             return redirect()->route('cliente.index')->with('success', 'Cliente eliminado correctamente');
     
+    }
+
+    public function obtenerSaldo($clientes_id)
+    {
+        $clientes = cliente::find($clientes_id);
+
+        if(!$clientes)
+        {
+            return response()->json(['error'=>'Cliente no encontrado'],404);
+        }
+
+        $ventasCredito = factura::where('clientes_id', $clientes_id)
+        ->where('tipoventa','credito')
+        ->get();
+
+        $saldoFinal = 0;
+
+        if($ventasCredito->count() > 0)
+        {
+
+            $ventasCreditoIDs = $ventasCredito->pluck('id');
+
+            $montoCredito = pago::whereIn('facturas_id', $ventasCreditoIDs)->sum('cantidadpago');
+            $sumapagos = detallepago::whereIn('pagos_id', function ($query) use ($ventasCreditoIDs)
+            {
+                $query->select('id')
+                ->from('pagos')
+                ->whereIn('facturas_id', $ventasCreditoIDs);
+
+            })->sum('cantidaddetallepago');
+            $saldoFinal = $montoCredito - $sumapagos;
+        }
+
+        return response()->json(['saldo'=>$saldoFinal]);
+
     }
 }

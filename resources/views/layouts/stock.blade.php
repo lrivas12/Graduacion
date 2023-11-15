@@ -74,7 +74,7 @@
                                     
                             if ($producto->cantidadproducto <= $producto->stockminimo) {
                             $existenciaClase = 'btn btn-danger'; // Clase danger de AdminLTE (rojo)
-                            } elseif ($producto->cantidadproducto <= 10) {
+                            } elseif ($producto->cantidadproducto <= 30) {
                             $existenciaClase = 'btn btn-warning'; // Clase warning de AdminLTE (amarillo)
                             } else {
                             $existenciaClase = 'btn btn-success'; // Clase success de AdminLTE (verde)
