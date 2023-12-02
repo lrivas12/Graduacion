@@ -7,8 +7,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 class UsuarioController extends Controller
 {
     /**
@@ -60,7 +58,16 @@ class UsuarioController extends Controller
             'image' => 'El campo :attribute debe ser una imagen válida.',
             'mimes' => 'El campo :attribute debe ser una imagen con formato: :values.',
         ];
-        
+
+        $customAttributes =
+        [
+            'usuario'=>'Nombre del  usuario',
+            'email'=>'Correo del usuario',
+            'password'=>'Contraseña del  usuario',
+            'privilegios'=>'Privilegios del usuario',
+        ];
+
+        $validator->setAttributeNames($customAttributes);
         $validator->setCustomMessages($customMessages);
 
 
@@ -134,6 +141,15 @@ class UsuarioController extends Controller
             'mimes' => 'El campo :attribute debe ser una imagen con formato: :values.',
         ];
 
+        $customAttributes =
+        [
+            'usuario'=>'Nombre del  usuario',
+            'email'=>'Correo del usuario',
+            'password'=>'Contraseña del  usuario',
+            'privilegios'=>'Privilegios del usuario',
+        ];
+
+        $validator->setAttributeNames($customAttributes);
         $validator->setCustomMessages($customMessages);
 
         if ($validator->fails()) {

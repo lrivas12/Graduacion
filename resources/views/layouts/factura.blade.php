@@ -321,8 +321,8 @@
                 <div class="row text-right mt-3">
                     <div class="col-md-12 " >
                        
-                        <button class="btn btn-primary mr-2"><i class="fas fa-print"></i> Guardar e Imprimir</button>
-                        <button class="btn btn-primary ml-2"><i class="fas fa-save"></i> Guardar</button>
+                        <button type="submit" class="btn btn-primary mr-2" name="guardar_e_imprimir" id="guardarEImprimir"><i class="fas fa-print"></i> Guardar e Imprimir</button>
+                        <button type="submit" class="btn btn-primary ml-2"><i class="fas fa-save"></i> Guardar</button>
                     </div>
                     <div class="col-md-12 mt-2 text-left">
                         <a href="{{ route('factura.index') }}" class="btn btn-danger" id="btnSalir"><i class="far fa-window-close"></i> Salir</a>
@@ -347,7 +347,61 @@
     
     document.addEventListener('DOMContentLoaded', function () {
         
+        var guardarEImprimirBtn = document.getElementById('guardarEImprimir');
+        var ventaForm = document.getElementById('ventaForm');
+        var numeroVentaInput = document.getElementById('numeroventa'); // Nuevo
 
+        if (guardarEImprimirBtn && ventaForm) {
+            guardarEImprimirBtn.addEventListener('click', function (event) {
+                event.preventDefault();
+
+                // Obtener el valor del input de número de venta
+                var idVenta = numeroVentaInput.value;
+                // Establecer el valor del input oculto "guardarImp"
+                document.getElementById('guardarImp').value = "true";
+                
+
+                fetch(ventaForm.action, {
+                    method: ventaForm.method,
+                    body: new FormData(ventaForm)
+                   
+                })
+               
+                .then(response => {
+                   
+                    if (!response.ok) {
+                        throw new Error('Error en la solicitud.');
+
+                    }
+                    Swal.fire({
+                        title: 'Éxito',
+                        text: 'Venta guardada con éxito, imprime la factura',
+                        icon: 'success',
+                        position: 'top-end',  // Posición top-end
+                        timer: 5000,  // Cierre automático en 5 segundos
+                        showConfirmButton: false  // No muestra el botón "OK"
+                    });
+                    return response.json();
+                    
+                })
+                .then(data => {
+                    console.log(data.id);
+                    
+                    // Recargar la página
+                    window.location.reload(true);
+                    // Asegúrate de incluir el ID de la venta en la URL
+                   // window.location.href = /ventas/${data.id}/factura;
+                    // Abrir la factura en una nueva pestaña
+                    window.open(/ventas/${data.id}/factura, '_blank');
+
+                })
+                .catch(error => console.error('Error al guardar e imprimir:', error.message));
+
+                 // Detectar cambios en el historial (Retroceso)
+                
+            });
+
+        }
         // Función para mostrar mensajes de SweetAlert2
         function showAlert(icon, title, text, isError, position) {
             const options = {
@@ -810,8 +864,6 @@
         }
     });
 
+            
 </script>
-
-
-
 @endsection

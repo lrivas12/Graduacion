@@ -296,10 +296,10 @@
                                             </div>
                                             <div class="form-group">
                                             <label for="categoria">Categoría: <span class="text-danger">*</span></label>
-                                            <select  class="form-control @error('id_categoria') is-invalid @enderror"  name="id_categoria" id="id_categoria">
+                                            <select  class="form-control @error('id_categoria') is-invalid @enderror"  name="id_categoria" id="id_categoria" >
                                             <option value="">Seleccionar una categoría</option>
                                             @foreach($categorias as $categoria)
-                                                <option value="{{ $categoria->id }}">{{ $categoria->nombrecategoria }}</option>
+                                                <option value="{{ $categoria->id }}" {{$producto->id_categoria == $categoria->id ? 'selected' : ''}}>{{ $categoria->nombrecategoria }}</option>
                                             @endforeach   
                                                 </select>
                                                 @error('id_categoria')
@@ -343,24 +343,6 @@
                                                     <strong>{{ $message }}</strong>
                                                 </span>
                                             @enderror
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="estadoproducto">Estado producto: <span class="text-danger">*</span></label>
-                                                <select id="estadoproveedor"
-                                                class="form-control @error('estadoproducto') is-invalid @enderror"
-                                                name="estadoproducto" required autocomplete="estadoproducto">
-                                                <option
-                                                value="1"{{ old('estadoproducto', $producto->estadoproducto) === 'Activo' ? ' selected' : '' }}>
-                                                Activo</option>
-                                                <option
-                                                value="0"{{ old('estadoproducto' , $producto->estadoproducto) === 'Inactivo' ? ' selected' : '' }}>
-                                                Inactivo</option>
-                                                </select>
-                                                @error('estadoproducto')
-                                                    <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                    </span>
-                                                @enderror         
                                             </div>
                                             <div class="form-group">
                                                 <label for="precioproducto">Precio producto: <span class="text-danger">*</span></label>

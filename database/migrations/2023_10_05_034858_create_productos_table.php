@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('fotoproducto')->nullable();
             $table->string('nombreproducto');
-            $table->string('descripcionproducto');
+            $table->string('descripcionproducto')->nullable();
             $table->integer('cantidadproducto');
             $table->string('marcaproducto');
             $table->string('unidadmedidaproducto');

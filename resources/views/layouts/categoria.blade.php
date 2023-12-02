@@ -104,12 +104,7 @@
                         <td>
                             {{-- <a href="{{ route('categorias.edit', $categoria->id) }}" class="btn btn-primary">Editar</a> --}}
                             <button class="btn btn-warning btn-edit" data-toggle="modal" data-target="#editarModal{{$categoria->id}}"><i class="fas fa-edit"></i> Editar</button>
-                            @if(!$categoria->categoria || $categoria->categoria->isEmpty())
-                           <button class="btn btn-danger btn-delete" data-toggle="modal" data-target="#eliminarModal{{ $categoria->id }}"><i class="fa fa-trash"></i> Eliminar</button>
-                            @else
-                           <!-- Mostrar boton deshanilitado si la categoría no puede ser eliminada -->
-                           <button class="btn btn-danger btn-delete" disabled>Eliminar</button>
-                            @endif
+                            
                         </td>
                    
                     </tr>
@@ -157,28 +152,6 @@
                                 </div>
                             </div>
                
-                            <div class="modal fade" id="eliminarModal{{ $categoria->id }}" tabindex="-1" aria-labelledby="eliminarModalLabel{{ $categoria->id }}" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                        <h5 class="modal-title" id="eliminarModalLabel{{ $categoria->id }}">Eliminar Categoría</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <p>¿Estás seguro de que quieres eliminar la categoría "{{ $categoria->nombrecategoria }}"?</p>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <form method="POST" action="{{ route('categoria.destroy', $categoria->id) }}" style="display: inline;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i> Eliminar</button>
-                                         </form>
-                                        <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="far fa-window-close"></i> Cancelar</button>       
-                                    </div>
-                                </div>
-                            </div>
                         </div>         
                     @endforeach
                 </tbody>

@@ -56,7 +56,7 @@
     <div class="card">
         <div class="card-body">
             
-            <form action="{{route('pago.update', $pagos->id)}}" method="POST">
+            <form action="{{route('pagos.update', $pagos->id)}}" method="POST">
                 @csrf
                     @method('PUT')
                     <div class="row">

@@ -108,6 +108,12 @@ class ProductoController extends Controller
         ]);
 
        
+        $customMessages =[
+            'required' => 'El Campo :atribute es Obligatorio',
+            'max' => 'El Campo :atribute no debe superar :max caracteres',
+            'mimes' => 'El Campo :atribute debe ser :mimes',
+            'min' => 'El Campo :atribute  debe superar :min caracteres',
+            ];
 
         $customAttributes =
         [
@@ -124,6 +130,7 @@ class ProductoController extends Controller
         ];
 
         $validator->setAttributeNames($customAttributes);
+        $validator->setCustomMessages($customMessages);
        
     
         if ($validator->fails()) {
@@ -166,5 +173,14 @@ class ProductoController extends Controller
         return redirect()->route('producto.index')->with('success', 'Producto actualizado con éxito');
     }
     
-    
+    public function DesactivarProducto($id)
+    {
+        $productos = producto::findOrFail($id);
+
+        // Cambia el estado del producto (1 para activar, 0 para desactivar)
+        $productos->estadoproducto = $productos->estadoproducto == 1 ? 0 : 1;
+        $productos->save();
+
+        return redirect()->back()->with('success', 'Estado de producto actualizado exitosamente');
+    }
 }

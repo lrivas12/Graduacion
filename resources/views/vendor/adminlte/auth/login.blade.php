@@ -18,20 +18,20 @@
     @php( $password_reset_url = $password_reset_url ? url($password_reset_url) : '' )
 @endif
 
-@section('auth_header', __('adminlte::adminlte.login_message'))
+@section('auth_header', __('Iniciar Sesión'))
 
 @section('auth_body')
-    <form action="{{ $login_url }}" method="post">
+    <form action="{{ $login_url }}" method="post" style="background: transparent;">
         @csrf
 
         {{-- Email field --}}
         <div class="input-group mb-3">
             <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
-                   value="{{ old('email') }}" placeholder="{{ __('adminlte::adminlte.email') }}" autofocus>
+                   value="{{ old('email') }}" placeholder="{{ __('adminlte::adminlte.email') }}" autofocus style="background: white; border-width: 2px; border-color: white;">
 
             <div class="input-group-append">
-                <div class="input-group-text">
-                    <span class="fas fa-envelope {{ config('adminlte.classes_auth_icon', '') }}"></span>
+                <div class="input-group-text" style="border-width: 2px; border-color: white; background: white;">
+                    <span class="fas fa-envelope {{ config('adminlte.classes_auth_icon', '') }}" style="color: rgb(17, 0, 94);"></span>
                 </div>
             </div>
 
@@ -45,12 +45,13 @@
         {{-- Password field --}}
         <div class="input-group mb-3">
             <input type="password" name="password" class="form-control @error('password') is-invalid @enderror"
-                   placeholder="{{ __('adminlte::adminlte.password') }}">
+                   placeholder="{{ __('adminlte::adminlte.password') }}" style="background: white; border-width: 2px; border-color: white;" id="password">
+
 
             <div class="input-group-append">
-                <div class="input-group-text">
-                    <span class="fas fa-lock {{ config('adminlte.classes_auth_icon', '') }}"></span>
-                </div>
+                <button type="button" class="btn btn-outline-primary border-0" onclick="togglePasswordVisibility()">
+                    <span id="togglePassword" class="fas fa-eye {{ config('adminlte.classes_auth_icon', '') }}"></span>
+                </button>
             </div>
 
             @error('password')
@@ -59,6 +60,21 @@
                 </span>
             @enderror
         </div>
+
+        <script>
+            function togglePasswordVisibility() {
+                var passwordInput = document.getElementById('password');
+                var togglePasswordIcon = document.getElementById('togglePassword');
+        
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    togglePasswordIcon.className = 'fas fa-eye-slash';
+                } else {
+                    passwordInput.type = 'password';
+                    togglePasswordIcon.className = 'fas fa-eye';
+                }
+            }
+        </script>
 
         {{-- Login field --}}
         <div class="row">
@@ -94,11 +110,11 @@
     @endif
 
     {{-- Register link --}}
-    @if($register_url)
+   {{-- @if($register_url)
         <p class="my-0">
             <a href="{{ $register_url }}">
                 {{ __('adminlte::adminlte.register_a_new_membership') }}
             </a>
         </p>
-    @endif
+    @endif--}}
 @stop

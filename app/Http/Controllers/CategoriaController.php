@@ -91,7 +91,7 @@ class categoriaController extends Controller
         $validator = Validator::make ($request->all(),[
             'nombrecategoria' => 'required|string|max:255',
             'tipocategoria' => 'required|string|max:255',
-
+            'estadocategoria'=>'required|boolean',
         ]);
         $customMessages =[
             'required' => 'El Campo :atribute es Obligatorio',
@@ -101,6 +101,7 @@ class categoriaController extends Controller
         [
             'nombrecategoria'=>'Nombre de la categoria',
             'tipocategoria'=>'Tipo de Categoria',
+            'estadocategoria'=>'Estado de la categoria',
         ];
         $validator->setAttributeNames($customAttributes);
         $validator->setCustomMessages($customMessages);
@@ -114,19 +115,22 @@ class categoriaController extends Controller
     
             'nombrecategoria' => $request->input('nombrecategoria'),
             'tipocategoria' => $request->input('tipocategoria'),
+            'estadocategoria' => $request->input('estadocategoria'),
            
         ]);
         $categorias->save();
         return redirect()->route('categoria.index')->with('success','Categoria actualizado con exito');  
       }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy( $id)
-    {
-        $categorias = categoria::findOrFail($id);
-        $categorias->delete();
-            return redirect()->route('categoria.index')->with('successE', 'Categoría eliminada correctamente');
-    }
+      public function DesactivarCategoria($id)
+      {
+          $categorias = categoria::findOrFail($id);
+  
+          // Cambia el estado de la categoria (1 para activar, 0 para desactivar)
+          $categorias->estadocategoria = $categorias->estadocategoria == 1 ? 0 : 1;
+          $categorias->save();
+  
+          return redirect()->back()->with('success', 'Estado de la cateoria actualizado exitosamente');
+      }
+    
 }

@@ -27,6 +27,20 @@ class EmpresaController extends Controller
             'direccionempresa' => 'required|string|max:100',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
+        
+        $customMessages =[
+            'required' => 'El Campo :atribute es Obligatorio',
+            'max' => 'El Campo :atribute no debe superar :max caracteres',
+            ];
+        $customAttributes =
+        [
+            'nombreempresa'=>'Nombre de la empresa',
+            'rucempresa'=>'RUC de la empresa',
+            'contactoempresa'=>'Numero de la empresa',
+            'direccionempresa'=>'Direccion de la empresa',
+        ];
+        $validator->setAttributeNames($customAttributes);
+        $validator->setCustomMessages($customMessages);
 
         if($validator->fails())
         {

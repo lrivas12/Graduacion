@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('nombrecliente');
             $table->string('apellidocliente');
-            $table->string('direccioncliente');
-            $table->string('telefonocliente');
-            $table->string('correocliente');
+            $table->string('direccioncliente')->nullable();
+            $table->string('telefonocliente')->nullable();
+            $table->string('correocliente')->nullable();
             $table->timestamps();
         });
     }

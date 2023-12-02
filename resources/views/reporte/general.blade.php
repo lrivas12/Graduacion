@@ -112,7 +112,7 @@
                         <option value="verfactura">lista de Facturas</option>
                     </select>
 
-                    <div class="contenido" id="listclientes" style="display: block">
+                    <div class="contenido" id="listclientes" style="display: none">
                         <div class="text-center">
                           <label for="">Listado de Clientes</label>
                         </div>
@@ -166,26 +166,27 @@
                         </button>
                 </div>
                 <div class="modal-body">
-
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label for="">Fecha Inicio</label>
-                            <input type="date" class="form-control" name="fechini" id="fechini">
-                        </div>
-                        <div class="col-md-6">
-                            <label for="">Fecha Fin</label>
-                            <input type="date" class="form-control" name="fechfin" id="fechfin">
-                        </div>
-                    </div>
                     <label for="">Seleccionar Tipo de Reporte</label>
-                    <select name="tiporeporteInventario" class="form-control" id="tiporeporteInventario" onchange="mostrarInventario()">
+                    <select name="tiporeporteInventario" class="form-control" id="tiporeporteInventario" onchange="MostrarDivInv()">
                         <option value="">Seleccione el reporte</option>
                         <option value="productosge">Inventario General</option>
                         <option value="prodagot">Productos a Agotarse</option>
+                        <option value="comprasxfech">Compras por fecha</option>
                     </select>
-
-                    <div class="contenido" id="cardprodgen" style="display: block">
+                    <br>
+                    <div class="row">
+                        <div class="col-md-6" id="FechInINV" style="display: none;" onchange="MostrarDivInv()">
+                            <label for="">Fecha Inicio</label>
+                            <input type="date" class="form-control" name="fechini" value="{{$fechaInicio ?? ''}}" id="fechini" onchange="validarfecha()" required>
+                        </div>
+                        <div class="col-md-6" id="FechFinINV" style="display: none;" onchange="MostrarDivInv()">
+                            <label for="">Fecha Fin</label>
+                            <input type="date" class="form-control" value="{{$fechaFin ?? ''}}" name="fechfin" id="fechfin" onchange="validarfecha()" required>
+                        </div>
+                    </div>
+                    <div class="contenido" id="cardprodgen" style="display: none">
                         <div class="text-center">
+                            <br>
                           <label for="">Inventario General</label>
                         </div>
                         <br>
@@ -268,7 +269,7 @@
                                             <td>{{$producto->nombreproducto}}</td>
                                             <td>{{$producto->nombrecategoria}}</td>
                                             <td>
-                                                <button class="{{ $existenciaClase }}" > {{ $producto->cantidadproducto }}</button>
+                                                <button class="{{ $existenciaClase }}" > {{ $producto->cantidadproducto <=  $producto->stockminimo}}</button>
                                             </td>
                                             <td>{{$producto->stockminimo}}</td>
                                         </tr>
@@ -323,22 +324,63 @@
 
 @section('js')
 <script>
-    $function mostrarInventario()
-    {
-        var tipoinventario = 
-        document.getElementById('tiporeporteInventario').value;
-            var cardprodgen = document.getElementById('cardprodgen');
-            var cardprodagot = document.getElementById('cardprodagot');
 
-            if (tiporeporteInventario === 'productosge') {
-                cardprodgen.style.display = 'block'; // Mostrar el contenido
-            } else {
-                cardProGen.style.display = 'none'; // Ocultar el contenido
+    var SelectCompras;
+    function MostrarDivInv(){
+        SelectCompras = document.getElementById('tiporeporteInventario').value;
+        var FechInINV = document.getElementById('FechInINV'); 
+        var FechFinINV = document.getElementById('FechFinINV');
+
+        FechInINV.style.display = 'none';
+        FechFinINV.style.display = 'none';
+
+        if(SelectCompras === 'comprasxfech'){
+        
+        FechInINV.style.display = 'block';
+        FechFinINV.style.display = 'block';
+        }
+    }
+    $(document).ready(function() {
+            var fechini = $('#fechini');
+            var fechfin = $('#fechfin');
+        $("#fechfin").click(function () {
+            console.log("click");
+            mostrarUrlinv();
+
+        });
+        function mostrarUrlinv(){
+            var rutaInv = "";
+            var start_dateInv_val = fechini.val();
+            var end_dateInv_val = fechfin.val();
+            console.log(fechini);
+
+            if(SelectCompras == 'comprasxfech'){
+                rutaInv = `/comprasrec-pdf?fechaInicio=${start_dateInv_val}&fechaFin=${end_dateInv_val}`;
             }
-            if (tiporeporteInventario === 'prodagot') {
-                cardprodagot.style.display = 'block'; // Mostrar el contenido
-            } else {
-                cardprodagot.style.display = 'none'; // Ocultar el contenido
+            if(rutaInv !==""){
+                window.open(rutaInv, '_blank');
+            }
+
+        }
+    });
+    
+
+    var tiporeporteInventario;
+    function mostrarInventario()
+    {
+        var tiporeporteInventario = document.getElementById('tiporeporteInventario').value;
+        var cardprodgen = document.getElementById('cardprodgen');
+        var cardprodagot = document.getElementById('cardprodagot');
+
+        if (tiporeporteInventario === 'productosge') {
+        cardprodgen.style.display = 'block'; // Mostrar el contenido
+        } else {
+        cardProGen.style.display = 'none'; // Ocultar el contenido
+        }
+        if (tiporeporteInventario === 'prodagot') {
+        cardprodagot.style.display = 'block'; // Mostrar el contenido
+        } else {
+        cardprodagot.style.display = 'none'; // Ocultar el contenido
         }
     }
 </script>

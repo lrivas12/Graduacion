@@ -84,9 +84,9 @@ return [
     */
 
     'auth_logo' => [
-        'enabled' => false,
+        'enabled' => true,
         'img' => [
-            'path' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
+            'path' => 'vendor/adminlte/dist/img/logolog.png',
             'alt' => 'Auth Logo',
             'class' => '',
             'width' => 50,
@@ -129,12 +129,13 @@ return [
     |
     */
 
-    'usermenu_enabled' => true,
-    'usermenu_header' => false,
+    'usermenu_enabled' => null,
+    'usermenu_header' => null,
     'usermenu_header_class' => 'bg-primary',
-    'usermenu_image' => false,
-    'usermenu_desc' => false,
-    'usermenu_profile_url' => false,
+    'usermenu_image' => null,
+    'usermenu_desc' => null,
+    'usermenu_profile_url' => null,
+
 
     /*
     |--------------------------------------------------------------------------
@@ -150,8 +151,8 @@ return [
 
     'layout_topnav' => null,
     'layout_boxed' => null,
-    'layout_fixed_sidebar' => null,
-    'layout_fixed_navbar' => null,
+    'layout_fixed_sidebar' => true,
+    'layout_fixed_navbar' => true,
     'layout_fixed_footer' => null,
     'layout_dark_mode' => null,
 
@@ -313,32 +314,9 @@ return [
         ],
         [
             'text'        => 'Inicio',
-            'url'         => 'admin/pages',
+            'url'         => '/home',
             'icon'        => 'fas fa-house-user',
             
-        ],
-        [
-            'text'    => 'Panel de Control',
-            'icon'    => 'fas fa-chalkboard-teacher	',
-            'submenu' => [
-                [
-                    'text' => 'Facturación',
-                    'url'  => '#',
-                    'icon' => 'far fa-money-bill-alt',
-            
-                ],
-                [
-                    'text'    => 'Inventario',
-                    'url'     => '#',
-                    'icon'    => 'fas fa-store',
-            
-                ],
-                ['text'   => 'Control de Crédito',
-                'url'     => '#',
-                'icon'    => 'far fa-credit-card',
-            ],
-                
-            ],
         ],
         ['header' => 'Módulos'],
         [
@@ -410,12 +388,12 @@ return [
             'submenu' => [
                 [
                     'text' => 'Agregar Abono',
-                    'url'  => 'pago.edit',
+                    'route'  => 'pagos.index',
                     'icon' => 'fas fa-credit-card',
                 ],
                 [
                     'text'    => 'Historial de Créditos',
-                    'url'     => 'pago.index',
+                    'url'     => 'pagos.edit',
                     'icon'    => 'far fa-list-alt',
                 ],
             ],
@@ -423,13 +401,13 @@ return [
         ['header' => 'Reportes'],
         [
             'text' => 'Generar Reporte',
-            'url'  => 'reportes.index',
+            'route'  => 'reportes.index',
             'icon' => 'fas fa-print	',
         ],
         ['header' => 'Configuración'],
         [
             'text' => 'Usuario',
-            'url'  => 'admin/settings',
+            'route'  => 'usuario.index',
             'icon' => 'fas fa-fw fa-user',
             'submenu' => [
                 [
@@ -447,7 +425,7 @@ return [
             'submenu' => [
                 [
                     'text' => 'Mantenimiento',
-                    'url'  => '#',
+                    'route'  => 'backup.index',
                     'icon' => 'fas fa-tools',
                 ],
             ],
@@ -466,7 +444,7 @@ return [
                 ],
                 [
                     'text'    => 'Acerca de',
-                    'url'     => '#',
+                    'route'     => 'nosotros.index',
                     'icon'    => 'fas fa-user-tie',
                 ],
                 [

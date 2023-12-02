@@ -140,7 +140,6 @@
                                     <td>
                                     {{-- <a href="{{ route('cliente.edit', $cliente->id) }}" class="btn btn-primary">Editar</a> --}}
                                     <button class="btn btn-warning btn-edit" data-toggle="modal" data-target="#editarclienteModal{{$cliente->id}}"><i class="fas fa-edit"></i> Editar</button>
-                                    <button class="btn btn-danger btn-delete" data-toggle="modal" data-target="#eliminarModal{{ $cliente->id }}"><i class="fa fa-trash"></i> Eliminar</button>
                             
                                 </td>
                             </tr>
@@ -210,29 +209,6 @@
                                     <div class="modal-footer">
                                         <button type="submit" class="btn btn-primary btn-submit"><i class="fas fa-save"></i> Guardar Cambios</button>
                                         <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="far fa-window-close"></i> Cancelar</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal fade" id="eliminarModal{{ $cliente->id }}" tabindex="-1" aria-labelledby="eliminarModalLabel{{ $cliente->id }}" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="eliminarModalLabel{{ $cliente->id }}">Eliminar Cliente</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                    <p>¿Estás seguro de que quieres eliminar el cliente "{{ $cliente->nombrecliente }}"?</p>
-                                </div>
-                                    <div class="modal-footer">
-                                        <form method="POST" action="{{ route('cliente.destroy', $cliente->id) }}" style="display: inline;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i> Eliminar</button>
-                                        </form>
-                                        <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="far fa-window-close"></i> Cancelar</button>
                                     </div>
                                 </div>
                             </div>

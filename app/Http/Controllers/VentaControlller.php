@@ -8,10 +8,12 @@ use App\Models\detallefactura;
 use App\Models\producto;
 use App\Models\cliente;
 use App\Models\detallepago;
+use App\Models\empresa;
 use App\Models\pago;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-
+use TCPDF;
+use Illuminate\Support\Carbon;
 class VentaControlller extends Controller
 {
     public function index()
@@ -114,6 +116,46 @@ class VentaControlller extends Controller
 
        return view('layouts.facturav', compact('venta', 'detalles', 'productos', 'clientes', 'rutas'));
          
+
+    }
+
+    public function imprimirFactura($idVenta)
+    {
+        $ventas = factura::with('detallefacturas', 'clientes', 'usuarios')->find($idVenta);
+        $empresa = empresa::first();
+        if($ventas && $ventas->tipoventa === 'credito')
+        {
+            $pagos = pago::where('pagos_id', $ventas->id)->first();
+            if($pagos)
+            {
+                $cantidadpago = $pagos->cantidadpago;
+
+                $detallepagos = detallepago::where('pagos_id', $pagos->id)->get();
+                $detallepagos = $pagos->saldodetallepago;
+            }
+        }
+
+        if(!$ventas)
+        {
+            abort(404, 'Venta no encontrado');
+        }
+
+        $pdf =new \TCPDF('p', 'mm', array(58, 297), true, 'UTF-8', false);
+        $pdf->setPrintHeader(false);
+        $pdf->setPrintFooter(false);
+       
+      
+        $pdf->SetAutoPageBreak(true, 0);
+        $pdf->SetMargins(2, 0.5, 2);
+        $pdf->AddPage();
+        $pdf->SetFont('helvetica', '', 8);
+        $html = view('layouts.factura', compact('ventas', 'empresas', 'cantidadpago', 'detallepagos'))->render();
+
+        $pdf->writeHTML($html, true, false, true, false, '');
+        
+
+        // Salida del archivo
+        $pdf->Output('layouts.pdf', 'I');
 
     }
 

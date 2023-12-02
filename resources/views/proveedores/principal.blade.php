@@ -48,7 +48,7 @@
 @stop
 
 @section('content')
-
+<div class="container-fluid">
 <section class="sectionT2">
     <div class="header">
         <h3><i class="far fa-address-book"></i> Generar  Proveedores </h3>
@@ -97,14 +97,13 @@
         </form>
         <br>
         <h1>Lista de proveedores</h1><br>
-        
+        <div class="table-responsive" >
         <table id="proveedor" class="table table-bordered">
             <thead>
                 <tr>
                     <th>ID</th>
                     <th>Razón social o Nombre</th>
                     <th>Número RUC</th>
-                    <th>Estado</th>
                     <th>Teléfono</th>
                     <th>Acciones</th>
                 </tr>
@@ -115,11 +114,30 @@
                         <td>{{ $proveedor->id }}</td>
                         <td>{{ $proveedor->razonsocialproveedor }}</td>
                         <td>{{ $proveedor->numerorucproveedor }}</td>
-                        <td>{{ $proveedor->estadoproveedor }}</td>
                         <td>{{ $proveedor->telefonoproveedor }}</td>
                         <td>
-                            {{-- <a href="{{ route('medidas.edit', $medida->id) }}" class="btn btn-primary">Editar</a> --}}
-                            <button class="btn btn-warning btn-edit" data-toggle="modal" data-target="#editarproveedorModal{{$proveedor->id}}"><i class="fas fa-edit"></i> Editar</button>
+                            <div class="d-flex align-items-center">
+                            
+                                <button class="btn btn-warning btn-edit" data-toggle="modal" data-target="#editarproveedorModal{{$proveedor->id}}"><i class="fas fa-edit"></i> Editar</button>
+                        
+                            <a>                            
+                                <!-- Se crea los botones dentro del formulario donde la acción hace el llamado a la ruta correspondiente -->
+                                <form method="POST" action="{{ route('proveedor.desactivate', ['id' => $proveedor->id]) }}">
+                                    @csrf
+                                    <!--Se crea la condición si ya está almacenado el valor 1 por defecto, 
+                                        que significa activo muestra un botón de color verde sino de color rojo -->
+                                    @if ($proveedor->estadoproveedor == 1)
+                                        <button type="submit" class="btn btn-link">
+                                            <i class="fas fa-check text-success"></i>Desactivar <!-- Icono de check en verde -->
+                                        </button>
+                                    @else
+                                        <button type="submit" class="btn btn-link" class="d-flex align-items-center">
+                                            <i class="fas fa-times text-danger"></i> <!-- Icono de X en rojo -->
+                                        </button>
+                                    @endif
+                                </form>
+                            </a>
+                            </div>
                         </td>
                     </tr>
                     <div class="modal fade" id="editarproveedorModal{{ $proveedor->id }}" tabindex="-1" aria-labelledby="editarModalLabel{{ $proveedor->id }}" aria-hidden="true">
@@ -156,24 +174,6 @@
                                             @enderror
                                         </div>
                                         <div class="form-group">
-                                            <label for="estadoproveedor">Estado proveedor: <span class="text-danger">*</span></label>
-                                            <select id="estadoproveedor"
-                                            class="form-control @error('estadoproveedor') is-invalid @enderror"
-                                            name="estadoproveedor" required autocomplete="estadoproveedor">
-                                            <option
-                                            value="1"{{ old('estadoproveedor', $proveedor->estadoproveedor) === 'Activo' ? ' selected' : '' }}>
-                                            Activo</option>
-                                            <option
-                                            value="0"{{ old('estadoproveedor' , $proveedor->estadoproveedor) === 'Inactivo' ? ' selected' : '' }}>
-                                            Inactivo</option>
-                                            </select>
-                                            @error('estadoproveedor')
-                                            <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                            </span>
-                                             @enderror         
-                                         </div>
-                                        <div class="form-group">
                                             <label for="telefonoproveedor">Teléfono proveedor: </label>
                                             <input type="text" class="form-control @error('telefonoproveedor') is-invalid @enderror" id="telefonoproveedor" name="telefonoproveedor" value="{{ old('telefonoproveedor', $proveedor->telefonoproveedor) }}"  autocomplete="telefonoproveedor" autofocus onkeypress="return event.charCode >= 48 && event.charCode<=57">
                                             @error('telefonoproveedor')
@@ -196,6 +196,8 @@
             </tbody>
         </table>
     </div>
+    </div>
+</div>
 </div>
 <br>
 

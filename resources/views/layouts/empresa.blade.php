@@ -91,9 +91,9 @@
 @stop
 
 @section('content_header')
-    @foreach ($empresas as $emp)
+    @foreach ($empresas as $emp) 
         <section class="sectionT">
-                <h1><i class="fas fa-store"></i> {{$emp->nombreempresa}}</h1>
+                <h1><i class="fas fa-store"></i> {{-- {{$emp->nombreempresa}} --}}</h1>
                 <i class="btn far fa-question-circle" title="Ayuda"></i>
         </section>
         <hr class="my-2" />
@@ -121,7 +121,7 @@
                         <div class="form-group row">
                             <div class="col-md-6">
                                 <h3><i class="fas fa-store"></i> Nombre del negocio:</h3>
-                                <h4>{{$emp->nombreempresa}}</h4>
+                                <h4>{{$emp->nombreempresa}} </h4>
                             </div>
                             <br>
                             <div class="col-md-6">

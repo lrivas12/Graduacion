@@ -75,7 +75,7 @@
                         <td>{{$pago->factura->totalventa}}</td>
                         <td>
                             <div class="d-flex align-items-center">
-                                <a  href ="{{ route('pago.edit', $pago->id)}}"  title="Abonar">
+                                <a  href ="{{ route('pagos.edit', $pago->id)}}"  title="Abonar">
                                     <i class="fab fa-algolia fa-lg text-success" > Abonar</i>
                                 </a> 
                             </div>

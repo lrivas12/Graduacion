@@ -102,13 +102,14 @@ class ProveedoresController extends Controller
     
     return redirect()->route('proveedores.index')->with('success','Proveedor actualizado con exito');
    }
-
-   public function destroy($id)
+   public function DesactivarCategoria($id)
    {
-    $proveedores=proveedores::findOrFail($id);
+       $proveedores = proveedores::findOrFail($id);
 
-    $proveedores->delete();
+       // Cambia el estado de la categoria (1 para activar, 0 para desactivar)
+       $proveedores->estadoproveedor = $proveedores->estadoproveedor == 1 ? 0 : 1;
+       $proveedores->save();
 
-    return redirect()->route('proveedores.index')->with('success','proveedor borrado exitosamente');
+       return redirect()->back()->with('success', 'Estado de la cateoria actualizado exitosamente');
    }
 }

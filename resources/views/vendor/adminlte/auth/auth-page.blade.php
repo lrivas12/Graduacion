@@ -16,7 +16,17 @@
 @section('classes_body'){{ ($auth_type ?? 'login') . '-page' }}@stop
 
 @section('body')
-    <div class="{{ $auth_type ?? 'login' }}-box">
+    
+<body style="position: relative">
+    <div style="position: fixed; top:0; left:0; width:100%; height:100%; background-image:url('{{asset('vendor/adminlte/dist/img/Login1.jpg')}}'); background-size:cover; opacity:1;">
+    </div>
+
+    <div class="row justify-content-center offset-md-5" >
+    <br><br>
+    <div style="transform: scale(1);">
+   
+    <div class="{{ $auth_type ?? 'login' }}-box" style="opacity: 1;">
+
 
         {{-- Logo --}}
         <div class="{{ $auth_type ?? 'login' }}-logo">
@@ -59,7 +69,7 @@
             @endif
 
             {{-- Card Body --}}
-            <div class="card-body {{ $auth_type ?? 'login' }}-card-body {{ config('adminlte.classes_auth_body', '') }}">
+            <div class="card-body {{ $auth_type ?? 'login' }}-card-body {{ config('adminlte.classes_auth_body', '') }}" >
                 @yield('auth_body')
             </div>
 
@@ -73,6 +83,9 @@
         </div>
 
     </div>
+</div>
+</div>
+</body>
 @stop
 
 @section('adminlte_js')

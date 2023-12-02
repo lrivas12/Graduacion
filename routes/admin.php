@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AcercaController;
 use Illuminate\Support\Facades\Route;
 
 use Illuminate\Support\Facades\Auth;
@@ -11,6 +12,7 @@ use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\ComprasController;
 use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\MantenimientoController;
+use App\Http\Controllers\OdontoController;
 use App\Http\Controllers\PagoController;
 use App\Http\Controllers\ReportesController;
 use App\Http\Controllers\StockController;
@@ -31,18 +33,20 @@ Route::get('/', function () {
     return view('home');
 });
 
-Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::resource('/usuario', (UsuarioController::class));
+Route::resource('/usuario', (UsuarioController::class))/* ->middleware("Roles:Administrador") */;
 Route::resource('/categoria', (categoriaController::class));
 Route::resource('/proveedores', (ProveedoresController::class));
 Route::resource('/cliente', (clienteController::class));
 Route::resource('/producto', (ProductoController::class));
 Route::post('usuario/{id}/', [UsuarioController::class, 'DesactivarUsuario'])->name('usuario.desactivate');
+Route::post('categoria/{id}/', [categoriaController::class, 'DesactivarCategoria'])->name('categoria.desactivate');
+Route::post('proveedores/{id}/', [ProveedoresController::class, 'DesactivarProveedor'])->name('proveedor.desactivate');
+Route::post('producto/{id}/', [ProductoController::class, 'DesactivarProducto'])->name('producto.desactivate');
 Route::resource('/stock', (StockController::class));
 Route::resource('/compras', (ComprasController::class));
-Route::resource('/pago', (PagoController::class));
+Route::resource('/pagos', (PagoController::class));
 Route::get('api/compras/{producto}', [ComprasController::class, 'apiShowProductos']);
 Route::get('api/factura/{producto}', [ComprasController::class, 'apiShowProductos']);
 Route::resource('/factura', (VentaControlller::class));
@@ -56,3 +60,8 @@ Route::get('/productoag-pdf',[ReportesController::class, 'GenProdApdf'])->name('
 Route::get('/listclien-pdf',[ReportesController::class, 'verclientpdf'])->name('verclientpdf-pdf');
 Route::get('/productoag-pdf',[ReportesController::class, 'GenProdApdf'])->name('GenProdApdf-pdf');
 Route::get('/obtener-saldo/{clientes_id}', [clienteController::class, 'obtenerSaldo'])->name('obtener-saldo');
+Route::get('/comprasrec-pdf', [ReportesController::class, 'generarPDFComprasRecientes'])->name('comprasrec-pdf');
+
+Route::resource('/nosotros', (AcercaController::class));
+Route::resource('/odonto', (OdontoController::class));
+
