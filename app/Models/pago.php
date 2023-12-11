@@ -14,6 +14,11 @@ class pago extends Model
         'fechapago', 'cantidadpago', 'estadopago',  'facturas_id',
     ];
 
+    public function detallepago()
+    {
+        return $this->hasMany(detallepago::class, 'pagos_id');
+    }
+
     public function factura()
     {
         return $this->belongsTo(factura::class,'facturas_id'); 

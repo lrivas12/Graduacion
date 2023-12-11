@@ -31,7 +31,7 @@ class categoriaController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make ($request->all(),[
-            'nombrecategoria' => 'required|string|max:255',
+            'nombrecategoria' => 'required|string|max:255|unique.categorias',
             'tipocategoria' => 'required|string|max:255',
 
         ]);
@@ -39,6 +39,7 @@ class categoriaController extends Controller
             $customMessages =[
             'required' => 'El Campo :atribute es Obligatorio',
             'max' => 'El Campo :atribute no debe superar :max caracteres',
+            'unique'=> 'El Campo :atribute ya está en uso',
         ];
         
         $customAttributes =
@@ -89,20 +90,23 @@ class categoriaController extends Controller
     {
         $categorias = categoria::findOrFail($id);
         $validator = Validator::make ($request->all(),[
-            'nombrecategoria' => 'required|string|max:255',
+            'nombrecategoria' => 'required|string|max:255|unique.categorias' . $categorias->id,
             'tipocategoria' => 'required|string|max:255',
             'estadocategoria'=>'required|boolean',
         ]);
         $customMessages =[
             'required' => 'El Campo :atribute es Obligatorio',
             'max' => 'El Campo :atribute no debe superar :max caracteres',
+            'unique'=> 'El Campo :atribute ya está en uso',
             ];
+
         $customAttributes =
         [
             'nombrecategoria'=>'Nombre de la categoria',
             'tipocategoria'=>'Tipo de Categoria',
             'estadocategoria'=>'Estado de la categoria',
         ];
+
         $validator->setAttributeNames($customAttributes);
         $validator->setCustomMessages($customMessages);
     

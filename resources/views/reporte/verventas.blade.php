@@ -1,60 +1,78 @@
 @extends('reporte.plantilla')
 
 @section('content')
-<style>
-.titulo
-{
+    <style>
+        @page {
+            size: landscape;
+        }
 
-    text-align: center;
-    display: flex;
-    align-items: center;
-}
+        .titulo {
+            text-align: center;
+            /* Centra el contenido horizontalmente */
+            display: flex;
+            align-items: center;
+            /* Centra el contenido verticalmente */
+        }
 
-/* .thead-dark
-{
-    background-color: rgb(5, 5, 90);
-} */
-</style>
-<div class="titulo">
-    <br>
-    <label for="titulo" for="titulo" class="tituloreporte">Lista de Ventas</label>
-</div>
-
-<div class="content" id="content">
-    <div class="cardcliente" id="cardcliente"> 
+        .thead-dark {
+            background-color: #007BFF !important;
+        }
+    </style>
+    <div class="titulo">
+        <br><label id="titulo" for="titulo" class="titulo-reporte">Total de Ingresos desde {{ $FechInFact }} hasta
+            {{ $FechFinFact }}</label>
+            <br>
+            <p>Se registraron un total de {{$cantidadFacturas}} facturas.</p>
+    </div>
+    <div class="content" id="content">
+        <div class="cardTotalVent" id="cardTotalVent">
             <div class="table-responsive">
-                <table id="factura" class="table table-bordered">
+                <table id="tablaproducto" class="table table-bordered">
                     <thead class="thead-dark text-center">
                         <tr>
-                            <th>#</th>
-                            <th>Fecha</th>
-                            <th>Cliente</th>
-                            <th>Tipo Venta</th>
-                            <th>Total</th>
+                            <th style="color: white;">Fecha</th>
+                            <th style="color: white;">Total de ingresos</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($ventas as $venta)
-                        <tr class="text-center">
-                            <td>{{$venta->id}}</td>
-                            <td>{{$venta->clientes->nombrecliente}} {{$venta->clientes->apellidocliente}}</td>
-                            <td>{{$venta->tipoventa}}</td>
-                            <td>{{$venta->totalventa}}</td>
-                        </tr>
-                    @endforeach
-                    </tbody>
-                </table>
+                        @foreach ($facturas as $factura)
+                            <tr class="text-center">
+                                <td>{{ $factura->fechafactura }}</td>
+                                <td>
+                                    @if ($factura->detallepago->cantidaddetallepago > 0 && $factura->detallepago->cantidaddetallepago < $factura->totalapagar)
+                                        {{-- Si hay abono y es menor al total a pagar, mostrar el abono --}}
+                                        Abonó: C$ {{ number_format($factura->detallepago->cantidaddetallepago, 2, '.', ',') }}
+                                    @elseif ($factura->detallepago->cantidaddetallepago > 0 && $factura->detallepago->cantidaddetallepago == $factura->totalapagar && $factura->saldopendiente == 0)
+                                        {{-- Si el abono es igual al total a pagar y el saldo pendiente es 0, mostrar el total a pagar --}}
+                                        Total: C$ {{ number_format($factura->totalapagar, 2, '.', ',') }}
+                                    @else
+                                        {{-- Si no hay abono o las condiciones anteriores no se cumplen, mostrar el total a pagar --}}
+                                        Total: C$ {{ number_format($factura->totalapagar, 2, '.', ',') }}
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>                                     
+                </table><br><br>
+                <div style="text-align: right;">
+                    <strong>
+                        <label for="">Total ingresos: C$
+                            {{ number_format($totalVentasRangoFechas, 2, '.', ',') }}</label>
+                    </strong>
+                </div>
             </div>
-            <script type="text/php">
-                if(isset($pdf))
-                {
-                    $pdf->page_script('
-                    $font = $fontMetrics->get_font("Arial, Helvetica, sans-serif", "normal");
-                    $size=10;
-                    $pdf->text(270,780, "Pág" . $PAGE_NUM . "de" . $PAGE_COUNT, $font, $size);');
-                }
+            <br>
 
+            <script type="text/php">
+                if (isset($pdf)) {
+                    $pdf->page_script('
+                        $font = $fontMetrics->get_font("Arial, Helvetica, sans-serif", "normal");
+                        $size = 10;
+                        $pdf->text(390, 545, "Pág " . $PAGE_NUM . " de " . $PAGE_COUNT, $font, $size);
+                    '); 
+                }
             </script>
         </div>
+
     </div>
 @endsection

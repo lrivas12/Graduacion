@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class OdontoController extends Controller
+class AyudaController extends Controller
 {
     public function index()
     {
-        return  view('layouts.odontograma');
+        return view('layouts.ayuda');
     }
 }

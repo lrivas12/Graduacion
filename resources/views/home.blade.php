@@ -41,8 +41,13 @@
         <div class="card card1">
             <div class="card-body">
                 <div class="text-center">
-                    <h4>Ventas del Día</h4>
+                    <h4 class="text-white"><strong>Ventas del Día</strong></h4>
                     <br>
+                    <h2 class="text-white"><strong>C$ {{ $ingresosHoy  ?? '0' }}</strong></h2>
+
+                    <h4 class="text-white"><strong> Ventas del Mes</strong></h4>
+                    <br>
+                    <h2 class="text-white"><strong> C$ {{$ingresosGenerales  ?? '0'}}</strong></h2>
                     <a href="{{ route('factura.index') }}" id="updateButton" class="btn btn-success">
                         <i class="fas fa-money-check-alt"></i> Facturar
                     </a>
@@ -53,7 +58,7 @@
     <div class="col-md-8">
         <div class="card card2">
             <div class="card-body">
-                <canvas id="topProductsPieChart" width="400" height="400"></canvas>
+                <canvas id="myPieChart"></canvas>
             </div>
         </div>
     </div>
@@ -64,50 +69,62 @@
     <div class="col-md-3">
         <div class="card card3">
             <div class="card-body">
-
+                <h3 class="text-center text-white"><strong> Total compras realizadas</strong></h3>
+                <br>
+                <h4 class="text-center text-white"><strong> C$ {{$totalCompras  ?? 'Variable no definida'}}</strong></h4>
             </div>
         </div>
     </div>
     <div class="col-md-3">
         <div class="card card4">
             <div class="card-body">
-
+                <h3 class="text-center text-white"><strong> Total Facturas a Crédito</strong></h3>
+                <br>
+                 <h4 class="text-center text-white"><strong> {{$totalFacturasCredito  ?? 'Variable no definida' }}</strong></h4> 
             </div>
         </div>
     </div>
     <div class="col-md-3">
         <div class="card card5">
             <div class="card-body">
-
+                <h3 class="text-center text-white"><strong> Total monto al crédito</strong></h3>
+                <br>
+                 <h4 class="text-center text-white"><strong>C$ {{$montoFacturasCredito  ?? 'Variable no definida'}}</strong></h4> 
             </div>
         </div>
     </div>
     <div class="col-md-3">
         <div class="card card6">
             <div class="card-body">
-
+                <h3 class="text-center text-white"><strong>Total facturas emitidas</strong></h3>
+                <br>
+                 <h4 class="text-center text-white"><strong>{{$totalFacturas  ?? 'Variable no definida'}}</strong></h4> 
             </div>
         </div>
     </div>
 
 </div>
 @section('js')
-<{{-- script>
-    // Obtener los datos pasados desde el controlador
-    var labels = <?php /* echo json_encode($labels); */ ?>;
-    var values = <?php /* echo json_encode($values); */ ?>;
+<script>
+   var ctx = document.getElementById('myPieChart').getContext('2d');
 
-    var ctx = document.getElementById('topProductsPieChart').getContext('2d');
-    var topProductsPieChart = new Chart(ctx, {
-        type: 'pie',
-        data: {
-            labels: labels,
-            datasets: [{
-                data: values,
-                backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF"],
-            }]
-        }
-    });
-</script> --}}
-@endsection
+// Crear el gráfico de tipo pie
+var myChart = new Chart(ctx, {
+    type: 'pie',
+    data: {
+        labels: {!! $labels !!},
+        datasets: [{
+            data: {!! $data !!},
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.7)',
+                'rgba(54, 162, 235, 0.7)',
+                'rgba(255, 206, 86, 0.7)',
+                'rgba(75, 192, 192, 0.7)',
+                'rgba(153, 102, 255, 0.7)',
+            ],
+        }],
+    },
+});
+</script> 
+@endsection 
 @endsection

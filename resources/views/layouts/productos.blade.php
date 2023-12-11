@@ -45,12 +45,26 @@
 @section('content_header')
     <section class="section">
         <h1> Productos</h1>
-    <i class="btn far fa-question-circle" title="Ayuda"></i>
+    <i class="btn far fa-question-circle" title="Ayuda" data-toggle="modal" data-target="#myModal"></i>
     </section>
     <hr class="my-2" />
 @stop
 
 @section('content')
+
+<div class="modal" id="myModal">
+    <div class="modal-dialog">
+      <div class="modal-content d-flex align-items-center" style="max-width: 100%; height: auto;">
+        
+        <!-- Contenido del modal -->
+        <div class="modal-body">
+            <img src="{{asset('/vendor/adminlte/dist/img/AyudaProducto.jpg')}}" class="img-fluid" alt="Ayuda Producto" style="max-width: 1000px; height: auto;">
+        </div>
+        <!-- Botón de cierre del modal -->
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
 
 <section class="sectionT2">
     <div class="header">
@@ -248,7 +262,27 @@
                             <td>{{ $producto->unidadmedidaproducto }}</td>
                             
                             <td>
+                                <div class="d-flex align-items-center">
                                 <button class="btn btn-warning btn-edit" data-toggle="modal" data-target="#editarproductoModal{{$producto->id}}"><i class="fas fa-edit"></i> Editar</button>
+                            
+                                <a>                            
+                                    <!-- Se crea los botones dentro del formulario donde la acción hace el llamado a la ruta correspondiente -->
+                                    <form method="POST" action="{{ route('producto.desactivate', ['id' => $producto->id]) }}">
+                                        @csrf
+                                        <!--Se crea la condición si ya está almacenado el valor 1 por defecto, 
+                                            que significa activo muestra un botón de color verde sino de color rojo -->
+                                        @if ($producto->estadoproducto == 1)
+                                            <button type="submit" class="btn btn-link">
+                                                <i class="fas fa-check text-success"></i>Desactivar <!-- Icono de check en verde -->
+                                            </button>
+                                        @else
+                                            <button type="submit" class="btn btn-link" class="d-flex align-items-center">
+                                                <i class="fas fa-times text-danger"></i> <!-- Icono de X en rojo -->
+                                            </button>
+                                        @endif
+                                    </form>
+                                </a>
+                            </div>
                             </td>
                         </tr>
 

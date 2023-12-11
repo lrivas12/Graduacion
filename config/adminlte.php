@@ -327,13 +327,13 @@ return [
             'submenu' => [
                 [
                     'text' => 'Nuevo Recibo',
-                    'route'  => 'factura.index',
+                    'route'  => 'factura.create',
                     'icon' => 'fas fa-money-bill-wave-alt',
             
                 ],
                 [
                     'text'    => 'Historial de Recibo',
-                    'url'     => 'factura.edit',
+                    'route'     => 'factura.index',
                     'icon'    => 'fas fa-clipboard-list',
                 ],
             [
@@ -438,7 +438,7 @@ return [
             'submenu' => [
                 [
                     'text' => 'Ayuda',
-                    'url'  => '#',
+                    'url'  => 'ayuda.index',
                     'icon' => 'far fa-question-circle',
             
                 ],
@@ -513,16 +513,16 @@ return [
             ],
         ],
         'Select2' => [
-            'active' => false,
+            'active' => true,
             'files' => [
                 [
                     'type' => 'js',
-                    'asset' => false,
+                    'asset' => true,
                     'location' => '//cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js',
                 ],
                 [
                     'type' => 'css',
-                    'asset' => false,
+                    'asset' => true,
                     'location' => '//cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.css',
                 ],
             ],
@@ -532,7 +532,7 @@ return [
             'files' => [
                 [
                     'type' => 'js',
-                    'asset' => true,
+                    'asset' => false,
                     'location' => '//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.bundle.min.js',
                 ],
             ],

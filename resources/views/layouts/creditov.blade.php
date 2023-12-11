@@ -62,7 +62,8 @@
                         <th>#</th>
                         <th>Fecha</th>
                         <th>Cliente</th>
-                        <th>Saldo</th>
+                        <th>Monto de crédito</th>
+                        <th>Saldo Pendiente</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -72,7 +73,8 @@
                         <td>{{$loop->iteration}}</td>
                         <td>{{$pago->fechapago}}</td>
                         <td>{{$pago->factura->cliente->nombrecliente}} {{$pago->factura->cliente->apellidocliente}}</td> 
-                        <td>{{$pago->factura->totalventa}}</td>
+                        <td>C$ {{ $pago->factura->totalventa}}</td>
+                        <td>C$ {{ number_format($pago->cantidadpago - $pago->detallepago->sum('cantidaddetallepago'), 2, '.', ',')}}</td>
                         <td>
                             <div class="d-flex align-items-center">
                                 <a  href ="{{ route('pagos.edit', $pago->id)}}"  title="Abonar">

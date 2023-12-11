@@ -41,12 +41,26 @@
 @section('content_header')
     <section class="section">
         <h1> Recibo</h1>
-    <i class="btn far fa-question-circle" title="Ayuda"></i>
+    <i class="btn far fa-question-circle" title="Ayuda" data-toggle="modal" data-target="#myModal"></i>
     </section>
     <hr class="my-2" />
 @stop
 
 @section('content')
+
+<div class="modal" id="myModal">
+    <div class="modal-dialog">
+      <div class="modal-content d-flex align-items-center" style="max-width: 100%; height: auto;">
+        
+        <!-- Contenido del modal -->
+        <div class="modal-body">
+            <img src="{{asset('/vendor/adminlte/dist/img/AyudaReporte.jpg')}}" class="img-fluid" alt="Ayuda Reporte" style="max-width: 1000px; height: auto;">
+        </div>
+        <!-- Botón de cierre del modal -->
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
 
 <section class="sectionT2">
     <div class="header">
@@ -101,7 +115,7 @@
                                                         <select class="form-control @error('clientes_id') is-invalid @enderror" id="clientes_id" name="clientes_id" required>
                                                             <option value="{{ old('clientes_id') }}">Seleccionar cliente</option>
                                                             @foreach ($clientes as $cliente)
-                                                            <option value="{{ $cliente->id }}" >{{ $cliente->nombrecliente }} {{ $cliente->apellidocliente }}</option>
+                                                            <option value="{{ $cliente->id }}" >{{ $cliente->nombrecliente }} {{ $cliente->apellidocliente }} {{$cliente->telefonocliente}}</option>
                                                             @endforeach
                                                         </select>
                                                         
@@ -150,25 +164,23 @@
 
                                                {{--  Buscador y select de los productos, deben ir juntos para funcionar --}}
                                                 <label for="nombreproducto">{{ __('Producto') }}</label>
-                                                <input list="producto-list" class="form-control text-center" id="producto-input" placeholder="Busca el producto">
+                                               {{--  <input list="producto-list" class="form-control text-center" id="producto-input" placeholder="Busca el producto">
                                                 <datalist id="producto-list">
                                                     <?php
-                                                        // Obtener y mostrar opciones de productos
+                                                     /*    // Obtener y mostrar opciones de productos
                                                         
                                                         foreach ($productos as $producto) {
-                                                            echo '<option value="' . $producto->id . '">' . $producto->nombreproducto . ' Existencia: ' . $producto->existenciaproducto . '</option>';
-                                                        }
+                                                            echo '<option value="' . $producto->id . '">' . $producto->nombreproducto . ' Existencia: ' . $producto->cantidadproducto . '</option>';
+                                                        } */
                                                     ?>
-                                                </datalist>
-                                        
-                                                <select class="form-control" id="seleccionarProducto" name="seleccionarProducto" key="" nombre="" >
+                                                </datalist> --}}
+                                                
+                                                
+                                                <select class="form-control select2 ProdSelect2" id="seleccionarProducto" name="seleccionarProducto" key="" nombre="" style="width: 100%;">
                                                     <option value="" >Seleccionar producto: </option>
-                                                    <?php
-                                                        // Mostrar opciones de productos en el select
-                                                        foreach ($productos as $producto) {
-                                                            echo '<option value="' . $producto->id . '">' . $producto->nombreproducto . '</option>';
-                                                        }
-                                                    ?>
+                                                    @foreach ($productos as $producto)
+                                                    <option value="{{ $producto->id }}"  >{{ $producto->nombreproducto }}   Existencia: {{ $producto->cantidadproducto }}</option>
+                                                    @endforeach
                                                 </select>
                                                 <br>
                                                 <div class="row">
@@ -343,11 +355,11 @@
 
     //variables que pueden ser utilizadas en todas las funciones del script
     var tablaDatos = [];
-    var stockminimo, pago, saldo,tipoVenta, totaldescuento = 0, descuento = 0; //propias de ventas
+    var cantidadproducto, pago, saldo,tipoVenta, totaldescuento = 0, descuento = 0; //propias de ventas
     
     document.addEventListener('DOMContentLoaded', function () {
         
-        var guardarEImprimirBtn = document.getElementById('guardarEImprimir');
+        /* var guardarEImprimirBtn = document.getElementById('guardarEImprimir');
         var ventaForm = document.getElementById('ventaForm');
         var numeroVentaInput = document.getElementById('numeroventa'); // Nuevo
 
@@ -399,9 +411,9 @@
 
                  // Detectar cambios en el historial (Retroceso)
                 
-            });
+            }); 
 
-        }
+        }*/
         // Función para mostrar mensajes de SweetAlert2
         function showAlert(icon, title, text, isError, position) {
             const options = {
@@ -443,7 +455,7 @@
                 $("#clientes_id").on("change", function () {
                     
                     const selectedClientId = $(this).val();
-            
+                    
                     if (selectedClientId) {
                         
                         const clienteId = selectedClientId;
@@ -471,6 +483,7 @@
                         $("#deuda").val("No se seleccionó cliente");
                         
                     }
+                    
 
                 });
                 //validaciones para la venta
@@ -561,6 +574,8 @@
             .then(x => {return x.json()})
             .then(x => {
             
+                cantidadproducto = x.cantidadproducto;
+
                 console.log(x);
                 console.log("cantidadproducto " + x.cantidadproducto);
           
@@ -592,7 +607,7 @@
             $("#btnAddProducto").click(function(){
             //validaciones para el producto de la venta
                 let id = $("#seleccionarProducto").attr("key");
-                if (stockminimo === 0) {
+                if (cantidadproducto === 0) {
                     Swal.fire({
                         icon: 'error',
                         title: 'Producto agotado',
@@ -630,7 +645,7 @@
                     return;
                 }
 
-                if (cantidadventa > stockminimo) {
+                if (cantidadventa > cantidadproducto) {
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',

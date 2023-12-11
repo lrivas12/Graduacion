@@ -47,12 +47,28 @@
 @section('content_header')
     <section class="section">
         <h1> Reportes</h1>
-    <i class="btn far fa-question-circle" title="Ayuda"></i>
+    <i class="btn far fa-question-circle" title="Ayuda" data-toggle="modal" data-target="#myModal"></i>
     </section>
     <hr class="my-2" />
 @stop
 
 @section('content')
+
+<div class="modal" id="myModal">
+    <div class="modal-dialog">
+      <div class="modal-content d-flex align-items-center" style="max-width: 100%; height: auto;">
+        
+        <!-- Contenido del modal -->
+        <div class="modal-body">
+            <img src="{{asset('/vendor/adminlte/dist/img/AyudaReporte.jpg')}}" class="img-fluid" alt="Ayuda Reporte" style="max-width: 1000px; height: auto;">
+        </div>
+        <!-- Botón de cierre del modal -->
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+
+
     <div class="card">
         <section class="sectionR"><h3><i class="fas fa-print"></i> Generar Reporte</h3></section>
         <div class="card-body">
@@ -94,25 +110,25 @@
                 </div>
                 <div class="modal-body">
 
-                    
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label for="">Fecha Inicio</label>
-                            <input type="date" class="form-control" name="fechini" id="fechini">
-                        </div>
-                        <div class="col-md-6">
-                            <label for="">Fecha Fin</label>
-                            <input type="date" class="form-control" name="fechfin" id="fechfin">
-                        </div>
-                    </div>
                     <label for="">Seleccionar Tipo de Reporte</label>
-                    <select name="tipoinventariofactura" class="form-control" id="tipoinventariofactura">
+                    <select name="tipoinventariofactura" class="form-control" id="tipoinventariofactura" onchange="MostrarDivFactura()">
                         <option value="">Seleccione el reporte</option>
                         <option value="verclientes">Lista de Clientes</option>
                         <option value="verfactura">lista de Facturas</option>
                     </select>
+                    
+                    <div class="row">
+                        <div class="col-md-6" id="FechInFact" style="display: none;" onchange="MostrarDivFactura()">
+                            <label for="">Fecha Inicio</label>
+                            <input type="date" class="form-control" name="fechini" value="{{$fechaInicio ?? ''}}" id="fechini" onchange="validarfecha()" required>
+                        </div>
+                        <div class="col-md-6" id="FechFinFact" style="display: none;" onchange="MostrarDivFactura()">
+                            <label for="">Fecha Fin</label>
+                            <input type="date" class="form-control" value="{{$fechaFin ?? ''}}" name="fechfin" id="fechfin" onchange="validarfecha()" required>
+                        </div>
+                    </div>
 
-                    <div class="contenido" id="listclientes" style="display: none">
+                    <div class="contenido" id="listclientes" style="display: none;">
                         <div class="text-center">
                           <label for="">Listado de Clientes</label>
                         </div>
@@ -184,7 +200,7 @@
                             <input type="date" class="form-control" value="{{$fechaFin ?? ''}}" name="fechfin" id="fechfin" onchange="validarfecha()" required>
                         </div>
                     </div>
-                    <div class="contenido" id="cardprodgen" style="display: none">
+                    <div class="contenido" id="cardprodgen" style="display: block">
                         <div class="text-center">
                             <br>
                           <label for="">Inventario General</label>
@@ -298,20 +314,21 @@
                 </div>
                 <div class="modal-body">
                     
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label for="">Fecha Inicio</label>
-                            <input type="date" class="form-control" name="fechini" id="fechini">
-                        </div>
-                        <div class="col-md-6">
-                            <label for="">Fecha Fin</label>
-                            <input type="date" class="form-control" name="fechfin" id="fechfin">
-                        </div>
-                    </div>
                     <label for="">Seleccionar Tipo de Reporte</label>
-                    <select name="" class="form-control" id="">
+                    <select name="" class="form-control" id="TiporeporteCredito" onchange="MostrarDivCredito()">
                         <option value="">Seleccione el reporte</option>
                     </select>
+
+                    <div class="row">
+                        <div class="col-md-6" id="FechInCred" style="display: none;" onchange="MostrarDivCredito()">
+                            <label for="">Fecha Inicio</label>
+                            <input type="date" class="form-control" name="fechini" value="{{$fechaInicio ?? ''}}" id="fechini" onchange="validarfecha()" required>
+                        </div>
+                        <div class="col-md-6" id="FechFinCred" style="display: none;" onchange="MostrarDivCredito()">
+                            <label for="">Fecha Fin</label>
+                            <input type="date" class="form-control" value="{{$fechaFin ?? ''}}" name="fechfin" id="fechfin" onchange="validarfecha()" required>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-close	"></i> Close</button>
@@ -320,53 +337,58 @@
             </div>
         </div>
     </div>
-@endsection
+
 
 @section('js')
 <script>
 
-    var SelectCompras;
-    function MostrarDivInv(){
-        SelectCompras = document.getElementById('tiporeporteInventario').value;
-        var FechInINV = document.getElementById('FechInINV'); 
-        var FechFinINV = document.getElementById('FechFinINV');
+        var tipoinventariofactura;
 
-        FechInINV.style.display = 'none';
-        FechFinINV.style.display = 'none';
+        function MostrarDivFactura() {
+            tipoinventariofactura = document.getElementById('tipoinventariofactura').value;
+            var listclientes = document.getElementById('listclientes');
+            var FechInFact = document.getElementById('FechInFact');
+            var FechFinFact = document.getElementById('FechFinFact');
 
-        if(SelectCompras === 'comprasxfech'){
-        
-        FechInINV.style.display = 'block';
-        FechFinINV.style.display = 'block';
+            // Asegura que todos los elementos estén ocultos al principio
+            listclientes.style.display = 'none';
+            FechInFact.style.display = 'none';
+            FechFinFact.style.display = 'none';
+
+            if (tipoinventariofactura === 'verfactura') {
+                FechInFact.style.display = 'block';
+                FechFinFact.style.display = 'block';
+            } else if (tipoinventariofactura === 'verclientes') {
+                listclientes.style.display = 'block';
+            }
         }
-    }
-    $(document).ready(function() {
+
+        $(document).ready(function() {
             var fechini = $('#fechini');
             var fechfin = $('#fechfin');
-        $("#fechfin").click(function () {
-            console.log("click");
-            mostrarUrlinv();
 
-        });
-        function mostrarUrlinv(){
-            var rutaInv = "";
-            var start_dateInv_val = fechini.val();
-            var end_dateInv_val = fechfin.val();
-            console.log(fechini);
+            $('#fechfin').change(function() {
+                mostrarUrl();
+            });
 
-            if(SelectCompras == 'comprasxfech'){
-                rutaInv = `/comprasrec-pdf?fechaInicio=${start_dateInv_val}&fechaFin=${end_dateInv_val}`;
+            function mostrarUrl() {
+                var ruta = "";
+                var start_date_val = fechini.val();
+                var end_date_val = fechfin.val();
+                console.log(fechini);
+
+                if (tipoinventariofactura == 'verfactura') {
+                    ruta = `/totalventas-pdf?fechini=${start_date_val}&fechfin=${end_date_val}`;
+                }
+
+                if (ruta !== "") {
+                    window.open(ruta, '_blank');
+                }
             }
-            if(rutaInv !==""){
-                window.open(rutaInv, '_blank');
-            }
-
-        }
-    });
-    
+        });    
 
     var tiporeporteInventario;
-    function mostrarInventario()
+    function MostrarDivInv()
     {
         var tiporeporteInventario = document.getElementById('tiporeporteInventario').value;
         var cardprodgen = document.getElementById('cardprodgen');
@@ -384,5 +406,5 @@
         }
     }
 </script>
-
+@endsection
 @endsection

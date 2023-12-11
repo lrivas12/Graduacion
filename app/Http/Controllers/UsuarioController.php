@@ -7,8 +7,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Auth\MustVerifyEmail;
 class UsuarioController extends Controller
 {
+
+    use MustVerifyEmail;
     /**
      * Display a listing of the resource.
      */

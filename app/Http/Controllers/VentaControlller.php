@@ -12,25 +12,29 @@ use App\Models\empresa;
 use App\Models\pago;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Barryvdh\DomPDF\Facade\Pdf as PDF;
 use TCPDF;
-use Illuminate\Support\Carbon;
+
 class VentaControlller extends Controller
 {
     public function index()
     {
+        
+        $productos = producto::where('estadoproducto','1')->get();
         $clientes = cliente::all();
-        $productos = producto::all();
-        $ventas = factura::orderBy('id', 'desc')->get();;
-
-        return view ('layouts.factura', compact ('ventas','productos', 'clientes'));
+        $pagos = pago::all();
+        $ventas = factura::orderBy('id', 'desc')->get();
+        return view ('layouts.facturav', compact ('productos', 'pagos', 'clientes', 'ventas'));
+       
     }
 
     public function create()
     {
-        $productos = producto::where('estadoproducto','1')->get();
         $clientes = cliente::all();
-        $pagos = pago::all();
-        return view ('layouts.factura', compact ('productos', 'pagos', 'clientes'));
+        $productos = producto::all();
+        $ventas = factura::orderBy('id', 'desc')->get();
+        return view ('layouts.factura', compact ('ventas','productos', 'clientes'));
+       
     }
 
     public function show($id)
@@ -38,7 +42,7 @@ class VentaControlller extends Controller
         $ventas = factura::findOrFail($id);
         $productos = producto::all();
         $clientes = cliente::all();
-        return view ('layouts.facturav', compact ('ventas','productos', 'clientes'));
+        return view ('layouts.facturam', compact ('ventas','productos', 'clientes'));
     }
     public function store(Request $request)
     {
@@ -60,7 +64,7 @@ class VentaControlller extends Controller
         $ventas->clientes_id=$request->clientes_id;
         $totaldescuento = $products->total - $ventas->descuentoventa;
         $ventas->totalventa = $totaldescuento;
-        $ventas->users_id = 1;
+        $ventas->users_id = $users->id;
         $ventas->save();
         foreach($products->datos as $key =>$value)
         {
@@ -107,14 +111,14 @@ class VentaControlller extends Controller
 
     public function pdf()
     {
-        $venta = factura::findOrFail();
+        $ventas = factura::findOrFail();
 
         $productos = producto::all();
         $clientes = cliente::all();
         // Obtén los detalles de la compra
-        $detalles = detallefactura::where('facturas_id', $venta->id)->get();
+        $detalles = detallefactura::where('facturas_id', $ventas->id)->get();
 
-       return view('layouts.facturav', compact('venta', 'detalles', 'productos', 'clientes', 'rutas'));
+       return view('layouts.facturav', compact('ventas', 'detalles', 'productos', 'clientes'));
          
 
     }

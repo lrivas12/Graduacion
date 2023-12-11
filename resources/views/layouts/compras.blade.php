@@ -39,12 +39,26 @@
 @section('content_header')
     <section class="section">
         <h1> Compras</h1>
-    <i class="btn far fa-question-circle" title="Ayuda"></i>
+    <i class="btn far fa-question-circle" title="Ayuda" data-toggle="modal" data-target="#myModal"></i>
     </section>
     <hr class="my-2" />
 @stop
 
 @section('content')
+
+<div class="modal" id="myModal">
+    <div class="modal-dialog">
+      <div class="modal-content d-flex align-items-center" style="max-width: 100%; height: auto;">
+        
+        <!-- Contenido del modal -->
+        <div class="modal-body">
+            <img src="{{asset('/vendor/adminlte/dist/img/AyudaReporte.jpg')}}" class="img-fluid" alt="Ayuda Reporte" style="max-width: 1000px; height: auto;">
+        </div>
+        <!-- Botón de cierre del modal -->
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
 
 <section class="sectionT2">
 <div class="header">
@@ -64,7 +78,7 @@
                                             <h2>Datos de compra</h2>
                                             <label for="fechacompra">Fecha de compra: <span class="text-danger">*</span></label>
                                             <input type="date" class="form-control @error('fechacompra') is-invalid @enderror"
-                                                    id="fechacompra" name="fechacompra" value="{{ old('fechacompra',  date('Y-m-d') )}}" required readonly>
+                                                    id="fechacompra" name="fechacompra" value="{{ old('fechacompra',  date('Y-m-d') )}}" required >
                                             @error('fechacompra')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
@@ -108,7 +122,7 @@
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text">C$</span>
                                                     <input type="precioproducto" class="form-control" id="precioproducto" name="precioproducto" min="1" onkeypress="return event.charCode >= 48 && event.charCode<=57">
-                                                    <div id="precioVentaError" style="color: red;"></div>        
+                                                    <div id="precioproductoError" style="color: red;"></div>        
                                     </div>
                                             <br>
                                             <div class="row">
@@ -133,6 +147,7 @@
                                                         <tr>
                                                             <th>#</th>
                                                             <th>Producto</th>
+                                                            <th>Stock </th>
                                                             <th>Precio</th>
                                                             <th>Agregar</th>
                                                         </tr>
@@ -141,7 +156,8 @@
                                                         @foreach ($productos as $producto)
                                                             <tr class = "text-center">
                                                                 <td>{{$loop->iteration}}</td> 
-                                                                <td>{{ $producto->nombreproducto }}</td>
+                                                                <td>{{$producto->nombreproducto }}</td>
+                                                                <td>{{$producto->cantidadproducto}}</td>
                                                                 <td>C$  {{ $producto->precioproducto }}</td>
                                                                 <td> 
                                                                     <button type="button" class="btn btn-link" id="btnAdd" cod="{{$producto->id}}">
@@ -170,7 +186,7 @@
                                             <th>Cantidad</th>
                                             <th>Costo</th>
                                             <th>Subtotal</th>
-                                            <th>Acciones</th>
+                                            <th colspan="2">Acciones</th>
                                         </tr>
                                     </thead>
                                     <tbody id="cuerpoCompra" class = "text-center">
@@ -251,26 +267,7 @@ document.addEventListener('DOMContentLoaded', function () {
         
         $("#proveedor_id").change(function () {
             // Obtener el valor seleccionado en el campo proveedor_id
-            const selectedProveedor = $("#proveedor_id option:selected").val();
-            const selectedProveedorT = $("#proveedor_id option:selected").text();
-            if (selectedProveedor.trim() === "") {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Debe seleccionar un proveedor',
-                    allowOutsideClick: false, // No permitir que se cierre haciendo clic fuera del modal
-                    showCancelButton: false, // No mostrar el botón de cancelar
-                    confirmButtonText: 'OK' // Personaliza el texto del botón "OK"     
-                });
-            }else if (selectedProveedor.trim() !== "") {
-                // Si se seleccionó un proveedor, mostrar el valor seleccionado en un campo de texto visible
-                $("#proveedorSeleccionado").val(selectedProveedorT);
-                    
-                // Ocultar el campo proveedor_id
-                $("#proveedor_id").hide();
-                $("#proveedorSeleccionado").show();
-
-            }
+            
                 
         });
     });
@@ -299,6 +296,27 @@ document.addEventListener('DOMContentLoaded', function () {
 
     $("#btnAddProducto").click(function(){
         
+        const selectedProveedor = $("#proveedor_id option:selected").val();
+            const selectedProveedorT = $("#proveedor_id option:selected").text();
+            if (selectedProveedor.trim() === "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Debe seleccionar un proveedor',
+                    allowOutsideClick: false, // No permitir que se cierre haciendo clic fuera del modal
+                    showCancelButton: false, // No mostrar el botón de cancelar
+                    confirmButtonText: 'OK' // Personaliza el texto del botón "OK"     
+                });
+            }else if (selectedProveedor.trim() !== "") {
+                // Si se seleccionó un proveedor, mostrar el valor seleccionado en un campo de texto visible
+                $("#proveedorSeleccionado").val(selectedProveedorT);
+                    
+                // Ocultar el campo proveedor_id
+                $("#proveedor_id").hide();
+                $("#proveedorSeleccionado").show();
+
+            }
+
         let id = $("#nombreproducto").attr("key");
         let nombreproducto = $("#nombreproducto").val();
         let cantidadcompra = $("#cantidadcompra").val();
@@ -386,6 +404,8 @@ document.addEventListener('DOMContentLoaded', function () {
                             <a key="${x.id}" id="btnEditCompra" class = "mx-3" title="Editar producto" >
                                 <i class="fas fa-pencil-alt text-success"></i> 
                             </a>
+                    </td>        
+                    <td>
                             <a key="${x.id}" id="btnDelCompra" class = "mx-3" title="Eliminar producto">
                                 <i class="fas fa-trash text-danger"></i> 
                             </a>

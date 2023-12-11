@@ -1,6 +1,8 @@
 @extends('adminlte::page')
 @section('plugins.Sweetalert2', true)
 @section('plugins.Datatables', true)
+@section('plugins.Chartjs', true)
+@section('plugins.select2', true)
 
 
 @section('head')

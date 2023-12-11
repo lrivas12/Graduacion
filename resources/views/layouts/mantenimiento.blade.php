@@ -110,13 +110,28 @@
 @section('content_header')
     <section class="sectionT">
         <h1><i class="fas fa-database"></i> Mantenimiento</h1>
-        <i class="btn far fa-question-circle" title="Ayuda"></i>
+        <i class="btn far fa-question-circle" title="Ayuda" data-toggle="modal" data-target="#myModal"></i>
     </section>
     <hr class="my-2" />
 @stop
 
 
 @section('content')
+
+<div class="modal" id="myModal">
+    <div class="modal-dialog">
+      <div class="modal-content d-flex align-items-center" style="max-width: 100%; height: auto;">
+        
+        <!-- Contenido del modal -->
+        <div class="modal-body">
+            <img src="{{asset('/vendor/adminlte/dist/img/AyudaReporte.jpg')}}" class="img-fluid" alt="Ayuda Reporte" style="max-width: 1000px; height: auto;">
+        </div>
+        <!-- Botón de cierre del modal -->
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+
     <div class="form">
         <div class="overflow-auto">
             <div class="card">
@@ -129,8 +144,8 @@
                     <div style="display: flex; justify-content: center; align-items: center;">
                         <button class="btndownload"><i class="fas fa-cloud-download-alt"></i><br><br><label for="">
                                 Descargar
-                                BackUp de Dental
-                                Serve</label></button>
+                                BackUp 
+                            </label></button>
                     </div>
                     <br><br>
                     <div class="card" style="background-color: rgb(242, 250, 125); font-size: 12px;">

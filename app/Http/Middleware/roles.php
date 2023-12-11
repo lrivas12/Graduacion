@@ -19,7 +19,9 @@ class roles
         {
             return $next($request);
         }
-        abort(403,'Prohibido');
+        /* abort(403,'Prohibido'); */
        // return $next($request);
+
+       return response()->view('',[],403);
     }
 }

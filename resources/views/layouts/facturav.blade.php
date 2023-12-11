@@ -53,14 +53,16 @@
         <h3><i class="fas fa-money-bill-wave-alt"></i> Historial de Recibos </h3>
     </div>
 </section>
+<div class="card">
+    <div class="card-body">
 
-<div class="containe-fluid">
+    
     <div class="row justify-content-center">
         <div class="card" style="border: 1px solid black;">
             <div class="card-header">
                 <strong>Listado de Ventas &nbsp;&nbsp;&nbsp;
 
-                    <a  href="{{ route('ventas.create') }}"  type="button" title= "Crear Venta">
+                    <a  href="{{ route('factura.create') }}"  type="button" title= "Crear Venta">
                         <i class="fas fa-plus fa-lg text-info" ></i>
                     </a>  
                 </strong>
@@ -77,26 +79,27 @@
                                     <th>Fecha</th>
                                     {{-- <th>Saldo</th> agregar el credito, mostrarlo--}} 
                                     <th>Total</th>
-                                    <th>Acciones</th>
+                                    <th colspan="2">Acciones</th>
                                 </tr>
                             </thead>
                             <tbody> 
                                 @foreach ($ventas as $venta)
                                     <tr>
                                         <td>{{$loop->iteration}}</td>
-                                        <td>{{ $venta->id}}</td>
-                                        <td>{{ $venta->clientes->nombrecliente->apellidocliente}}</td>
+                                        <td>{{ $venta->cliente->nombrecliente}}  {{ $venta->cliente->apellidocliente}} </td>
                                         <td>{{ $venta->tipoventa}}</td>
-                                        <td>{{ $venta->fechaventa}}</td>
+                                        <td>{{ $venta->fechafactura}}</td>
                                         {{-- <td>{{ $detalle->subtotal}}</td> --}}
                                         {{--  <td>{{ $Venta->saldo}}</td> relacionar con detalle de ventas --}}
                                         <td>C$ {{ $venta->totalventa}}</td>
                                         <td> <!-- Los botones para desactivar o activar aparecen según el estado almacenado en la base de datos -->
                                             <div class="d-flex align-items-center">
-                                                <a  href="{{ route('ventas.show',$venta->id) }}" style="margin-right: 10px;" title="Visualizar venta">
+                                                <a  href="{{ route('factura.show',$venta->id) }}" style="margin-right: 10px;" title="Visualizar venta">
                                                     <i class="fas fa-eye fa-lg text-warning" ></i>
                                                 </a> 
-                                                <a href="{{ route('ventas.index') }}" title= "Imprimir Venta"> 
+                                                </td>
+                                                <td>
+                                                <a href="{{ route('factura.create') }}" title= "Imprimir Venta"> 
                                                     <i class="fas fa-print text-success" ></i>
                                                 </a>
                                             </div>    
@@ -107,8 +110,8 @@
                         </table>
                     </div>
                 </div>
-                
             </div>
+        </div>
         </div>
     </div>
 </div>

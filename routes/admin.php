@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AcercaController;
+use App\Http\Controllers\AyudaController;
 use Illuminate\Support\Facades\Route;
 
 use Illuminate\Support\Facades\Auth;
@@ -54,7 +55,7 @@ Route::get('api/factura/{producto}', [VentaControlller::class, 'apiShowProductos
 Route::resource('/reportes', (ReportesController::class));
 Route::resource('/backup', (MantenimientoController::class));
 Route::resource('/empresa', (EmpresaController::class));
-Route::get('/obtener-datos-empresa', [ClinicaController::class, 'ObtenerDatos']);
+Route::get('/obtener-datos-empresa', [EmpresaController::class, 'ObtenerDatos']);
 Route::get('/productogen-pdf',[ReportesController::class, 'prodgpdf'])->name('productogen-pdf');
 Route::get('/productoag-pdf',[ReportesController::class, 'GenProdApdf'])->name('GenProdApdf-pdf');
 Route::get('/listclien-pdf',[ReportesController::class, 'verclientpdf'])->name('verclientpdf-pdf');
@@ -63,5 +64,7 @@ Route::get('/obtener-saldo/{clientes_id}', [clienteController::class, 'obtenerSa
 Route::get('/comprasrec-pdf', [ReportesController::class, 'generarPDFComprasRecientes'])->name('comprasrec-pdf');
 
 Route::resource('/nosotros', (AcercaController::class));
-Route::resource('/odonto', (OdontoController::class));
+Route::resource('/ayuda', (AyudaController::class));
 
+/* Esta es la ruta para reporte de ventas con fecha */
+Route::get('/totalventas-pdf', [ReportesController::class, 'generarPDFtotalventas'])->name('totalventas-pdf');

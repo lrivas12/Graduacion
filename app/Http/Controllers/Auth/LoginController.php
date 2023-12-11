@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
+use League\Config\Exception\ValidationException;
 
 class LoginController extends Controller
 {
@@ -36,5 +38,39 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+    }
+
+    public function email()
+    {
+        return 'email';
+    }
+
+    protected function attemptLogin(Request $request)
+    {
+        $credentials = $this->credentials($request);
+        if ($this->guard()->attempt($credentials + ['estado' => 1], $request->filled('remember'))) {
+            return true;
+        }
+    
+        // Verifica si las credenciales son incorrectas
+        if (!$this->guard()->validate($credentials)) {
+            throw ValidationException::withMessages([
+                $this->email() => [trans('auth.failed')],
+            ]);
+        }
+    
+        // Verifica si el usuario está inactivo
+        if ($this->guard()->validate(['email' => $request->email, 'password' => $request->password])) {
+            throw ValidationException::withMessages([
+                'email' => [trans('auth.inactive')],
+            ]);
+        }
+    
+        // En este punto, las credenciales son correctas, pero el usuario está inactivo
+        // Podrías lanzar una excepción específica si deseas manejar esto de manera diferente.
+    
+        throw ValidationException::withMessages([
+            'email' => [trans('auth.failed')],
+        ]);
     }
 }
