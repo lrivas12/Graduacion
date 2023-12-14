@@ -5,8 +5,9 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request;
-use League\Config\Exception\ValidationException;
+
 
 class LoginController extends Controller
 {
@@ -22,6 +23,7 @@ class LoginController extends Controller
     */
 
     use AuthenticatesUsers;
+    protected $email = 'email';
 
     /**
      * Where to redirect users after login.
