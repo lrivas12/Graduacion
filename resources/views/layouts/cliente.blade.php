@@ -55,7 +55,7 @@
         
         <!-- Contenido del modal -->
         <div class="modal-body">
-            <img src="{{asset('/vendor/adminlte/dist/img/AyudaReporte.jpg')}}" class="img-fluid" alt="Ayuda Reporte" style="max-width: 1000px; height: auto;">
+            <img src="{{asset('/vendor/adminlte/dist/img/AyudaCliente.jpg')}}" class="img-fluid" alt="Ayuda Cliente" style="max-width: 1000px; height: auto;">
         </div>
         <!-- Botón de cierre del modal -->
         <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>

@@ -200,7 +200,7 @@
                             <input type="date" class="form-control" value="{{$fechaFin ?? ''}}" name="fechfin" id="fechfin" onchange="validarfecha()" required>
                         </div>
                     </div>
-                    <div class="contenido" id="cardprodgen" style="display: block">
+                    <div class="contenido" id="cardprodgen" style="display: none">
                         <div class="text-center">
                             <br>
                           <label for="">Inventario General</label>
@@ -221,24 +221,12 @@
                                 <tbody>
                                     @foreach ($productos as $producto)
                                         <tr class="text-center">
-                                            @php
-                                                $existenciaClase = '';
-                                                            
-                                                if ($producto->cantidadproducto <= $producto->stockminimo) {
-                                                $existenciaClase = 'btn btn-danger'; // Clase danger de AdminLTE (rojo)
-                                                } elseif ($producto->cantidadproducto <= 30) {
-                                                $existenciaClase = 'btn btn-warning'; // Clase warning de AdminLTE (amarillo)
-                                                } else {
-                                                $existenciaClase = 'btn btn-success'; // Clase success de AdminLTE (verde)
-                                                }
-                                            @endphp
                                             <td>{{$producto->id}}</td>
                                             <td>{{$producto->nombreproducto}}</td>
                                             <td>{{$producto->nombrecategoria}}</td>
-                                            <td>
-                                            <button class="{{ $existenciaClase }}" >
+                                            <td  style="color: {{ $producto->cantidadproducto <= $producto->stockminimo ? 'red' : 'green' }}">
                                                 {{ $producto->cantidadproducto }}
-                                            </button></td>
+                                            </td>
                                             <td>{{$producto->stockminimo}}</td>
                                         </tr>
                                     @endforeach
@@ -268,26 +256,16 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($productos as $producto)
+                                    @foreach ($productosProximosAgotarse as $prodagot)
                                         <tr class="text-center">
-                                            @php
-                                            $existenciaClase = '';
-                                                        
-                                            if ($producto->cantidadproducto <= $producto->stockminimo) {
-                                            $existenciaClase = 'btn btn-danger'; // Clase danger de AdminLTE (rojo)
-                                            } elseif ($producto->cantidadproducto <= 10) {
-                                            $existenciaClase = 'btn btn-warning'; // Clase warning de AdminLTE (amarillo)
-                                            } else {
-                                            $existenciaClase = 'btn btn-success'; // Clase success de AdminLTE (verde)
-                                            }
-                                        @endphp
-                                            <td>{{$producto->id}}</td>
-                                            <td>{{$producto->nombreproducto}}</td>
-                                            <td>{{$producto->nombrecategoria}}</td>
+                                            
+                                            <td>{{$prodagot->id}}</td>
+                                            <td>{{$prodagot->nombreproducto}}</td>
+                                            <td>{{$prodagot->nombrecategoria}}</td>
                                             <td>
-                                                <button class="{{ $existenciaClase }}" > {{ $producto->cantidadproducto <=  $producto->stockminimo}}</button>
+                                                {{ $producto->cantidadproducto <=  $producto->stockminimo}}
                                             </td>
-                                            <td>{{$producto->stockminimo}}</td>
+                                            <td>{{$prodagot->stockminimo}}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -297,6 +275,8 @@
                             <a href="{{ url('/productoag-pdf')}}" class="btn btn-outline-info"><i class="fas fa-print"></i> Generar Reporte</a>
                         </div>
                     </div>
+
+
                 </div>
             </div>
         </div>
@@ -317,6 +297,7 @@
                     <label for="">Seleccionar Tipo de Reporte</label>
                     <select name="" class="form-control" id="TiporeporteCredito" onchange="MostrarDivCredito()">
                         <option value="">Seleccione el reporte</option>
+                        <option value="estadcuenta">Estado de cuenta</option>
                     </select>
 
                     <div class="row">
@@ -342,7 +323,7 @@
 @section('js')
 <script>
 
-        var tipoinventariofactura;
+    var tipoinventariofactura;
 
         function MostrarDivFactura() {
             tipoinventariofactura = document.getElementById('tipoinventariofactura').value;
@@ -393,17 +374,50 @@
         var tiporeporteInventario = document.getElementById('tiporeporteInventario').value;
         var cardprodgen = document.getElementById('cardprodgen');
         var cardprodagot = document.getElementById('cardprodagot');
+        var FechInFact = document.getElementById('FechInFact');
+        var FechFinFact = document.getElementById('FechFinFact');
+        FechInFact.style.display = 'none';
+        FechFinFact.style.display = 'none';
 
+
+        if (tipoinventariofactura === 'comprasxfech') {
+        FechInFact.style.display = 'block';
+        FechFinFact.style.display = 'block';
+        }else 
         if (tiporeporteInventario === 'productosge') {
         cardprodgen.style.display = 'block'; // Mostrar el contenido
         } else {
-        cardProGen.style.display = 'none'; // Ocultar el contenido
+        cardprodgen.style.display = 'none'; // Ocultar el contenido
         }
         if (tiporeporteInventario === 'prodagot') {
         cardprodagot.style.display = 'block'; // Mostrar el contenido
         } else {
         cardprodagot.style.display = 'none'; // Ocultar el contenido
         }
+        $(document).ready(function() {
+            var fechini = $('#fechini');
+            var fechfin = $('#fechfin');
+
+            $('#fechfin').change(function() {
+                mostrarUrl();
+            });
+
+            function mostrarUrl() {
+                var ruta = "";
+                var start_date_val = fechini.val();
+                var end_date_val = fechfin.val();
+                console.log(fechini);
+
+                if (tiporeporteInventario == 'comprasxfech') {
+                    ruta = `/comprasrec-pdf?fechini=${start_date_val}&fechfin=${end_date_val}`;
+                }
+
+                if (ruta !== "") {
+                    window.open(ruta, '_blank');
+                }
+            }
+        });    
+
     }
 </script>
 @endsection

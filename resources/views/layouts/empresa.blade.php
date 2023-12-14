@@ -93,7 +93,7 @@
 @section('content_header')
     @foreach ($empresas as $emp) 
         <section class="sectionT">
-                <h1><i class="fas fa-store"></i> {{-- {{$emp->nombreempresa}} --}}</h1>
+                <h1><i class="fas fa-store"></i> {{$emp->nombreempresa}} </h1>
                 <i class="btn far fa-question-circle" title="Ayuda" data-toggle="modal" data-target="#myModal"></i>
         </section>
         <hr class="my-2" />
@@ -109,7 +109,7 @@
         
         <!-- Contenido del modal -->
         <div class="modal-body">
-            <img src="{{asset('/vendor/adminlte/dist/img/AyudaReporte.jpg')}}" class="img-fluid" alt="Ayuda Reporte" style="max-width: 1000px; height: auto;">
+            <img src="{{asset('/vendor/adminlte/dist/img/AyudaEmpresa.jpg')}}" class="img-fluid" alt="Ayuda Empresa" style="max-width: 1000px; height: auto;">
         </div>
         <!-- Botón de cierre del modal -->
         <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>

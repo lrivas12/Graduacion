@@ -39,13 +39,29 @@
 @section('content_header')
     <section class="section">
         <h1>Compras</h1>
-    <i class="btn far fa-question-circle" title="Ayuda"></i>
+    <i class="btn far fa-question-circle" title="Ayuda" data-toggle="modal" data-target="#myModal"></i>
     </section>
     <hr class="my-2" />
 @stop
 
 
 @section('content')
+
+
+<div class="modal" id="myModal">
+    <div class="modal-dialog">
+      <div class="modal-content d-flex align-items-center" style="max-width: 100%; height: auto;">
+        
+        <!-- Contenido del modal -->
+        <div class="modal-body">
+            <img src="{{asset('/vendor/adminlte/dist/img/AyudaCompraV.jpg')}}" class="img-fluid" alt="Ayuda Compra" style="max-width: 1000px; height: auto;">
+        </div>
+        <!-- Botón de cierre del modal -->
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+
 
 <div class="container">
 

@@ -27,7 +27,7 @@
                     <tr>
                         <th style="color: white;">Fecha de Compra</th>
                         <th style="color: white;">Total de Compra</th>
-                        <th style="color: white;">Cantidad de Insumos comprados</th>
+                        <th style="color: white;">Cantidad comprada</th>
                     </tr>
                 </thead>
                 <tbody>

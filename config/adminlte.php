@@ -295,11 +295,11 @@ return [
         [
             'type'         => 'navbar-search',
             'text'         => 'search',
-            'topnav_right' => true,
+            'topnav_right' => false,
         ],
         [
             'type'         => 'fullscreen-widget',
-            'topnav_right' => true,
+            'topnav_right' => false,
         ],
 
         // Sidebar items:
@@ -391,11 +391,6 @@ return [
                     'route'  => 'pagos.index',
                     'icon' => 'fas fa-credit-card',
                 ],
-                [
-                    'text'    => 'Historial de Créditos',
-                    'url'     => 'pagos.edit',
-                    'icon'    => 'far fa-list-alt',
-                ],
             ],
         ],
         ['header' => 'Reportes'],
@@ -436,12 +431,6 @@ return [
             'url'     => '#',
             'icon'    => 'fas fa-user-tie',
             'submenu' => [
-                [
-                    'text' => 'Ayuda',
-                    'url'  => 'ayuda.index',
-                    'icon' => 'far fa-question-circle',
-            
-                ],
                 [
                     'text'    => 'Acerca de',
                     'route'     => 'nosotros.index',

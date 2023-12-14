@@ -34,16 +34,16 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($productosProximosAgotar as $producto)
+                        @foreach ($productosProximosAgotarse as $prodagot)
                         <tr class="text-center">
                            
-                            <td>{{$producto->id}}</td>
-                            <td>{{$producto->nombreproducto}}</td>
-                            <td>{{$producto->nombrecategoria}}</td>
-                            <td style="color: {{ $producto->cantidadproducto <= $producto->stockminimo ? 'red' : 'green' }}">
-                                  {{ $producto->cantidadproducto }} 
+                            <td>{{$prodagot->id}}</td>
+                            <td>{{$prodagot->nombreproducto}}</td>
+                            <td>{{$prodagot->nombrecategoria}}</td>
+                            <td style="color:  'red' : 'green' }}">
+                                  {{ $prodagot->cantidadproducto }} 
                             </td>
-                            <td>{{$producto->stockminimo}}</td>
+                            <td>{{$prodagot->stockminimo}}</td>
                         </tr>
                     @endforeach
                     </tbody>

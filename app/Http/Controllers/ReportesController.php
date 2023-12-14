@@ -33,13 +33,12 @@ class ReportesController extends Controller
         $detallepagos = detallepago::all();
         $users = User::all();
 
-
-
-        $productosProximosAgotar = DB::table('productos')
+    // Realizar la consulta para obtener productos próximos a agotarse
+        $productosProximosAgotarse = DB::table('productos')
         ->join('categorias', 'productos.id_categoria', '=', 'categorias.id')
-        ->select('productos.nombreproducto', 'productos.cantidadproducto', 'productos.stockminimo', 'categorias.nombrecategoria')
-        ->where('productos.estadoproducto', true)
-        ->whereColumn('productos.cantidadproducto', '<=', 'productos.stockminimo')
+        ->select('productos.*', 'categorias.nombrecategoria')
+        ->where('productos.estadoproducto',  true) // Ajusta según tu estructura
+        ->where('productos.cantidadproducto', '<=', 'stockminimo')
         ->get();
 
         $productos = DB::table('productos')
@@ -51,12 +50,7 @@ class ReportesController extends Controller
         ->select('clientes.*')
         ->get();
 
-        /* $ventas = DB::table('facturas')
-        ->join('detalle_facturas', 'facturas.id', '=', 'detalle_facturas.facturas_id')
-        ->join('productos', 'detalle_facturas.productos_id', '=', 'productos.id')
-        ->select('facturas.*', 'detalle_facturas.*', 'productos.nombreproducto')
-        ->get(); */
-
+        
         $categorias = DB::table('categorias')
         ->select('categorias.*')
         ->get();
@@ -64,24 +58,6 @@ class ReportesController extends Controller
         $fechaInicio = $request->fechaInicio; 
         $fechaFin = $request->fechaFin;
         
-        /* 
-
-        $totalVentas = DB::table('facturas')
-        ->whereBetween('fechafactura', [$fechaInicio, $fechaFin])
-        ->sum('totalventa');
-
-        $compras = DB::table('compras')
-        ->join('proveedores', 'compras.proveedor_id', '=', 'proveedores.id')
-        ->select('compras.*', 'proveedores.razonsocialproveedor')
-        ->get();
-
-        $ventasus = DB::table('facturas')
-        ->where('users_id', '=', 'users.id')
-        ->join('detalle_facturas', 'facturas.id', '=', 'detalle_facturas.facturas_id')
-        ->join('productos', 'detalle_facturas.productos_id', '=', 'productos.id')
-        ->select('facturas.*', 'detalle_facturas.*', 'productos.nombreproducto')
-        ->get(); */
-
         $fechaInicio = $request->input('fechini');
         $fechaFin = $request->input('fechfin');
 
@@ -124,23 +100,26 @@ class ReportesController extends Controller
         $cantidadFacturas = $facturas->count();
 
         // Puedes cargar relaciones adicionales según tus necesidades
-        $facturas->load('cliente', 'usuario');
+        $facturas->load('facturas','clientes.id', '=', 'facturas.clientes_id', 'facturas','users.id', '=', 'facturas.users_id');
+
 
         return view('reporte.general', compact('productos', 'categorias', 'clientes', 'ventas', 'detalleventas', 'proveedores', 
         'compras', 'detallecompras', 'pagos', 'detallepagos', 'users', 'FechInFact','FechFinFact','facturas','totalVentasRangoFechas',
-        'cantidadFacturas'));
+        'cantidadFacturas', 'productosProximosAgotarse', 'compras', 'comprasrecientes', 'cantidadporcompra', 'totalcompras'));
     }
 
     public function GenProdApdf()
     {
-        $productosProximosAgotar = DB::table('productos')
+
+    // Realizar la consulta para obtener productos próximos a agotarse
+    $productosProximosAgotarse = DB::table('productos')
         ->join('categorias', 'productos.id_categoria', '=', 'categorias.id')
-        ->select('productos.nombreproducto', 'productos.cantidadproducto', 'productos.stockminimo', 'categorias.nombrecategoria')
-        ->where('productos.estadoproducto', true)
-        ->whereColumn('productos.cantidadproducto', '<=', 'productos.stockminimo')
+        ->select('productos.*', 'categorias.nombrecategoria')
+        ->where('productos.estadoproducto',  true) // Ajusta según tu estructura
+        ->where('productos.cantidadproducto', '<=', 'stockminimo')
         ->get();
 
-        $pdf = PDF::loadview('reporte.prodagot', ['productos'=> $productosProximosAgotar]); 
+        $pdf = PDF::loadview('reporte.prodagot', ['productos'=> $productosProximosAgotarse]); 
         return $pdf->stream();
     }
 
@@ -163,55 +142,6 @@ class ReportesController extends Controller
         $pdf = PDF::loadview('reporte.verclient', ['clientes'=> $clientes]);
         return $pdf->stream();
     }
-
-    
-
-     /*   public function verventaspdf()
-    {   
-        $ventas = DB::table('facturas')
-        ->join('detalle_facturas', 'facturas.id', '=', 'detalle_facturas.facturas_id')
-        ->join('productos', 'detalle_facturas.productos_id', '=', 'productos.id')
-        ->select('facturas.*', 'detalle_facturas.*', 'productos.nombreproducto')
-        ->get();
-        
-        $pdf = PDF::loadview('reporte.verventas', ['facturas'=> $ventas]);
-        return $pdf->stream();
-    }
-    
-    public function vercompraspdf()
-    {
-        $compras = DB::table('compras')
-        ->join('proveedores', 'compras.proveedor_id', '=', 'proveedores.id')
-        ->select('compras.*', 'proveedores.razonsocialproveedor')
-        ->get();
-            
-        $pdf = PDF::loadview('reporte.vercom', ['compras'=> $compras]);
-        return $pdf->stream();
-    }
-
-    public function verfacturaxusuarpdf()
-    {
-        $ventasus = DB::table('facturas')
-        ->where('users_id', '=', 'users.id')
-        ->join('detalle_facturas', 'facturas.id', '=', 'detalle_facturas.facturas_id')
-        ->join('productos', 'detalle_facturas.productos_id', '=', 'productos.id')
-        ->select('facturas.*', 'detalle_facturas.*', 'productos.nombreproducto')
-        ->get();
-        $pdf = PDF::loadview('reporte.facturaxusua', ['ventas'=> $ventasus]);
-        return $pdf->stream();
-    }
-
-    public function totalventasxfech(Request $request)
-    {
-        $fechaInicio = $request->fechaInicio; 
-        $fechaFin = $request->fechaFin;
-        $totalVentas = DB::table('facturas')
-        ->whereBetween('fechafactura', [$fechaInicio, $fechaFin])
-        ->sum('totalventa');
-        $pdf = PDF::loadview('reporte.facxfech', ['ventas'=> $totalVentas]);
-        return $pdf->stream();
-
-    } */
 
     public function generarPDFComprasRecientes(Request $request)
     {
@@ -246,10 +176,10 @@ class ReportesController extends Controller
 
         $facturas = Factura::select(
             'facturas.fechafactura',
-            DB::raw('SUM(CASE WHEN pagos.estadopago = "Credito" THEN detalles_pagos.cantidaddetallepago ELSE facturas.totalventa END) as total_pagar')
+            DB::raw('SUM(CASE WHEN pagos.estadopago = "Credito" THEN detallepagos.cantidaddetallepago ELSE facturas.totalventa END) as total_pagar')
         )
             ->leftJoin('pagos', 'facturas.id', '=', 'pagos.facturas_id')
-            ->leftJoin('detalles_pagos', 'pagos.id', '=', 'detalles_pagos.pagos_id')
+            ->leftJoin('detallepagos', 'pagos.id', '=', 'detallepagos.pagos_id')
             ->whereBetween('facturas.fechafactura', [$FechInFact, $FechFinFact])
             ->groupBy('facturas.id', 'facturas.fechafactura')
             ->get();
@@ -261,7 +191,7 @@ class ReportesController extends Controller
         $cantidadFacturas = $facturas->count();
 
         // Puedes cargar relaciones adicionales según tus necesidades
-        $facturas->load('cliente', 'usuario');
+        $facturas->load('facturas','clientes.id', '=', 'facturas.clientes_id', 'facturas','users.id', '=', 'facturas.users_id');
 
         $pdf = PDF::loadView('reporte.verventas', [
             'facturas' => $facturas,

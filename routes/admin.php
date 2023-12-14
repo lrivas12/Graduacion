@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\AcercaController;
-use App\Http\Controllers\AyudaController;
 use Illuminate\Support\Facades\Route;
 
 use Illuminate\Support\Facades\Auth;
@@ -64,7 +63,8 @@ Route::get('/obtener-saldo/{clientes_id}', [clienteController::class, 'obtenerSa
 Route::get('/comprasrec-pdf', [ReportesController::class, 'generarPDFComprasRecientes'])->name('comprasrec-pdf');
 
 Route::resource('/nosotros', (AcercaController::class));
-Route::resource('/ayuda', (AyudaController::class));
 
 /* Esta es la ruta para reporte de ventas con fecha */
 Route::get('/totalventas-pdf', [ReportesController::class, 'generarPDFtotalventas'])->name('totalventas-pdf');
+
+Route::get('/comprarec-pdf', [ReportesController::class, 'generarPDFComprasRecientes'])->name('comprarec-pdf');

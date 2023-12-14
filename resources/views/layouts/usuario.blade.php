@@ -60,7 +60,7 @@
         
         <!-- Contenido del modal -->
         <div class="modal-body">
-            <img src="{{asset('/vendor/adminlte/dist/img/AyudaProducto.jpg')}}" class="img-fluid" alt="Ayuda Producto" style="max-width: 1000px; height: auto;">
+            <img src="{{asset('/vendor/adminlte/dist/img/AyudaUsuario.jpg')}}" class="img-fluid" alt="Ayuda Usuario" style="max-width: 1000px; height: auto;">
         </div>
         <!-- Botón de cierre del modal -->
         <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
@@ -233,7 +233,9 @@
                                                             <option
                                                                 value="Editor"{{ old('privilegios', $user->privilegios) === 'Editor' ? ' selected' : '' }}>
                                                                 Editor</option>
-                                                            
+                                                                <option
+                                                                value="Vendedor"{{ old('privilegios', $user->privilegios) === 'Vendedor' ? ' selected' : '' }}>
+                                                                Vendedor</option>
                                                         </select>
                                                         @error('privilegios')
                                                             <span class="invalid-feedback" role="alert">
@@ -391,7 +393,9 @@
                                     <option value="Editor" {{ old('privilegios') === 'Editor' ? ' selected' : '' }}>
                                         Editor
                                     </option>
-                                    
+                                    <option value="Vendedor" {{ old('privilegios') === 'Vendedor' ? ' selected' : '' }}>
+                                        Vendedor
+                                    </option>
                                 </select>
 
                                 @error('privilegios')
