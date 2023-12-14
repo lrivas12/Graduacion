@@ -47,16 +47,16 @@
     <label style="text-align: center; display: block; margin: 0 auto;">RUC: {{ $empresa->rucempresa }}</label><br>
     <label style="text-align: center; display: block; margin: 0 auto;">Contacto: {{ $empresa->contactoempresa }}</label><br>
     
-        <br><label>Factura Nº {{ $venta->id }} </label>
-        <br><label>Fecha: {{ Carbon\Carbon::parse($venta->fechaventa)->format('d/m/Y') }}</label><br>
-        <br><label>Cliente: {{ $venta->clientes->nombrecliente }} {{ $venta->clientes->apellidocliente }}</label>
-        <br><label>Creado Por:: {{ $venta->usuarios->usuario }}</label>
+        <br><label>Factura Nº {{ $ventas->id }} </label>
+        <br><label>Fecha: {{ Carbon\Carbon::parse($ventas->fechafactura)->format('d/m/Y') }}</label><br>
+        <br><label>Cliente: {{ $ventas->cliente->nombrecliente }} {{ $ventas->cliente->apellidocliente }}</label>
+        <br><label>Creado Por:: {{ $ventas->User->usuario }}</label>
         <br><br>
     
-        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<label for="" style="text-align: center; display: block; margin: 0 auto;">{{ $venta->tipoventa === 'contado' ? 'Factura de contado' : 'Factura de crédito' }}</label>
+        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<label for="" style="text-align: center; display: block; margin: 0 auto;">{{ $ventas->tipoventa === 'contado' ? 'Factura de contado' : 'Factura de crédito' }}</label>
         
         <table>
-                 @foreach ($venta->detalleventas as $detalle)
+                 @foreach ($ventas->detallefactura as $detalle)
                  <hr class="hr">  
                      <tr>
                          <td style="width:180px; text-align:left;">{{ $detalle->producto->nombreproducto }}</td>
@@ -71,11 +71,11 @@
          </table>
          <hr>
 
-         <label for="">Neto: C$ {{ number_format($venta->totalventa - $venta->descuentoventa, 2) }}</label><br>
-         <label for="">Descuento: C$ {{ number_format($venta->descuentoventa, 2) }}</label><hr>
-         <label for="">Total: C$ {{ number_format($venta->total, 2) }}</label>
+         <label for="">Neto: C$ {{ number_format($detalle->subtotalventa, 2) }}</label><br>
+         <label for="">Descuento: C$ {{ number_format($ventas->descuentoventa, 2) }}</label><hr>
+         <label for="">Total: C$ {{ number_format($ventas->totalventa , 2) }}</label>
          
-         @if($venta->tipoventa === 'credito')
+         @if($ventas->tipoventa === 'credito')
          <br><br>
              <table border="0" style="text-align: center;">
                  <tr>

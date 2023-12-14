@@ -100,7 +100,7 @@ class ReportesController extends Controller
         $cantidadFacturas = $facturas->count();
 
         // Puedes cargar relaciones adicionales según tus necesidades
-        $facturas->load('facturas','clientes.id', '=', 'facturas.clientes_id', 'facturas','users.id', '=', 'facturas.users_id');
+        $facturas->load('factura','clientes.id', '=', 'factura.clientes_id', 'factura','users.id', '=', 'factura.users_id');
 
 
         return view('reporte.general', compact('productos', 'categorias', 'clientes', 'ventas', 'detalleventas', 'proveedores', 
@@ -112,14 +112,14 @@ class ReportesController extends Controller
     {
 
     // Realizar la consulta para obtener productos próximos a agotarse
-    $productosProximosAgotarse = DB::table('productos')
+        $productosProximosAgotarse = DB::table('productos')
         ->join('categorias', 'productos.id_categoria', '=', 'categorias.id')
         ->select('productos.*', 'categorias.nombrecategoria')
         ->where('productos.estadoproducto',  true) // Ajusta según tu estructura
         ->where('productos.cantidadproducto', '<=', 'stockminimo')
         ->get();
 
-        $pdf = PDF::loadview('reporte.prodagot', ['productos'=> $productosProximosAgotarse]); 
+        $pdf = PDF::loadview('reporte.prodagot', ['productosProximosAgotarse'=> $productosProximosAgotarse]); 
         return $pdf->stream();
     }
 
@@ -191,7 +191,7 @@ class ReportesController extends Controller
         $cantidadFacturas = $facturas->count();
 
         // Puedes cargar relaciones adicionales según tus necesidades
-        $facturas->load('facturas','clientes.id', '=', 'facturas.clientes_id', 'facturas','users.id', '=', 'facturas.users_id');
+        $facturas->load('factura','clientes.id', '=', 'facturas.clientes_id', 'factura','users.id', '=', 'facturas.users_id');
 
         $pdf = PDF::loadView('reporte.verventas', [
             'facturas' => $facturas,

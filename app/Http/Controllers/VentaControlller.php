@@ -42,7 +42,8 @@ class VentaControlller extends Controller
         $ventas = factura::findOrFail($id);
         $productos = producto::all();
         $clientes = cliente::all();
-        return view ('layouts.facturam', compact ('ventas','productos', 'clientes'));
+        $detalleventas = detallefactura::where('facturas_id', $ventas->id)->get();
+        return view ('layouts.facturam', compact ('ventas','productos', 'clientes', 'detalleventas'));
     }
     public function store(Request $request)
     {
@@ -125,14 +126,18 @@ class VentaControlller extends Controller
 
     public function imprimirFactura($idVenta)
     {
-        $ventas = factura::with('detallefacturas', 'clientes', 'usuarios')->find($idVenta);
+        $ventas = factura::with('detallefactura', 'cliente', 'User')->find($idVenta);
         $empresa = empresa::first();
+
+        $cantidadpagos = null;
+        $detallepagos = [];
+
         if($ventas && $ventas->tipoventa === 'credito')
         {
             $pagos = pago::where('pagos_id', $ventas->id)->first();
             if($pagos)
             {
-                $cantidadpago = $pagos->cantidadpago;
+                $cantidadpagos = $pagos->cantidadpago;
 
                 $detallepagos = detallepago::where('pagos_id', $pagos->id)->get();
                 $detallepagos = $pagos->saldodetallepago;
@@ -144,23 +149,37 @@ class VentaControlller extends Controller
             abort(404, 'Venta no encontrado');
         }
 
-        $pdf =new \TCPDF('p', 'mm', array(58, 297), true, 'UTF-8', false);
+        $pdf =new TCPDF('p', 'mm', 'UTF-8', 'A4', false);
         $pdf->setPrintHeader(false);
         $pdf->setPrintFooter(false);
-       
-      
-        $pdf->SetAutoPageBreak(true, 0);
+        
+        $pdf->SetAutoPageBreak(false, 0);
         $pdf->SetMargins(2, 0.5, 2);
         $pdf->AddPage();
         $pdf->SetFont('helvetica', '', 8);
-        $html = view('layouts.factura', compact('ventas', 'empresas', 'cantidadpago', 'detallepagos'))->render();
+        $html = view('layouts.pdf', compact('ventas', 'empresa', 'cantidadpagos', 'detallepagos'))->render();
 
+
+        $altura = $this->obtenerAlturaPdf($html);
+        $pdf->setPageFormat([56,$altura]);
         $pdf->writeHTML($html, true, false, true, false, '');
         
 
         // Salida del archivo
-        $pdf->Output('layouts.pdf', 'I');
+        $pdf->Output('recibo.pdf', 'I');
 
+    }
+
+    protected function obtenerAlturaPdf($html)
+    {
+        $pdf = new TCPDF('p', 'mm', 'A4', true, 'UTF-8', false);
+
+        $pdf->SetAutoPageBreak(false, 0);
+        $pdf->AddPage();
+        $pdf->SetFont('helvetica', '', 8);
+         
+        $pdf->writeHTML($html, true, false, true, false, '');
+        return $pdf->GetY();
     }
 
 }

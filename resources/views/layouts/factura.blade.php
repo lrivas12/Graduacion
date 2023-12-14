@@ -69,8 +69,9 @@
 </section>
 <div class="card">
     <div class="card-body">
-    <form action="{{route('factura.store')}}" method="post">
+    <form action="{{route('factura.store')}}" method="post" id="ventaForm">
         @csrf
+        <input type="hidden" id="guardarImp">
         <input type="hidden" id="detalleVenta" name="detalleVenta">
             <div class="border border-primary rounded p-2">
                 <div class="row ">
@@ -333,7 +334,7 @@
                 <div class="row text-right mt-3">
                     <div class="col-md-12 " >
                        
-                        <button type="submit" class="btn btn-primary mr-2" name="guardar_e_imprimir" id="guardarEImprimir"><i class="fas fa-print"></i> Guardar e Imprimir</button>
+                        <button type="submit" class="btn btn-primary mr-2" name="guardar_e_imprimir" id="guardarEImprimir"><i class="fas fa-print" id="guardarEImprimir"></i> Guardar e Imprimir</button>
                         <button type="submit" class="btn btn-primary ml-2"><i class="fas fa-save"></i> Guardar</button>
                     </div>
                     <div class="col-md-12 mt-2 text-left">
@@ -359,16 +360,16 @@
     
     document.addEventListener('DOMContentLoaded', function () {
         
-        /* var guardarEImprimirBtn = document.getElementById('guardarEImprimir');
+        var guardarEImprimirBtn = document.getElementById('guardarEImprimir');
         var ventaForm = document.getElementById('ventaForm');
-        var numeroVentaInput = document.getElementById('numeroventa'); // Nuevo
+        /* var numeroVentaInput = document.getElementById('numeroventa'); // Nuevo */
 
         if (guardarEImprimirBtn && ventaForm) {
             guardarEImprimirBtn.addEventListener('click', function (event) {
                 event.preventDefault();
 
                 // Obtener el valor del input de número de venta
-                var idVenta = numeroVentaInput.value;
+                /* var idVenta = numeroVentaInput.value; */
                 // Establecer el valor del input oculto "guardarImp"
                 document.getElementById('guardarImp').value = "true";
                 
@@ -413,7 +414,7 @@
                 
             }); 
 
-        }*/
+        }
         // Función para mostrar mensajes de SweetAlert2
         function showAlert(icon, title, text, isError, position) {
             const options = {

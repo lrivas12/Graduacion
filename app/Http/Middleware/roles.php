@@ -22,6 +22,6 @@ class roles
         /* abort(403,'Prohibido'); */
        // return $next($request);
 
-       return response()->view('',[],403);
+       return response()->view('layouts.denegado',[],403);
     }
 }
