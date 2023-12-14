@@ -17,7 +17,7 @@ return new class extends Migration
             $table->decimal('descuentoventa');
             $table->string('tipoventa');
             $table->decimal('totalventa');
-            $table->unsignedBigInteger('clientes_id');
+            $table->unsignedBigInteger('clientes_id')->nullable();
             $table->foreign('clientes_id')->references('id')->on('clientes');
 
             $table->unsignedBigInteger('users_id');

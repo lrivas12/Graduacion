@@ -334,7 +334,7 @@
                 <div class="row text-right mt-3">
                     <div class="col-md-12 " >
                        
-                        <button type="submit" class="btn btn-primary mr-2" name="guardar_e_imprimir" id="guardarEImprimir"><i class="fas fa-print" id="guardarEImprimir"></i> Guardar e Imprimir</button>
+                        <button type="submit" class="btn btn-primary mr-2" name="guardar_e_imprimir" id="guardarEImprimir"><i class="fas fa-print" ></i> Guardar e Imprimir</button>
                         <button type="submit" class="btn btn-primary ml-2"><i class="fas fa-save"></i> Guardar</button>
                     </div>
                     <div class="col-md-12 mt-2 text-left">
@@ -362,14 +362,14 @@
         
         var guardarEImprimirBtn = document.getElementById('guardarEImprimir');
         var ventaForm = document.getElementById('ventaForm');
-        /* var numeroVentaInput = document.getElementById('numeroventa'); // Nuevo */
+        
 
         if (guardarEImprimirBtn && ventaForm) {
             guardarEImprimirBtn.addEventListener('click', function (event) {
                 event.preventDefault();
 
                 // Obtener el valor del input de número de venta
-                /* var idVenta = numeroVentaInput.value; */
+             
                 // Establecer el valor del input oculto "guardarImp"
                 document.getElementById('guardarImp').value = "true";
                 
@@ -405,7 +405,7 @@
                     // Asegúrate de incluir el ID de la venta en la URL
                    // window.location.href = /ventas/${data.id}/factura;
                     // Abrir la factura en una nueva pestaña
-                    window.open(/ventas/${data.id}/factura, '_blank');
+                    window.open(`/ventas/${data.id}/factura`, '_blank');
 
                 })
                 .catch(error => console.error('Error al guardar e imprimir:', error.message));

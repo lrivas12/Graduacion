@@ -36,10 +36,10 @@ Route::get('/', function () {
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::resource('/usuario', (UsuarioController::class))->middleware("Roles:Administrador");
-Route::resource('/categoria', (categoriaController::class))->middleware("Roles:Administrador, Editor, Vendedor");
-Route::resource('/proveedores', (ProveedoresController::class))->middleware("Roles:Administrador, Editor, Vendedor");
-Route::resource('/cliente', (clienteController::class))->middleware("Roles:Administrador, Editor, Vendedor");
-Route::resource('/producto', (ProductoController::class))->middleware("Roles:Administrador, Editor, Vendedor");
+Route::resource('/categoria', (categoriaController::class))->middleware("Roles:Administrador,Editor,Vendedor");
+Route::resource('/proveedores', (ProveedoresController::class))->middleware("Roles:Administrador,Editor,Vendedor");
+Route::resource('/cliente', (clienteController::class))->middleware("Roles:Administrador,Editor,Vendedor");
+Route::resource('/producto', (ProductoController::class))->middleware("Roles:Administrador,Editor,Vendedor");
 Route::post('usuario/{id}/', [UsuarioController::class, 'DesactivarUsuario'])->name('usuario.desactivate')->middleware("Roles:Administrador");
 Route::post('categoria/{id}/', [categoriaController::class, 'DesactivarCategoria'])->name('categoria.desactivate')->middleware("Roles:Administrador");
 Route::post('proveedores/{id}/', [ProveedoresController::class, 'DesactivarProveedor'])->name('proveedor.desactivate')->middleware("Roles:Administrador");
@@ -49,9 +49,9 @@ Route::resource('/compras', (ComprasController::class))->middleware("Roles:Admin
 Route::resource('/pagos', (PagoController::class))->middleware("Roles:Administrador, Editor, Vendedor");
 Route::get('api/compras/{producto}', [ComprasController::class, 'apiShowProductos'])->middleware("Roles:Administrador");
 Route::get('api/factura/{producto}', [ComprasController::class, 'apiShowProductos'])->middleware("Roles:Administrador");
-Route::resource('/factura', (VentaControlller::class))->middleware("Roles:Administrador, Editor, Vendedor");
+Route::resource('/factura', (VentaControlller::class))->middleware("Roles:Administrador,Editor,Vendedor");
 Route::get('api/factura/{producto}', [VentaControlller::class, 'apiShowProductos']);
-Route::resource('/reportes', (ReportesController::class))->middleware("Roles:Administrador, Editor, Vendedor");
+Route::resource('/reportes', (ReportesController::class))->middleware("Roles:Administrador,Editor,Vendedor");
 Route::resource('/backup', (MantenimientoController::class))->middleware("Roles:Administrador");
 Route::resource('/empresa', (EmpresaController::class))->middleware("Roles:Administrador");
 Route::get('/obtener-datos-empresa', [EmpresaController::class, 'ObtenerDatos'])->middleware("Roles:Administrador");
@@ -73,4 +73,4 @@ Route::get('/exportarclientes', [MantenimientoController::class, 'exportClientes
 Route::get('/exportarproveedores', [MantenimientoController::class, 'exportProveedores'])->name('exportarProveedores')->middleware("Roles:Administrador");
 Route::get('/exportarproductos', [MantenimientoController::class, 'exportProductos'])->name('exportarProductos')->middleware("Roles:Administrador");
 Route::get('/exportarfacturas', [MantenimientoController::class, 'exportSalesWithDetails'])->name('exportarVentas')->middleware("Roles:Administrador");
-Route::get('/ventas/{id}/factura', [VentaControlller::class, 'Imprimirfactura'])->name('facturas.Imprimirfactura')->middleware("Roles:Administrador, Editor, Vendedor");
+Route::get('/ventas/{id}/factura', [VentaControlller::class, 'Imprimirfactura'])->name('facturas.Imprimirfactura')->middleware("Roles:Administrador,Editor,Vendedor");
