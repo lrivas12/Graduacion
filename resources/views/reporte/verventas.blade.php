@@ -22,7 +22,6 @@
         <br><label id="titulo" for="titulo" class="titulo-reporte">Total de Ingresos desde {{ $FechInFact }} hasta
             {{ $FechFinFact }}</label>
             <br>
-            <p>Se registraron un total de {{$cantidadFacturas}} facturas.</p>
     </div>
     <div class="content" id="content">
         <div class="cardTotalVent" id="cardTotalVent">

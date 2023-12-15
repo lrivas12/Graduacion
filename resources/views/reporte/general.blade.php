@@ -380,7 +380,7 @@
         FechFinFact.style.display = 'none';
 
 
-        if (tipoinventariofactura === 'comprasxfech') {
+        if (tiporeporteInventario === 'comprasxfech') {
         FechInFact.style.display = 'block';
         FechFinFact.style.display = 'block';
         }else 

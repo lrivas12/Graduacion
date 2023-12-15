@@ -28,16 +28,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        /* $data = detallefactura::join('productos', 'detallefactura.productos_id', '=', 'productos.id')
-        ->groupBy('productos.id', 'productos.nombreproducto')
-        ->select('productos.nombreproducto as productos', \DB::raw('SUM(detallefactura.cantidadventa) as total_cantidad'))
-        ->orderBy('total_cantidad', 'desc')
-        ->take(5)
-        ->get();
-
-        // Formatear los datos para el gráfico de Chart.js
-        $labels = $data->pluck('productos');
-        $values = $data->pluck('total_cantidad'); */
+       
 
         $fechaHoy = Carbon::now();
 
@@ -59,14 +50,14 @@ class HomeController extends Controller
     $labels = $productosMasVendidos->pluck('nombreproducto');
     $data = $productosMasVendidos->pluck('totalVentas');
 
-        $totalFacturasCredito = Factura::where('tipoventa', 'credito')->count();
+    $totalFacturasCredito = Factura::where('tipoventa', 'credito')->count();
 
-        $totalFacturas = Factura::count();
+    $totalFacturas = Factura::count();
 
-        $montoFacturasCredito = Factura::where('tipoventa', 'credito')->sum('totalventa');
-        $totalCompras = compra::sum('totalcompra');
+    $montoFacturasCredito = Factura::where('tipoventa', 'credito')->sum('totalventa');
+    $totalCompras = compra::sum('totalcompra');
 
-        return view('home', compact('fechaHoy', 'totalCompras', 'ingresosHoy', 'ingresosGenerales',
-        'totalFacturasCredito', 'totalFacturas', 'montoFacturasCredito', 'productosMasVendidos','labels','data'));
+    return view('home', compact('fechaHoy', 'totalCompras', 'ingresosHoy', 'ingresosGenerales',
+    'totalFacturasCredito', 'totalFacturas', 'montoFacturasCredito', 'productosMasVendidos','labels','data'));
     }
 }

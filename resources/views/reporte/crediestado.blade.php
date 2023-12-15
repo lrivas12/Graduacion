@@ -15,7 +15,7 @@
 
 <div class="titulo">
     <br>
-    <label for="titulo" for="titulo" class="tituloreporte">Facturas por Fecha desde {{-- {{ $FechIniFact }} --}} hasta
+    <label for="titulo" for="titulo" class="tituloreporte">Crédito por Fecha desde {{-- {{ $FechIniFact }} --}} hasta
     {{-- {{ $FechaFinFact }} --}}</label>
     <br>
 

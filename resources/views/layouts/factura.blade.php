@@ -539,7 +539,7 @@
 
         //Buscador de productos correcto, de tipo input on su select
         //Propiamente de ventas
-        let productoInput = document.querySelector("#producto-input");
+       /*  let productoInput = document.querySelector("#producto-input");
         let productoSelect = document.querySelector("#seleccionarProducto");
 
         productoInput.addEventListener("change", () => {
@@ -556,7 +556,7 @@
                     $("#producto-input").attr("style", "transition: 1s;");
                 }, 1000);
             }
-        });
+        }); */
             
         $('#seleccionarProducto').change(function(){
             let id = $(this).val();

@@ -49,6 +49,6 @@ class PagoController extends Controller
     $newdetallepagos->saldodetallepago = $pagos->cantidadpago - ($totalPagosCredito + $newdetallepagos->cantidaddetallepago);
     $newdetallepagos->pagos_id = $id;
     $newdetallepagos->save();
-    return redirect()->route('pago.show', $id)->with('successC', 'Abono agregado exitosamente.');
+    return redirect()->route('pagos.show', $id)->with('successC', 'Abono agregado exitosamente.');
   }
 }

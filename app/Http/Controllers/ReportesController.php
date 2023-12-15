@@ -32,6 +32,8 @@ class ReportesController extends Controller
         $pagos = pago::all();
         $detallepagos = detallepago::all();
         $users = User::all();
+        $venta = factura::all();
+        $detallepagos = detallepago::all();
 
     // Realizar la consulta para obtener productos próximos a agotarse
         $productosProximosAgotarse = DB::table('productos')
@@ -55,8 +57,6 @@ class ReportesController extends Controller
         ->select('categorias.*')
         ->get();
         
-        $fechaInicio = $request->fechaInicio; 
-        $fechaFin = $request->fechaFin;
         
         $fechaInicio = $request->input('fechini');
         $fechaFin = $request->input('fechfin');
@@ -80,32 +80,19 @@ class ReportesController extends Controller
         }
 
         /* total de ventas */
-        $FechInFact = $request->input('fechini');
-        $FechFinFact = $request->input('fechfin');
+        $FechIniFact = $request->input('fechini');
+        $FechaFinFact = $request->input('fechfin');
 
-        $facturas = Factura::select(
-            'facturas.fechafactura',
-            DB::raw('SUM(CASE WHEN pagos.estadopago = "Credito" THEN detallepagos.cantidaddetallepago ELSE facturas.totalventa END) as total_pagar')
-        )
-            ->leftJoin('pagos', 'facturas.id', '=', 'pagos.facturas_id')
-            ->leftJoin('detallepagos', 'pagos.id', '=', 'detallepagos.pagos_id')
-            ->whereBetween('facturas.fechafactura', [$FechInFact, $FechFinFact])
-            ->groupBy('facturas.id', 'facturas.fechafactura')
-            ->get();
+        $ventasporfecha = DB::table('facturas')
+        ->whereBetween('fechafactura', [$FechIniFact, $FechaFinFact])
+        ->get();
 
-        // Sumar los totales a pagar
-        $totalVentasRangoFechas = $facturas->sum('total_pagar');
-
-        // Obtener la cantidad de facturas
-        $cantidadFacturas = $facturas->count();
-
-        // Puedes cargar relaciones adicionales según tus necesidades
-        $facturas->load('factura','clientes.id', '=', 'factura.clientes_id', 'factura','users.id', '=', 'factura.users_id');
-
+        $credito = pago::whereIn('facturas_id', $venta->pluck('id'))->get();
+        $detallepagos = detallepago::whereIn('pagos_id', $pagos->pluck('id'))->get();
 
         return view('reporte.general', compact('productos', 'categorias', 'clientes', 'ventas', 'detalleventas', 'proveedores', 
-        'compras', 'detallecompras', 'pagos', 'detallepagos', 'users', 'FechInFact','FechFinFact','facturas','totalVentasRangoFechas',
-        'cantidadFacturas', 'productosProximosAgotarse', 'compras', 'comprasrecientes', 'cantidadporcompra', 'totalcompras'));
+        'compras', 'detallecompras', 'pagos', 'detallepagos', 'users',
+         'productosProximosAgotarse','venta','detallepagos', 'compras', 'comprasrecientes', 'cantidadporcompra', 'totalcompras'));
     }
 
     public function GenProdApdf()
@@ -169,39 +156,37 @@ class ReportesController extends Controller
         $pdf = PDF::loadView('reporte.comprasrec', ['fechaInicio'=> $fechaInicio, 'fechaFIn'=> $fechaFin, 'comprasrecientes' => $comprasrecientes, 'totalcompras'=> $totalcompras, 'totalprod'=> $totalprod, 'fechacompra'=>$fechaCompra, 'cantidadporcompra'=> $cantidadporcompra ]);
         return $pdf->stream();
     }
+
     public function generarPDFtotalventas(Request $request)
     {
-        $FechInFact = $request->input('fechini');
-        $FechFinFact = $request->input('fechfin');
+        $FechIniFact = $request->input('fechini');
+        $FechaFinFact = $request->input('fechfin');
 
-        $facturas = Factura::select(
-            'facturas.fechafactura',
-            DB::raw('SUM(CASE WHEN pagos.estadopago = "Credito" THEN detallepagos.cantidaddetallepago ELSE facturas.totalventa END) as total_pagar')
-        )
-            ->leftJoin('pagos', 'facturas.id', '=', 'pagos.facturas_id')
-            ->leftJoin('detallepagos', 'pagos.id', '=', 'detallepagos.pagos_id')
-            ->whereBetween('facturas.fechafactura', [$FechInFact, $FechFinFact])
-            ->groupBy('facturas.id', 'facturas.fechafactura')
-            ->get();
+        $ventasporfecha = DB::table('facturas')
+        ->whereBetween('fechafactura', [$FechIniFact, $FechaFinFact])
+        ->get();
 
-        // Sumar los totales a pagar
-        $totalVentasRangoFechas = $facturas->sum('total_pagar');
-
-        // Obtener la cantidad de facturas
-        $cantidadFacturas = $facturas->count();
-
-        // Puedes cargar relaciones adicionales según tus necesidades
-        $facturas->load('factura','clientes.id', '=', 'facturas.clientes_id', 'factura','users.id', '=', 'facturas.users_id');
-
-        $pdf = PDF::loadView('reporte.verventas', [
-            'facturas' => $facturas,
-            'FechInFact' => $FechInFact,
-            'FechFinFact' => $FechFinFact,
-            'totalVentasRangoFechas' => $totalVentasRangoFechas,
-            'cantidadFacturas' => $cantidadFacturas, // Pasar la cantidad de facturas al reporte
-        ]);
-
+        $pdf = PDF::loadView('reporte.facxfech', ['ventasporfecha'=> $ventasporfecha, 'fechaInicio'=> $FechIniFact, 'fechaFIn'=> $FechaFinFact]);
         return $pdf->stream();
     }
 
+    public function generarPDFcredito(Request $request)
+    {
+        $FechIniFact = $request->input('fechini');
+        $FechaFinFact = $request->input('fechfin');
+        
+        $pagos = pago::all();
+        $venta = factura::all();
+        $credito = pago::whereIn('facturas_id', $venta->pluck('id'))->get();
+        $detallepagos = detallepago::whereIn('pagos_id', $pagos->pluck('id'))->get();
+
+
+        $pdf = PDF::loadView('reporte.crediestado', ['credito'=> $credito,'detallepagos'=> $detallepagos , 'fechaInicio'=> $FechIniFact, 'fechaFIn'=> $FechaFinFact]);
+        return $pdf->stream();
+    }
+
+    public function generarfacturacredito()
+    {
+        
+    }
 }
