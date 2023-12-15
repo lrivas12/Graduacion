@@ -69,7 +69,7 @@
     </section>
 
 <div class="containe-fluid">
-        <div class="card" style="border: 1px solid black;">
+        <div class="card" {{-- style="border: 1px solid black;" --}}>
             <div class="card-header">
                 <strong>
 

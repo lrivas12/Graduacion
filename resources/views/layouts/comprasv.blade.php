@@ -67,11 +67,11 @@
 
     <section class="sectionT2">
         <div class="header">
-            <h3><i class="fas fa-shopping-cart"></i> Ver Compra </h3>
+            <h3><i class="fas fa-shopping-cart"></i> Ver compra </h3>
         </div>
         </section>
     
-        <div class="border border-primary rounded p-3">
+        <div class="border border rounded p-3">
            
              <div class="card-header">
                     <strong id="id">Detalle de compra Nº {{ $compra->id }}</strong>

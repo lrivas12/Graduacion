@@ -278,7 +278,8 @@ document.addEventListener('DOMContentLoaded', function () {
     
         let id = $(this).attr("cod");
         //Peticion al servidor con el id
-        fetch('http://motoflor.com/api/compras/'+id)
+        let baseUrl = "{{ url('/') }}";
+        fetch(baseUrl+'/api/compras/'+id)
     
         .then(x => {return x.json()})
         .then(x => {
