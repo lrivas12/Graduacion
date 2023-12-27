@@ -147,7 +147,7 @@
                                     </span>
                                 @enderror
                             </div>
-                            <div class="form-group row">
+                            {{-- <div class="form-group row">
                                 <label for="cantidadproducto">Cantidad producto: <span class="text-danger">*</span></label>
                                 <input type="number" class="form-control" id="cantidadproducto" name="cantidadproducto" value="{{ old('cantidadproducto')}}" required autocomplete="cantidadproducto" autofocus >
                                 @error('cantidadproducto')
@@ -155,7 +155,7 @@
                                     <strong>{{ $message }}</strong>
                                 </span>
                                 @enderror
-                            </div>
+                            </div> --}}
                             <div class="form-group row">
                                 <label for="precioproducto">Precio producto: <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" id="precioproducto" name="precioproducto" value="{{ old('precioproducto')}}" required autocomplete="precioproducto" autofocus >

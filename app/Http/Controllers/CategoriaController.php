@@ -31,12 +31,12 @@ class categoriaController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make ($request->all(),[
-            'nombrecategoria' => 'required|string|max:255|unique.categorias',
+            'nombrecategoria' => 'required|string|max:255|unique:categorias',
             'tipocategoria' => 'required|string|max:255',
 
         ]);
 
-            $customMessages =[
+        $customMessages =[
             'required' => 'El Campo :atribute es Obligatorio',
             'max' => 'El Campo :atribute no debe superar :max caracteres',
             'unique'=> 'El Campo :atribute ya está en uso',
@@ -50,18 +50,18 @@ class categoriaController extends Controller
 
         $validator->setAttributeNames($customAttributes);
         $validator->setCustomMessages($customMessages);
-    if($validator->fails()){
+        if($validator->fails()){
 
 
-        return redirect()->route('categoria.index') ->withErrors($validator)->withInput()->with('errorC','Error al crear la Categoria, revise e intente nuevamente.');
-   }
-   $categorias = categoria::create([
-    'nombrecategoria' => $request->input('nombrecategoria'),
-    'tipocategoria' => $request->input('tipocategoria'),
-   ]);
+            return redirect()->route('categoria.index') ->withErrors($validator)->withInput()->with('errorC','Error al crear la Categoria, revise e intente nuevamente.');
+        }
+        $categorias = categoria::create([
+            'nombrecategoria' => $request->input('nombrecategoria'),
+            'tipocategoria' => $request->input('tipocategoria'),
+        ]);
 
-    $categorias->save();
-    return redirect()->route('categoria.index', $categorias)->with('successC','Categoria creado con exito');
+        $categorias->save();
+        return redirect()->route('categoria.index', $categorias)->with('successC','Categoria creado con exito');
 
     }
 
@@ -90,9 +90,9 @@ class categoriaController extends Controller
     {
         $categorias = categoria::findOrFail($id);
         $validator = Validator::make ($request->all(),[
-            'nombrecategoria' => 'required|string|max:255|unique.categorias' . $categorias->id,
+            'nombrecategoria' => 'required|string|max:255|unique:categorias,nombrecategoria,' . $categorias->id,
             'tipocategoria' => 'required|string|max:255',
-            'estadocategoria'=>'required|boolean',
+            /* 'estadocategoria'=>'required|boolean', */
         ]);
         $customMessages =[
             'required' => 'El Campo :atribute es Obligatorio',
@@ -104,7 +104,7 @@ class categoriaController extends Controller
         [
             'nombrecategoria'=>'Nombre de la categoria',
             'tipocategoria'=>'Tipo de Categoria',
-            'estadocategoria'=>'Estado de la categoria',
+           /*  'estadocategoria'=>'Estado de la categoria', */
         ];
 
         $validator->setAttributeNames($customAttributes);
@@ -119,7 +119,7 @@ class categoriaController extends Controller
     
             'nombrecategoria' => $request->input('nombrecategoria'),
             'tipocategoria' => $request->input('tipocategoria'),
-            'estadocategoria' => $request->input('estadocategoria'),
+            /* 'estadocategoria' => $request->input('estadocategoria'), */
            
         ]);
         $categorias->save();

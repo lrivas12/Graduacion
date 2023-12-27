@@ -17,7 +17,7 @@ class ProveedoresController extends Controller
    public function store(Request $request)
    {
         $validator = Validator::make($request->all(),[
-            'razonsocialproveedor' => 'required|string|max:40',
+            'razonsocialproveedor' => 'required|string|max:40:unique:proveedores',
             'numerorucproveedor' => 'string|max:20',
             'telefonoproveedor'=> 'string|max:8',
 
@@ -64,24 +64,25 @@ class ProveedoresController extends Controller
     $proveedores = proveedores::findOrFail($id);
     
     $validator = Validator::make($request->all(),[
-        'razonsocialproveedor' => 'required|string|max:40',
+        'razonsocialproveedor' => 'required|string|max:40|unique:proveedores,razonsocialproveedor,' . $proveedores->id,
         'numerorucproveedor' => 'string|max:20',
-        'estadoproveedor' => 'required|boolean',
+        /* 'estadoproveedor' => 'required|boolean', */
         'telefonoproveedor'=> 'string|max:8',
     ]);
+    $customAttributes = 
+        [
+            'razonsocialproveedor' => 'Razon Social del proveedor',
+            'numerorucproveedor' => 'Numero RUC del proveedor',
+            /* 'estadoproveedor'=> 'Estado del proveedor', */
+            'telefonoproveedor'=> 'Telefono del proveedor',
+        ];
     
     $customMessages =[
         'required' => 'El Campo :atribute es Obligatorio',
         'max' => 'El Campo :atribute no debe superar :max caracteres',
         ];
 
-        $customAttributes = 
-        [
-            'razonsocialproveedor' => 'Razon Social del proveedor',
-            'numerorucproveedor' => 'Numero RUC del proveedor',
-            'estadoproveedor'=> 'Estado del proveedor',
-            'telefonoproveedor'=> 'Telefono del proveedor',
-        ];
+        
         
         $validator->setAttributeNames($customAttributes);
         $validator->setCustomMessages($customMessages);
@@ -95,7 +96,7 @@ class ProveedoresController extends Controller
 
         'razonsocialproveedor' => $request->input('razonsocialproveedor'),
         'numerorucproveedor' => $request->input('numerorucproveedor'),
-        'estadoproveedor' => $request->input('estadoproveedor'),
+       /*  'estadoproveedor' => $request->input('estadoproveedor'), */
         'telefonoproveedor' => $request->input('telefonoproveedor'),
        
     ]);

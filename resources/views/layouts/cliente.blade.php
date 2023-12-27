@@ -105,31 +105,30 @@
                         @enderror
                     </div>
                 </div>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <label for="nombre">Teléfono del cliente: </label>
-                            <input type="text" class="form-control @error('telefonocliente') is-invalid @enderror" id="telefonocliente" name="telefonocliente" autocomplete="telefonocliente" value="{{ old('telefonocliente')}}" autofocus>
-                            @error('telefonocliente')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
-                        <div class="col-md-4">
-                            <label for="nombre">Correo eléctronico del cliente: </label>
-                            <input type="email" class="form-control @error('correocliente') is-invalid @enderror" id="correocliente" name="correocliente" autocomplete="correocliente" value="{{ old('correocliente')}}" autofocus>
-                            @error('correocliente')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>     
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="nombre">Teléfono del cliente: </label>
+                        <input type="text" class="form-control @error('telefonocliente') is-invalid @enderror" id="telefonocliente" name="telefonocliente" autocomplete="telefonocliente" value="{{ old('telefonocliente')}}" autofocus>
+                        @error('telefonocliente')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
                     </div>
-                    <br>
-                    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Agregar</button>
-                </form>
-               <br>
-               <h2>Lista de Clientes</h2>
+                    <div class="col-md-4">
+                        <label for="nombre">Correo eléctronico del cliente: </label>
+                        <input type="email" class="form-control @error('correocliente') is-invalid @enderror" id="correocliente" name="correocliente" autocomplete="correocliente" value="{{ old('correocliente')}}" autofocus>
+                        @error('correocliente')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>     
+                </div>
+                <br>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Agregar</button>
+            </form>
+            <h2>Lista de Clientes</h2>
                 <table id="clienteTable" class="table table-bordered">
                     <thead>
                         <tr>
@@ -145,15 +144,15 @@
                     <tbody>
                         @foreach($cliente as $cliente)
                             <tr>
-                                    <td>{{$cliente->id }}</td>
-                                    <td>{{$cliente->nombrecliente }}</td>
-                                    <td>{{$cliente->apellidocliente }}</td>
-                                    <td>{{$cliente->direccioncliente}}</td>
-                                    <td>{{$cliente->telefonocliente }}</td>
-                                    <td>{{$cliente->correocliente }}</td>
-                                    <td>
-                                    {{-- <a href="{{ route('cliente.edit', $cliente->id) }}" class="btn btn-primary">Editar</a> --}}
-                                    <button class="btn btn-warning btn-edit" data-toggle="modal" data-target="#editarclienteModal{{$cliente->id}}"><i class="fas fa-edit"></i> Editar</button>
+                                <td>{{$cliente->id }}</td>
+                                <td>{{$cliente->nombrecliente }}</td>
+                                <td>{{$cliente->apellidocliente }}</td>
+                                <td>{{$cliente->direccioncliente}}</td>
+                                <td>{{$cliente->telefonocliente }}</td>
+                                <td>{{$cliente->correocliente }}</td>
+                                <td>
+                                {{-- <a href="{{ route('cliente.edit', $cliente->id) }}" class="btn btn-primary">Editar</a> --}}
+                                <button class="btn btn-warning btn-edit" data-toggle="modal" data-target="#editarclienteModal{{$cliente->id}}"><i class="fas fa-edit"></i> Editar</button>
                             
                                 </td>
                             </tr>
@@ -172,64 +171,66 @@
                                             @csrf
                                             @method('PUT')
                 
-                                                <div class="form-group">
-                                                    <label for="nombre">Nombre del cliente: <span class="text-danger">*</span></label>
-                                                    <input type="text" class="form-control @error('nombreclienteE') is-invalid @enderror" id="nombreclienteE" name="nombreclienteE" value="{{ old('nombreclienteE', $cliente->nombrecliente )}}" required autocomplete="nombreclienteE" autofocus>
-                                                    @error('nombreclienteE')
-                                                        <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $message }}</strong>
-                                                        </span>
-                                                    @enderror
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="nombre">Apellido del cliente: <span class="text-danger">*</span></label>
-                                                    <input type="text" class="form-control @error('apellidoclienteE') is-invalid @enderror" id="apellidoclienteE" name="apellidoclienteE" value="{{ old('apellidoclienteE', $cliente->apellidocliente )}}" required autocomplete="apellidoclienteE" autofocus>
-                                                    @error('apellidoclienteE')
-                                                        <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $message }}</strong>
-                                                        </span>
-                                                    @enderror
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="nombre">Dirección del cliente</label>
-                                                    <input type="text" class="form-control @error('direccionclienteE') is-invalid @enderror" id="direccionclienteE" name="direccionclienteE" value="{{ old('direccionclienteE', $cliente->direccioncliente )}}" autocomplete="direccionclienteE" autofocus>
-                                                    @error('direccionclienteE')
-                                                        <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $message }}</strong>
-                                                        </span>
-                                                    @enderror
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="nombre">Teléfono del cliente</label>
-                                                    <input type="text" class="form-control @error('telefonoclienteE') is-invalid @enderror" id="telefonoclienteE" name="telefonoclienteE" value="{{ old('telefonoclienteE', $cliente->telefonocliente )}}" autocomplete="telefonoclienteE" autofocus onkeypress="return event.charCode >= 48 && event.charCode<=57">
-                                                    @error('telefonoclienteE')
-                                                        <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $message }}</strong>
-                                                        </span>
-                                                    @enderror
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="nombre">Correo eléctronico del cliente</label>
-                                                    <input type="email" class="form-control @error('correoclienteE') is-invalid @enderror" id="correoclienteE" name="correoclienteE" value="{{ old('correoclienteE', $cliente->correocliente )}}" autocomplete="correoclienteE" autofocus>
-                                                    @error('correoclienteE')
-                                                        <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $message }}</strong>
-                                                        </span>
-                                                    @enderror    
-                                                </div>
-    
+                                            <div class="form-group">
+                                                <label for="nombre">Nombre del cliente: <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control @error('nombrecliente') is-invalid @enderror" id="nombrecliente" name="nombrecliente" value="{{ old('nombrecliente', $cliente->nombrecliente )}}" required autocomplete="nombrecliente" autofocus>
+                                                @error('nombrecliente')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                @enderror
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="nombre">Apellido del cliente: <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control @error('apellidocliente') is-invalid @enderror" id="apellidoclienteE" name="apellidocliente" value="{{ old('apellidocliente', $cliente->apellidocliente )}}" required autocomplete="apellidocliente" autofocus>
+                                                @error('apellidocliente')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                @enderror
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="nombre">Dirección del cliente</label>
+                                                <input type="text" class="form-control @error('direccioncliente') is-invalid @enderror" id="direccionclienteE" name="direccioncliente" value="{{ old('direccioncliente', $cliente->direccioncliente )}}" autocomplete="direccioncliente" autofocus>
+                                                @error('direccioncliente')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                @enderror
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="nombre">Teléfono del cliente</label>
+                                                <input type="text" class="form-control @error('telefonocliente') is-invalid @enderror" id="telefonocliente" name="telefonocliente" value="{{ old('telefonocliente', $cliente->telefonocliente )}}" autocomplete="telefonocliente" autofocus onkeypress="return event.charCode >= 48 && event.charCode<=57">
+                                                @error('telefonocliente')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                @enderror
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="nombre">Correo eléctronico del cliente</label>
+                                                <input type="email" class="form-control @error('correocliente') is-invalid @enderror" id="correoclienteE" name="correocliente" value="{{ old('correocliente', $cliente->correocliente )}}" autocomplete="correocliente" autofocus>
+                                                @error('correocliente')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                @enderror    
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="submit" class="btn btn-primary btn-submit"><i class="fas fa-save"></i> Guardar Cambios</button>
+                                                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="far fa-window-close"></i> Cancelar</button>
+                                            </div>
                                         </form>
                                     </div>
-                                    <div class="modal-footer">
-                                        <button type="submit" class="btn btn-primary btn-submit"><i class="fas fa-save"></i> Guardar Cambios</button>
-                                        <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="far fa-window-close"></i> Cancelar</button>
-                                    </div>
+                                    
                                 </div>
                             </div>
                         </div>
-                    @endforeach
-                </tbody>
-            </table>
+                        @endforeach
+                    </tbody>
+                </table>
+            <br>
+               
         </div>
     </div>
   <br>
@@ -239,43 +240,42 @@
 <script>
         // Función para mostrar mensajes de SweetAlert2
         function showAlert(icon, title, text, position, isError) {
-                    const options = {
-                        position: position,
-                        icon: icon,
-                        title: title,
-                        text: text,
-                        showConfirmButton: isError, // Mostrar el botón "OK" solo en alertas de error
-                        allowOutsideClick: false, // Evitar cerrar el modal haciendo clic fuera de él
-                        timer: isError ? null : 2000, // Cerrar automáticamente después de 2 segundos en alertas de éxito
-                    };
+            const options = {
+                position: position,
+                icon: icon,
+                title: title,
+                text: text,
+                showConfirmButton: isError, // Mostrar el botón "OK" solo en alertas de error
+                allowOutsideClick: false, // Evitar cerrar el modal haciendo clic fuera de él
+                timer: isError ? null : 2000, // Cerrar automáticamente después de 2 segundos en alertas de éxito
+            };
 
-                    // Mostrar la alerta de SweetAlert2 con las opciones configuradas
-                    Swal.fire(options).then((result) => {
-                        if (!isError && result.dismiss === Swal.DismissReason.timer) {
-                            // Cerrar el modal si la alerta es de éxito y se cierra automáticamente
-                            $('#editarclienteModal').modal('hide');
-                        }
-                    });
+            // Mostrar la alerta de SweetAlert2 con las opciones configuradas
+            Swal.fire(options).then((result) => {
+                if (!isError && result.dismiss === Swal.DismissReason.timer) {
+                    // Cerrar el modal si la alerta es de éxito y se cierra automáticamente
+                    $('#editarclienteModal').modal('hide');
                 }
-                
-                @if (session('success'))
-                    // Mostrar mensaje de éxito para la actualización
-                    showAlert('success', 'Éxito', '{{ session('success') }}', 'top-end', false);
-                    // Cerrar el modal de edición automáticamente después de 2 segundos
-                    setTimeout(function () {
-                        $('#editarclienteModal').modal('hide');
-                    }, 2000);
-                @elseif (session('error'))
-                    // Mostrar mensaje de error para la actualización
-                    showAlert('error', 'Error', '{{ session('error') }}', 'top-center', true);
-                    @foreach($clientes as $cliente)
-                        @if(session('error_id') == $cliente->id)
-                            $(document).ready(function () {
-                                $('#editarclienteModal{{$cliente->id}}').modal('show');
-                            });
-                        @endif
-                    @endforeach
-                @endif
+            });
+        }
+        
+        @if (session('success'))
+
+        // Mostrar mensaje de éxito para la actualización
+        showAlert('success', 'Éxito', '{{ session('success') }}', 'top-end', false);
+        // Cerrar el modal de edición automáticamente después de 2 segundos
+        setTimeout(function () {
+            $('#editarclienteModal').modal('hide');
+        }, 2000);
+
+        @elseif (session('error'))
+        
+                // Mostrar mensaje de error para la actualización
+            showAlert('error', 'Error', '{{ session('error') }}', 'top-center', true);
+            $('#editarclienteModal{{ $cliente->id }}').modal('show');
+        
+        @endif
+
 
     $(document).ready(function() {
     $('#clienteTable').DataTable({

@@ -175,17 +175,19 @@
                                         @enderror
                                    
                                         </div>
-                                    </form>
-                                        </div>
                                         <div class="modal-footer">
                                             <button type="submit" class="btn btn-primary btn-submit"><i class="fas fa-save"></i> Guardar Cambios</button>
                                             <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="far fa-window-close"></i> Cancelar</button>
                                         </div>
+                                    </form>
+                                        
+                                        
                                     </div>
                                 </div>
                             </div>
                
-                        </div>         
+                        </div>  
+                    </div>       
                     @endforeach
                 </tbody>
             </table>

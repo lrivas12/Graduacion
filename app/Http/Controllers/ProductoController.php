@@ -27,11 +27,11 @@ class ProductoController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'nombreproducto' => 'required|string|max:255',
-            'descripcionproducto' => 'string|max:255',
+            'nombreproducto' => 'required|string|max:255|unique:productos',
+            'descripcionproducto' => 'nullable|string|max:255',
             'precioproducto' => 'required|numeric|min:0',
             'stockminimo' => 'required|integer|min:0',
-            'cantidadproducto' => 'required|integer|min:0',
+            /* 'cantidadproducto' => 'required|integer|min:0', */
             'marcaproducto' => 'required|string|max:255',
             'unidadmedidaproducto' => 'required|string|max:255',
             'clasificacionproducto' => 'required|string|max:255',
@@ -70,7 +70,8 @@ class ProductoController extends Controller
         $productos = new Producto();
         $productos->nombreproducto = $request->input('nombreproducto');
         $productos->descripcionproducto = $request->input('descripcionproducto');
-        $productos->cantidadproducto = $request->input('cantidadproducto');
+       /*  $productos->cantidadproducto = $request->input('cantidadproducto'); */
+       $productos->cantidadproducto = 0;
         $productos->stockminimo = $request->input('stockminimo');
         $productos->marcaproducto = $request->input('marcaproducto');
         $productos->unidadmedidaproducto = $request->input('unidadmedidaproducto');

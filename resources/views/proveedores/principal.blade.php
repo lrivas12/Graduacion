@@ -131,9 +131,7 @@
                         <td>{{ $proveedor->numerorucproveedor }}</td>
                         <td>{{ $proveedor->telefonoproveedor }}</td>
                         <td>
-                            <div class="d-flex align-items-center">
-                            
-                                <button class="btn btn-warning btn-edit" data-toggle="modal" data-target="#editarproveedorModal{{$proveedor->id}}"><i class="fas fa-edit"></i> Editar</button>
+                            <button class="btn btn-warning btn-edit" data-toggle="modal" data-target="#editarproveedorModal{{$proveedor->id}}"><i class="fas fa-edit"></i> Editar</button>
                         
                             <a>                            
                                 <!-- Se crea los botones dentro del formulario donde la acción hace el llamado a la ruta correspondiente -->
@@ -152,6 +150,9 @@
                                     @endif
                                 </form>
                             </a>
+                            <div class="d-flex align-items-center">
+                            
+                                
                             </div>
                         </td>
                     </tr>
