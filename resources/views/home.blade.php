@@ -112,9 +112,9 @@
 var myChart = new Chart(ctx, {
     type: 'pie',
     data: {
-        labels: {!! $labels '0' !!},
+        labels: {!! $labels ?? 0 !!},
         datasets: [{
-            data: {!! $data ?? '0' !!},
+            data: {!! $data ?? 0 !!},
             backgroundColor: [
                 'rgba(255, 99, 132, 0.7)',
                 'rgba(54, 162, 235, 0.7)',
