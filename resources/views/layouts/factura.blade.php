@@ -35,7 +35,47 @@
             /* Bordes redondeados */
         }
     </style>
+    <style>
+        .select2-container{
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            width: 100%;
+        }
+        .select2-section{
+            height: 38px;
+            border:none;
+        }
 
+        .select2-container--focus .select2-selection {
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Cambia el color del borde cuando el Select2 está enfocado */
+        }
+
+        .search-box {
+            width: 250px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            outline: none;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        /* Estilos cuando el campo de búsqueda está enfocado */
+        .search-box:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+        .search-container {
+            text-align: right;
+        }
+        
+        #divTable {
+            max-height: 700px; /* Ajusta la altura máxima según tus necesidades */
+            overflow-y: auto; /* Agrega una barra de desplazamiento vertical cuando sea necesario */
+        }
+        
+    </style>
 @stop
 
 @section('content_header')
@@ -113,7 +153,7 @@
                                                 
                                                     <div id="contentCliente">
                                                         <label for="cliente">Cliente: <span class="text-danger">*</span></label>
-                                                        <select class="form-control @error('clientes_id') is-invalid @enderror" id="clientes_id" name="clientes_id" required>
+                                                        <select class="form-control select2 cliente-select @error('clientes_id') is-invalid @enderror" id="clientes_id" name="clientes_id" required>
                                                             <option value="{{ old('clientes_id') }}">Seleccionar cliente</option>
                                                             @foreach ($clientes as $cliente)
                                                             <option value="{{ $cliente->id }}" >{{ $cliente->nombrecliente }} {{ $cliente->apellidocliente }} {{$cliente->telefonocliente}}</option>
@@ -180,7 +220,7 @@
                                                 <select class="form-control select2 ProdSelect2" id="seleccionarProducto" name="seleccionarProducto" key="" nombre="" style="width: 100%;">
                                                     <option value="" >Seleccionar producto: </option>
                                                     @foreach ($productos as $producto)
-                                                    <option value="{{ $producto->id }}"  >{{ $producto->nombreproducto }}   Existencia: {{ $producto->cantidadproducto }}</option>
+                                                    <option value="{{ $producto->id }}"  >{{ $producto->nombreproducto }}   Existencia: {{ $producto->cantidadproducto }} Medida {{$producto->unidadmedidaproducto}}</option>
                                                     @endforeach
                                                 </select>
                                                 <br>
@@ -357,7 +397,7 @@
     //variables que pueden ser utilizadas en todas las funciones del script
     var tablaDatos = [];
     var cantidadproducto, pago, saldo,tipoVenta, totaldescuento = 0, descuento = 0; //propias de ventas
-    
+
     document.addEventListener('DOMContentLoaded', function () {
         
         var guardarEImprimirBtn = document.getElementById('guardarEImprimir');
@@ -558,6 +598,16 @@
             }
         }); */
             
+        $('.cliente-select').select2({
+            theme: 'bootstrap4',
+            language: 'es',
+        });
+
+        $('.ProdSelect2').select2({
+            theme: 'bootstrap4',
+            language:'es',
+        });
+
         $('#seleccionarProducto').change(function(){
             let id = $(this).val();
             inputSelect(id);
