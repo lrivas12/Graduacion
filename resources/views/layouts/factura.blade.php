@@ -448,7 +448,16 @@
                     window.open(`/ventas/${data.id}/factura`, '_blank');
 
                 })
-                .catch(error => console.error('Error al guardar e imprimir:', error.message));
+                .catch(error => {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: "Error al imprimir",
+                        allowOutsideClick: false,
+                        showCancelButton: false,
+                        confirmButtonText: 'OK'
+                    });
+                })
 
                  // Detectar cambios en el historial (Retroceso)
                 

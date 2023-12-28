@@ -170,7 +170,7 @@ class VentaControlller extends Controller
 
     }
 
-    protected function obtenerAlturaPdf($html)
+    public function obtenerAlturaPdf($html)
     {
         $pdf = new TCPDF('p', 'mm', 'A4', true, 'UTF-8', false);
 
