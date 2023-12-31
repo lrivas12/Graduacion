@@ -71,7 +71,7 @@
             <h2>Stock de Productos</h2>
             <!-- Tabla de Compras -->
             <table id="stockTable" class="table table-bordered ">
-                <thead>
+                <thead class="text-center">
                     <tr>
                         <th>#</th>
                         <th>Producto</th>
@@ -80,7 +80,7 @@
                         <th>Stock Mínimo</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="text-center">
                     @foreach ($productos as $producto)
                     <tr>
                         @php

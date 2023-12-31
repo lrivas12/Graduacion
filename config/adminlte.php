@@ -129,12 +129,12 @@ return [
     |
     */
 
-    'usermenu_enabled' => null,
-    'usermenu_header' => null,
+    'usermenu_enabled' => true,
+    'usermenu_header' => true,
     'usermenu_header_class' => 'bg-primary',
-    'usermenu_image' => null,
-    'usermenu_desc' => null,
-    'usermenu_profile_url' => null,
+    'usermenu_image' => true,
+    'usermenu_desc' => true,
+    'usermenu_profile_url' => true,
 
 
     /*
@@ -341,6 +341,16 @@ return [
                 'route'  => 'cliente.index',
                 'icon' => 'fas fa-address-book',
             ],
+            [
+                'text' => 'Compras',
+                'route'  => 'compras.create',
+                'icon' => 'fas fa-shopping-cart',
+            ],
+            [
+                'text' => 'Historial Compras',
+                'route'  => 'compras.index',
+                'icon' => 'fas fa-shopping-cart',
+            ],
             ],
         ],
         [
@@ -368,16 +378,6 @@ return [
                     'text'    => 'Stock',
                     'route'     => 'stock.index',
                     'icon'    => 'fas fa-box',
-                ],
-                [
-                    'text' => 'Compras',
-                    'route'  => 'compras.create',
-                    'icon' => 'fas fa-shopping-cart',
-                ],
-                [
-                    'text' => 'Historial Compras',
-                    'route'  => 'compras.index',
-                    'icon' => 'fas fa-shopping-cart',
                 ],
             ],
         ],

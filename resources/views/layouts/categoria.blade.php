@@ -102,7 +102,7 @@
    <br>
    <h2>Lista de Categorías</h2>
    <table id="categoriaTable" class="table table-bordered">
-       <thead>
+       <thead class="text-center">
            <tr>
                <th>Id</th>
                <th>Nombre</th>
@@ -110,7 +110,7 @@
                <th>Acciones</th>
            </tr>
             </thead>
-                <tbody>
+                <tbody class="text-center">
                     @foreach($categorias as $categoria)
                     <tr>
                         <td>{{$categoria->id }}</td>

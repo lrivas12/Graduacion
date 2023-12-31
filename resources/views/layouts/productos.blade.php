@@ -206,7 +206,7 @@
         <br><br>
         <h2>Lista de productos</h2>
         <table id="productosTable" class="table table-bordered table-responsive">
-            <thead>
+            <thead class="text-center">
                 <tr>
                     <th>#</th>
                     <th>Imagen </th>
@@ -222,7 +222,7 @@
                     <th>Acciones</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="text-center">
                     @foreach($productos as $producto)
                         <tr>
                             

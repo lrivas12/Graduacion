@@ -129,8 +129,8 @@
                 <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Agregar</button>
             </form>
             <h2>Lista de Clientes</h2>
-                <table id="clienteTable" class="table table-bordered">
-                    <thead>
+                <table id="clienteTable" class="table table-bordered ">
+                    <thead class="text-center">
                         <tr>
                             <th>Id</th>
                             <th>Nombres</th>
@@ -141,7 +141,7 @@
                             <th>Acciones</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="text-center">
                         @foreach($cliente as $cliente)
                             <tr>
                                 <td>{{$cliente->id }}</td>

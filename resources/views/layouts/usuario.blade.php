@@ -82,8 +82,8 @@
 
                 <h3>Listado de Usuarios</h3>
                 <div>
-                    <table id="userTable" class="table table-hover table-bordered">
-                        <thead class="thead-blue">
+                    <table id="userTable" class="table table-hover table-bordered table-responsive">
+                        <thead class="thead-blue text-center">
                             <tr>
                                 <th>Id</th>
                                 <th>Fotografía</th>
@@ -93,7 +93,7 @@
                                 <th>Acciones</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="text-center">
                             @foreach ($users as $user)
                                 <tr>
                                     <td>{{ $user->id }}</td>

@@ -114,7 +114,7 @@
         <h1>Lista de proveedores</h1><br>
         <div class="table-responsive" >
         <table id="proveedor" class="table table-bordered">
-            <thead>
+            <thead class="text-center">
                 <tr>
                     <th>ID</th>
                     <th>Razón social o Nombre</th>
@@ -123,7 +123,7 @@
                     <th>Acciones</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="text-center">
                 @foreach($proveedores as $proveedor)
                     <tr>
                         <td>{{ $proveedor->id }}</td>

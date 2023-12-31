@@ -14,6 +14,7 @@ use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\MantenimientoController;
 use App\Http\Controllers\OdontoController;
 use App\Http\Controllers\PagoController;
+use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\ReportesController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\VentaControlller;
@@ -74,3 +75,4 @@ Route::get('/exportarproveedores', [MantenimientoController::class, 'exportProve
 Route::get('/exportarproductos', [MantenimientoController::class, 'exportProductos'])->name('exportarProductos')->middleware("Roles:Administrador");
 Route::get('/exportarfacturas', [MantenimientoController::class, 'exportSalesWithDetails'])->name('exportarVentas')->middleware("Roles:Administrador");
 Route::get('/ventas/{id}/factura', [VentaControlller::class, 'Imprimirfactura'])->name('facturas.Imprimirfactura')->middleware("Roles:Administrador,Editor,Vendedor");
+Route::resource('/perfil', (PerfilController::class))->middleware("Roles:Administrador,Editor,Vendedor");

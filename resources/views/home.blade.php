@@ -3,19 +3,19 @@
 @section('css')
     <style>
         .card1{
-            background: linear-gradient(to bottom, #6704e9, purple);
+            background: linear-gradient(to bottom, var(--success), transparent);
         }
         .card3{
-            background: linear-gradient(to bottom, #048de9, rgb(2, 59, 216));
+            background: var(--success);
         }
         .card4{
-            background: linear-gradient(to bottom, #ffa703, rgb(255, 251, 0));
+            background: var(--info);
         }
         .card5{
-            background: linear-gradient(to bottom, purple, rgb(2, 59, 216));
+            background: var(--warning);
         }
         .card6{
-            background: linear-gradient(to bottom, #34f89c, rgb(35, 206, 1));
+            background: var(--primary);
         }
     </style>
 @stop
@@ -41,14 +41,14 @@
         <div class="card card1">
             <div class="card-body">
                 <div class="text-center">
-                    <h4 class="text-white"><strong>Ventas del Día</strong></h4>
+                    <h4 ><strong>Ventas del Día</strong></h4>
                     <br>
-                    <h2 class="text-white"><strong>C$ {{ $ingresosHoy  ?? '0' }}</strong></h2>
+                    <h2 ><strong>C$ {{number_format($ingresosHoy, 2, '.', ',')   ?? '0' }}</strong></h2>
 
-                    <h4 class="text-white"><strong> Ventas del Mes</strong></h4>
+                    <h4 ><strong> Ventas del Mes</strong></h4>
                     <br>
-                    <h2 class="text-white"><strong> C$ {{$ingresosGenerales  ?? '0'}}</strong></h2>
-                    <a href="{{ route('factura.index') }}" id="updateButton" class="btn btn-success">
+                    <h2 ><strong> C$ {{number_format($ingresosGenerales, 2, '.', ',')  ?? '0'}}</strong></h2>
+                    <a href="{{ route('factura.create') }}" id="updateButton" class="btn btn-success">
                         <i class="fas fa-money-check-alt"></i> Facturar
                     </a>
                 </div> 
@@ -58,6 +58,7 @@
     <div class="col-md-8">
         <div class="card card2">
             <div class="card-body">
+                <h2 class="text-center"><strong>Productos mas vendidos</strong></h2>
                 <canvas id="myPieChart"></canvas>
             </div>
         </div>
@@ -71,7 +72,7 @@
             <div class="card-body">
                 <h3 class="text-center text-white"><strong> Total compras realizadas</strong></h3>
                 <br>
-                <h4 class="text-center text-white"><strong> C$ {{$totalCompras  ?? 'Variable no definida'}}</strong></h4>
+                <h4 class="text-center text-white"><strong> C$ {{number_format($totalCompras, 2, '.', ',')  ?? 'Variable no definida'}}</strong></h4>
             </div>
         </div>
     </div>
@@ -89,7 +90,7 @@
             <div class="card-body">
                 <h3 class="text-center text-white"><strong> Total monto al crédito</strong></h3>
                 <br>
-                 <h4 class="text-center text-white"><strong>C$ {{$montoFacturasCredito  ?? 'Variable no definida'}}</strong></h4> 
+                 <h4 class="text-center text-white"><strong>C$ {{number_format($montoFacturasCredito, 2, '.', ',')  ?? 'Variable no definida'}}</strong></h4> 
             </div>
         </div>
     </div>

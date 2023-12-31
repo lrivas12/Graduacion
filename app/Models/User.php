@@ -28,6 +28,36 @@ class User extends Authenticatable implements MustVerifyEmail
         'foto',
     ];
 
+    public function adminlte_image()
+    {
+        $user = Auth::user();
+         // Verificar si el usuario tiene una foto de perfil cargada
+         if ($user->foto) {
+            // Devolver la URL de la foto de perfil del usuario autenticado
+            return asset('storage/usuarios/' . $user->foto);
+        } else {
+            // Si el usuario no tiene una foto de perfil, puedes devolver una imagen por defecto
+            return asset('storage/usuarios/user.png');
+        }
+    }
+
+    public function adminlte_desc()
+    {
+        // Obtén el nombre de usuario del usuario autenticado
+        //$user = Auth::user();
+
+        //return $user->username;
+        return $this->usuario . ' ( ' . $this->privilegios . ' ) ';
+
+    }
+
+    public function adminlte_profile_url()
+    {
+        $user = Auth::user();
+        return route('perfil.show', ['perfil' => $user->id]);
+
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -47,4 +77,5 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
 }
