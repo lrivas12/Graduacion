@@ -97,8 +97,8 @@
                 </div>
                 
                 <div class="col-md-4">
-                    <label for="telefonoproveedor">Teléfono proveedor: </label>
-                    <input type="text" class="form-control @error('telefonoproveedor') is-invalid @enderror" id="telefonoproveedor" name="telefonoproveedor" autocomplete="telefonoproveedor" value="{{ old('telefonoproveedor')}}" autofocus onkeypress="return event.charCode >= 48 && event.charCode<=57">
+                    <label for="telefonoproveedor">Teléfono proveedor: <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control @error('telefonoproveedor') is-invalid @enderror" id="telefonoproveedor" name="telefonoproveedor" autocomplete="telefonoproveedor" value="{{ old('telefonoproveedor')}}" autofocus onkeypress="return event.charCode >= 48 && event.charCode<=57"  required>
                     @error('telefonoproveedor')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>

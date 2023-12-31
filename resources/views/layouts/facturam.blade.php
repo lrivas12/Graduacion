@@ -154,7 +154,7 @@
        {{-- <a  href="{{ route('ventas.index') }}" class="btn btn-success" id="btnImprimir">Imprimir</a> --}}
        <label for=""></label>
       
-       <form class = "text-right" method="GET" action="{{ route('factura.index', $ventas->id) }}">
+       <form class = "text-right" method="GET" action="{{ route('facturas.Imprimirfactura', $ventas->id) }}">
            <button type="submit" class="btn btn-outline-success">Imprimir venta</button>
        </form>
    </div>

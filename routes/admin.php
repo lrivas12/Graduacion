@@ -74,5 +74,6 @@ Route::get('/exportarclientes', [MantenimientoController::class, 'exportClientes
 Route::get('/exportarproveedores', [MantenimientoController::class, 'exportProveedores'])->name('exportarProveedores')->middleware("Roles:Administrador");
 Route::get('/exportarproductos', [MantenimientoController::class, 'exportProductos'])->name('exportarProductos')->middleware("Roles:Administrador");
 Route::get('/exportarfacturas', [MantenimientoController::class, 'exportSalesWithDetails'])->name('exportarVentas')->middleware("Roles:Administrador");
+
 Route::get('/ventas/{id}/factura', [VentaControlller::class, 'Imprimirfactura'])->name('facturas.Imprimirfactura')->middleware("Roles:Administrador,Editor,Vendedor");
 Route::resource('/perfil', (PerfilController::class))->middleware("Roles:Administrador,Editor,Vendedor");

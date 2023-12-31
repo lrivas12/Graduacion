@@ -113,7 +113,7 @@
                                                 </a> 
                                                 </td>
                                                 <td>
-                                                <a href="{{ route('factura.create') }}" title= "Imprimir Venta"> 
+                                                <a href="{{ route('facturas.Imprimirfactura', $venta->id) }}" title= "Imprimir Venta"> 
                                                     <i class="fas fa-print text-success" ></i>
                                                 </a>
                                             </div>    
