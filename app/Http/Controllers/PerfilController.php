@@ -7,12 +7,13 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Auth\MustVerifyEmail;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 
 class PerfilController extends Controller
 {
+     use MustVerifyEmail;
     /**
      * Display a listing of the resource.
      */
@@ -77,13 +78,14 @@ class PerfilController extends Controller
         $user->email = $request->input('email');
         $user->password = $request->input('password');
 
-        $user->sendEmailVerificationNotification();
+        $user-> sendEmailVerificationNotification();
 
         // Actualizar la contraseña si se proporciona
         if ($request->has('password')) {
             $hashedPassword = bcrypt($request->input('password'));
             $user->password = $hashedPassword;
         }
+       
 
         if($request->hasFile('foto')){
             if(Storage::disk('public')->exists($user->foto)){
