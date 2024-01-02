@@ -127,13 +127,13 @@
                                         <th>Saldo Pendiente</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody class="text-center">
                                     @foreach ($detallepagos as $detallepago)
                                     <tr>
                                         <td>{{$detallepago->id}}</td>
-                                        <td>{{$detallepago->fechadetallepago}}</td>
-                                        <td>{{$detallepago->cantidaddetallepago}}</td>
-                                        <td>{{$detallepago->saldodetallepago}}</td>
+                                        <td>{{\Carbon\Carbon::parse ($detallepago->fechadetallepago)->format('d/m/Y')}}</td>
+                                        <td>{{number_format($detallepago->cantidaddetallepago, 2, '.', ',')}}</td>
+                                        <td>{{number_format($detallepago->saldodetallepago, 2, '.', ',')}}</td>
                                     </tr>
                                     @endforeach
                                 </tbody>

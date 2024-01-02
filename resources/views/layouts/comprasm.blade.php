@@ -82,7 +82,7 @@
                 <div class="card-body">
                     <div class="table-responsive" >
                         <table class="table table-bordered" id="listaCompra">
-                            <thead>
+                            <thead class="text-center">
                                 <tr>
                                     <th>#</th>
                                     <th>Proveedor</th>
@@ -91,13 +91,13 @@
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="text-center">
                                 @foreach ($compra as $compra)
                                 <tr>
                                 <td>{{$loop->iteration}}</td>
                                 <td>{{$compra->proveedor->razonsocialproveedor}}</td>
-                                <td>{{$compra->fechacompra}}</td>
-                                <td>{{$compra->totalcompra}}</td>
+                                <td>{{ \Carbon\Carbon::parse ($compra->fechacompra)->format('d/m/Y')}}</td>
+                                <td>{{ number_format($compra->totalcompra, 2, '.', ',')}}</td>
                                 <td>
                                     <!-- Los botones para desactivar o activar aparecen según el estado almacenado en la base de datos -->
                                     <div class="d-flex align-items-center">

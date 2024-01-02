@@ -89,7 +89,7 @@
                                 <label for="fechacompra">{{ __('Fecha compra') }}</label>
                                 <input id="fechacompra" type="text"
                                 class="form-control" name="fechacompra"
-                                value="{{ $compra->fechacompra }}"  disabled>
+                                value="{{ \Carbon\Carbon::parse($compra->fechacompra)->format('d/m/Y') }}"  disabled>
                             </div>
                             <div class="col-md-3">
                                 <label for=""></label>
@@ -118,9 +118,9 @@
                                 <tr class="text-center">
                                     <td>{{ $detallecompra->id }}</td>
                                     <td>{{ $detallecompra->producto->nombreproducto}}</td>
-                                    <td>{{ $detallecompra->cantidadcompra }}</td>
-                                    <td>C$ {{ $detallecompra->costocompra }}</td>
-                                    <td>C$ {{ $detallecompra->subtotalcompra }}</td>
+                                    <td>{{$detallecompra->cantidadcompra }}</td>
+                                    <td>C$ {{ number_format($detallecompra->costocompra, 2, '.', ',') }}</td>
+                                    <td>C$ {{ number_format($detallecompra->subtotalcompra, 2, '.', ',') }}</td>
  
                                 </tr>
                             @endforeach
@@ -128,7 +128,7 @@
                         <tfoot>
                             <tr class="text-center"> 
                                 <td class = "text-right" colspan="4"> <strong>Total </strong></td> <!-- Celdas vacías para alinear correctamente -->
-                                <td><strong> C$ {{ $compra->totalcompra }}</strong></td>
+                                <td><strong> C$ {{ number_format($compra->totalcompra, 2, '.', ',') }}</strong></td>
                             </tr>
                         </tfoot>
                        

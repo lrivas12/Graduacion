@@ -256,7 +256,7 @@
                                     {{ $producto->cantidadproducto }}
                                 </button>
                             </td>
-                            <td>{{ $producto->precioproducto }}</td>
+                            <td>{{ number_format($producto->precioproducto, 2, '.', ',') }}</td>
                             <td>{{ $producto->marcaproducto }}</td>
                             <td>{{ $producto->stockminimo }}</td>
                             <td>{{ $producto->unidadmedidaproducto }}</td>

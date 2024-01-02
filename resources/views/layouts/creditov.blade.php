@@ -83,13 +83,13 @@
                         <th>Acciones</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="text-center">
                     @foreach ($pagos as $pago)
                     <tr>
                         <td>{{$loop->iteration}}</td>
-                        <td>{{$pago->fechapago}}</td>
+                        <td>{{\Carbon\Carbon::parse ($pago->fechapago)->format('d/m/Y')}}</td>
                         <td>{{$pago->factura->cliente->nombrecliente}} {{$pago->factura->cliente->apellidocliente}}</td> 
-                        <td>C$ {{ $pago->factura->totalventa}}</td>
+                        <td>C$ {{ number_format($pago->factura->totalventa, 2, '.', ',')}}</td>
                         <td>C$ {{ number_format($pago->cantidadpago - $pago->detallepago->sum('cantidaddetallepago'), 2, '.', ',')}}</td>
                         <td>
                             <div class="d-flex align-items-center">
