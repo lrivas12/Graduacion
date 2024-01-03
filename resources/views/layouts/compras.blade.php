@@ -73,6 +73,9 @@
                         <div class="overflow-auto">
                                 <div class="card-body">
                                     @csrf
+                                    <label style="font-style: italic; ">
+                                        Los campos marcados con  <span style=" color: red;">*</span> son obligatorios</span>
+                                    </label>
                                             <input type="hidden" id="detalleCompra" name="detalleCompra">
                                             <div class="border border p-2">
                                             <h2>Datos de compra</h2>

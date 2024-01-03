@@ -325,7 +325,10 @@
                     <form method="POST" action="{{ route('usuario.store') }}" enctype="multipart/form-data">
 
                         @csrf
-
+                        <label style="font-style: italic; ">
+                            Los campos marcados con  <span style=" color: red;">*</span> son obligatorios</span>
+                        </label>
+                        
                         <div class="form-group row">
                             <label for="photo" class="col-md-4 col-form-label text-md-right">Fotografía</label>
                             <br>

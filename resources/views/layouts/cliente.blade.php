@@ -74,6 +74,9 @@
         <!-- Formulario para crear un nuevo Cliente -->
             <form method="POST" action="{{ route('cliente.store') }}">
                 @csrf
+                <label style="font-style: italic; ">
+                    Los campos marcados con  <span style=" color: red;">*</span> son obligatorios</span>
+                </label>
                 <div class="row">
                     <div class="col-md-4">
                         <label for="nombre">Nombre del cliente: <span class="text-danger">*</span></label>

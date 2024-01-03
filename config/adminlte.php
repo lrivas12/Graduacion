@@ -425,9 +425,9 @@ return [
                 ],
             ],
         ],
-        ['header' => 'Acerca de'],
+        ['header' => 'Configuración'],
         [
-            'text'    => 'Ayuda',
+            'text'    => 'Configurar',
             'url'     => '#',
             'icon'    => 'fas fa-user-tie',
             'submenu' => [

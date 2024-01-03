@@ -176,6 +176,11 @@
                 <br>
                 <form method="POST" action="{{ route('empresa.update', $emp->id) }}" enctype="multipart/form-data">
                     @csrf
+
+                    <label style="font-style: italic; ">
+                        Los campos marcados con  <span style=" color: red;">*</span> son obligatorios</span>
+                    </label>
+                    
                     @method('PUT')
                     <div class="form-group row">
                         <div class="col-md-6">

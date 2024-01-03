@@ -87,6 +87,10 @@
                     <div class="modal-body">
                         <form method= "POST" action="{{route ('producto.store')}}" enctype="multipart/form-data">
                             @csrf
+
+                            <label style="font-style: italic; ">
+                                Los campos marcados con  <span style=" color: red;">*</span> son obligatorios</span>
+                            </label>
                             <div class="form-group row">
                                 <label for="fotoproducto">Foto producto: </label>
                                 <input type="file" name="fotoproducto" id="fotoproducto" class="form-control @error('fotoproducto') is-invalid @enderror" value="{{ old('fotoproducto')}}">

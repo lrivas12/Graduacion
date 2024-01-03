@@ -75,6 +75,9 @@
     <!-- Formulario para crear una nueva categoría -->
     <form method="POST" action="{{ route('categoria.store') }}">
        @csrf
+       <label style="font-style: italic; ">
+           Los campos marcados con  <span style=" color: red;">*</span> son obligatorios</span>
+       </label>
        
         <div class=" row">
           <div class="col-md-4 ">

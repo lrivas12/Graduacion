@@ -163,7 +163,10 @@
                                     <input id="password" type="password"
                                         class="form-control @error('password') is-invalid @enderror" name="password"
                                         autocomplete="new-password">
-
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-secondary" type="button" id="showPasswordBtn">
+                                                <i class="fa fa-eye"></i> </button>
+                                            </div>
                                     @error('password')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -179,6 +182,8 @@
                                 <div class="col-md-6">
                                     <input id="password-confirm" type="password" class="form-control"
                                         name="password_confirmation" autocomplete="new-password">
+                                        
+                                <div id="password-errors" class="col-md-6 offset-md-4"></div>
                                 </div>
                             </div>
 
@@ -325,5 +330,62 @@
             @endif
         });
     </script>
+
+<script>
+    $(document).ready(function () {
+       $('#showPasswordBtn').click(function () {
+           var passwordFields = $('#password, #password-confirm');
+           var passwordFieldType = passwordFields.attr('type');
+           if (passwordFieldType === 'password') {
+               passwordFields.attr('type', 'text');
+               $(this).html('<i class="fa fa-eye-slash"></i>');
+           } else {
+               passwordFields.attr('type', 'password');
+               $(this).html('<i class="fa fa-eye"></i>');
+           }
+       });
+
+       // Validación de contraseña segura
+       $('#password, #password-confirm').on('input', function () {
+           var password = $('#password').val();
+           var confirmPassword = $('#password-confirm').val();
+           var passwordErrors = $('#password-errors');
+           var errors = [];
+
+           // Validar longitud mínima
+           if (password.length < 8) {
+               errors.push("La contraseña debe tener al menos 8 caracteres.");
+           }
+
+           // Validar al menos un número
+           if (!/\d/.test(password)) {
+               errors.push("La contraseña debe contener al menos un número.");
+           }
+
+           // Validar al menos una letra mayúscula
+           if (!/[A-Z]/.test(password)) {
+               errors.push("La contraseña debe contener al menos una letra mayúscula.");
+           }
+
+           // Validar al menos un carácter especial
+           if (!/[\W_]/.test(password)) {
+               errors.push("La contraseña debe contener al menos un carácter especial.");
+           }
+
+           // Validar que las contraseñas coincidan
+           if (password !== confirmPassword) {
+               errors.push("Las contraseñas no coinciden.");
+           }
+
+           // Mostrar los mensajes de error
+           if (errors.length > 0) {
+               passwordErrors.html('<ul class="text-danger"><li>' + errors.join('</li><li>') + '</li></ul>');
+           } else {
+               passwordErrors.html('');
+           }
+       });
+   });
+
+</script>
 @endsection
 @endsection

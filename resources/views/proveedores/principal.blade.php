@@ -75,6 +75,11 @@
     <!-- Formulario para crear un proveedor-->
         <form method="POST" action="{{ route('proveedores.store') }}">
             @csrf
+
+            <label style="font-style: italic; ">
+                Los campos marcados con  <span style=" color: red;">*</span> son obligatorios</span>
+            </label>
+            
             <div class="row">
                 <div class="col-md-4">
                     <label for="razonsocialproveedor">Razón social o nombre proveedor: <span class="text-danger">*</span></label>
