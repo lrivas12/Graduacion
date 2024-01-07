@@ -37,9 +37,9 @@
                         <tr class="text-center">
                            
                             <td>{{$venta->id}}</td>
-                            <td>{{$venta->fechafactura}}</td>
+                            <td>{{\Carbon\Carbon::parse ($venta->fechafactura)->format('d-m-Y')}}</td>
                             <td>{{$venta->tipoventa}}</td>
-                            <td>{{$venta->totalventa}}</td>
+                            <td>C$ {{number_format($venta->totalventa, 2, '.', ',')}}</td>
                         </tr>
                     @endforeach
                     </tbody>

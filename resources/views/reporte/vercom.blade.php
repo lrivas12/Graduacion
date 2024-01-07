@@ -34,8 +34,8 @@
                         <tr class="text-center">
                            
                             <td>{{$compra->id}}</td>
-                            <td>{{$compra->fechacompra}}</td>
-                            <td>{{$compra->totalcompra}}</td>
+                            <td>{{\Carbon\Carbon::parse ($compra->fechacompra)->format('d/m/Y')}}</td>
+                            <td>C$ {{number_format($compra->totalcompra, 2, '.', ',')}}</td>
                         </tr>
                     @endforeach
                     </tbody>

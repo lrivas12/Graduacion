@@ -36,7 +36,7 @@
                     <tbody>
                         @foreach ($facturas as $factura)
                             <tr class="text-center">
-                                <td>{{ $factura->fechafactura }}</td>
+                                <td>{{ \Carbon\Carbon::parse ($factura->fechafactura)->format('d/m/Y') }}</td>
                                 <td>
                                     @if ($factura->detallepago->cantidaddetallepago > 0 && $factura->detallepago->cantidaddetallepago < $factura->totalapagar)
                                         {{-- Si hay abono y es menor al total a pagar, mostrar el abono --}}
