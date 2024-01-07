@@ -375,7 +375,7 @@
                                             </div>
                                             <div class="form-group">
                                             <label for="cantidadproducto">Cantidad producto: <span class="text-danger">*</span></label>
-                                            <input type="number" class="form-control @error('cantidadproducto') is-invalid @enderror" id="cantidadproducto" name="cantidadproducto" value="{{ old('cantidadproducto', $producto->cantidadproducto )}}" required autocomplete="cantidadproducto" autofocus onkeypress="return event.charCode >= 48 && event.charCode<=57">
+                                            <input type="number" class="form-control @error('cantidadproducto') is-invalid @enderror" id="cantidadproducto" name="cantidadproducto" value="{{ old('cantidadproducto', $producto->cantidadproducto )}}" required autocomplete="cantidadproducto" autofocus onkeypress="return event.charCode >= 48 && event.charCode<=57" readonly>
                                             @error('cantidadproducto')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
@@ -384,7 +384,7 @@
                                             </div>
                                             <div class="form-group">
                                                 <label for="precioproducto">Precio producto: <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control @error('precioproducto') is-invalid @enderror" id="precioproducto" name="precioproducto" value="{{ old('precioproducto', $producto->precioproducto )}}" required autocomplete="precioproducto" autofocus onkeypress="return event.charCode >= 48 && event.charCode<=57">
+                                                <input type="text" class="form-control @error('precioproducto') is-invalid @enderror" id="precioproducto" name="precioproducto" value="{{ old('precioproducto', $producto->precioproducto )}}" required autocomplete="precioproducto" autofocus onkeypress="return event.charCode >= 48 && event.charCode<=57" readonly>
                                                 @error('precioproducto')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>

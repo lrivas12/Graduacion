@@ -193,11 +193,11 @@
                     <div class="row">
                         <div class="col-md-6" id="FechInINV" style="display: none;" onchange="MostrarDivInv()">
                             <label for="">Fecha Inicio</label>
-                            <input type="date" class="form-control" name="fechini" value="{{$fechaInicio ?? ''}}" id="fechini" onchange="validarfecha()" required>
+                            <input type="date" class="form-control" name="fechaini" value="{{$fechaInicio ?? ''}}" id="fechaini" onchange="validarfecha()" required>
                         </div>
                         <div class="col-md-6" id="FechFinINV" style="display: none;" onchange="MostrarDivInv()">
                             <label for="">Fecha Fin</label>
-                            <input type="date" class="form-control" value="{{$fechaFin ?? ''}}" name="fechfin" id="fechfin" onchange="validarfecha()" required>
+                            <input type="date" class="form-control" value="{{$fechaFin ?? ''}}" name="fechafin" id="fechafin" onchange="validarfecha()" required>
                         </div>
                     </div>
                     <div class="contenido" id="cardprodgen" style="display: none">
@@ -381,6 +381,9 @@ var tiporeporteInventario;
         var cardprodagot = document.getElementById('cardprodagot');
         var FechInINV = document.getElementById('FechInINV');
         var FechFinINV = document.getElementById('FechFinINV');
+
+        cardprodagot.style.display = 'none';
+        cardprodgen.style.display = 'none';
         FechInINV.style.display = 'none';
         FechFinINV.style.display = 'none';
 
@@ -388,33 +391,28 @@ var tiporeporteInventario;
         if (tiporeporteInventario === 'comprasxfech') {
             FechInINV.style.display = 'block';
             FechFinINV.style.display = 'block';
-        }else 
-        if (tiporeporteInventario === 'productosge') {
+        }else if (tiporeporteInventario === 'productosge') {
         cardprodgen.style.display = 'block'; // Mostrar el contenido
-        } else {
-        cardprodgen.style.display = 'none'; // Ocultar el contenido
-        }
-        if (tiporeporteInventario === 'prodagot') {
+        } else if (tiporeporteInventario === 'prodagot') {
         cardprodagot.style.display = 'block'; // Mostrar el contenido
-        } else {
-        cardprodagot.style.display = 'none'; // Ocultar el contenido
         }
-        $(document).ready(function() {
-            var fechini = $('#fechini');
-            var fechfin = $('#fechfin');
 
-            $('#fechfin').change(function() {
+        $(document).ready(function() {
+            var fechaini = $('#fechaini');
+            var fechafin = $('#fechafin');
+
+            $('#fechafin').change(function() {
                 mostrarUrl();
             });
 
             function mostrarUrl() {
                 var ruta = "";
-                var start_date_val = fechini.val();
-                var end_date_val = fechfin.val();
+                var start_date_val = fechaini.val();
+                var end_date_val = fechafin.val();
                 console.log(fechini);
 
                 if (tiporeporteInventario == 'comprasxfech') {
-                    ruta = `/comprasfecha-pdf?fechini=${start_date_val}&fechfin=${end_date_val}`;
+                    ruta = `/comprasfecha-pdf?fechaini=${start_date_val}&fechafin=${end_date_val}`;
                 }
 
                 if (ruta !== "") {

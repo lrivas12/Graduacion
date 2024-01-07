@@ -91,8 +91,8 @@ class ReportesController extends Controller
         $detallepagos = detallepago::whereIn('pagos_id', $pagos->pluck('id'))->get();
 
         
-        $FechIniFact = $request->input('fechini');
-        $FechaFinFact = $request->input('fechfin');
+        $FechIniFact = $request->input('fechaini');
+        $FechaFinFact = $request->input('fechafin');
 
         $comprasfecha = DB::table('compras')
         ->whereBetween('fechacompra', [$FechIniFact, $FechaFinFact])
@@ -200,8 +200,8 @@ class ReportesController extends Controller
 
     public function generarComprasFecha(Request $request)
     {
-        $FechIniFact = $request->input('fechini');
-        $FechaFinFact = $request->input('fechfin');
+        $FechIniFact = $request->input('fechaini');
+        $FechaFinFact = $request->input('fechafin');
 
         $comprasfecha = DB::table('compras')
         ->whereBetween('fechacompra', [$FechIniFact, $FechaFinFact])
