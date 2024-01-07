@@ -368,21 +368,26 @@
             }
         });    
 
-    var tiporeporteInventario;
+</script>
+
+<script>
+
+    
+var tiporeporteInventario;
     function MostrarDivInv()
     {
         var tiporeporteInventario = document.getElementById('tiporeporteInventario').value;
         var cardprodgen = document.getElementById('cardprodgen');
         var cardprodagot = document.getElementById('cardprodagot');
-        var FechInFact = document.getElementById('FechInFact');
-        var FechFinFact = document.getElementById('FechFinFact');
-        FechInFact.style.display = 'none';
-        FechFinFact.style.display = 'none';
+        var FechInINV = document.getElementById('FechInINV');
+        var FechFinINV = document.getElementById('FechFinINV');
+        FechInINV.style.display = 'none';
+        FechFinINV.style.display = 'none';
 
 
         if (tiporeporteInventario === 'comprasxfech') {
-        FechInFact.style.display = 'block';
-        FechFinFact.style.display = 'block';
+            FechInINV.style.display = 'block';
+            FechFinINV.style.display = 'block';
         }else 
         if (tiporeporteInventario === 'productosge') {
         cardprodgen.style.display = 'block'; // Mostrar el contenido
@@ -409,7 +414,7 @@
                 console.log(fechini);
 
                 if (tiporeporteInventario == 'comprasxfech') {
-                    ruta = `/comprasrec-pdf?fechini=${start_date_val}&fechfin=${end_date_val}`;
+                    ruta = `/comprasfecha-pdf?fechini=${start_date_val}&fechfin=${end_date_val}`;
                 }
 
                 if (ruta !== "") {

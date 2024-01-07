@@ -12,7 +12,7 @@ class detallecompra extends Model
 
     public function compra()
     {
-        return $this->belongsTo(Compras::class);
+        return $this->belongsTo(compra::class);
     }
 
     public function producto()

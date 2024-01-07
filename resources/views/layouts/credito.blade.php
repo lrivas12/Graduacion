@@ -72,6 +72,11 @@
             
             <form action="{{route('pagos.update', $pagos->id)}}" method="POST">
                 @csrf
+
+                    
+                <label style="font-style: italic; ">
+                    Los campos marcados con  <span style=" color: red;">*</span> son obligatorios</span>
+                </label>
                     @method('PUT')
                     <div class="row">
                         <div class="col-md-4">
@@ -108,7 +113,8 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text">C$</span>
                                     </div>
-                                <input type="text" class="form-control" name="cantidaddetallepago" id="cantidaddetallepago" >
+                                <input type="text" class="form-control" name="cantidaddetallepago" id="cantidaddetallepago"  pattern="^\d+(\.\d{1,2})?$" title="Ingrese un monto válido (mayor o igual a cero y hasta dos decimales)"  onblur="validarMontoAbono(this)" required>
+                                <div id="errorMontoAbono" class="text-danger"></div>
                             </div>
                         </div>
                     </div>
@@ -186,6 +192,79 @@
     });
 
 </script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var fechacredito = document.getElementById("fechacredito");
+        var fechadetallepago = document.getElementById("fechadetallepago");
+        var saldo = document.getElementById("saldo");
+        var cantidaddetallepago = document.getElementById("cantidaddetallepago");
+
+        // Validar que la fecha de abono sea mayor a la fecha de crédito
+        fechadetallepago.addEventListener("change", function () {
+            if (new Date(fechadetallepago.value) <= new Date(fechacredito.value)) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'La fecha de abono debe ser mayor a la fecha de crédito.',
+                });
+                fechadetallepago.value = "";
+            }
+        });
+
+        // Validar que el campo de monto crédito no esté vacío y no sea mayor al saldo
+        cantidaddetallepago.addEventListener("blur", function () {
+            var montoAbono = parseFloat(cantidaddetallepago.value);
+            var montoSaldo = parseFloat(saldo.value.replace("C$", "").trim());
+
+            if (isNaN(montoAbono) || montoAbono <= 0) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'El monto de abono no puede estar vacío ni ser menor o igual a cero.',
+                });
+                cantidaddetallepago.value = "";
+            } else if (montoAbono > montoSaldo) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'El monto de abono no puede ser mayor al saldo.',
+                });
+                cantidaddetallepago.value = "";
+            }
+        });
+    });
+    document.addEventListener("DOMContentLoaded", function () {
+        var botonAgregar = document.querySelector("button[type='submit']");
+
+        botonAgregar.addEventListener("click", function (event) {
+            var montoAbono = document.getElementById("cantidaddetallepago").value.trim();
+
+            // Validar que el campo de monto abono no esté vacío
+            if (montoAbono === "") {
+                event.preventDefault(); // Evitar que el formulario se envíe
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'El campo "Monto Abono" no puede estar vacío.',
+                });
+            }
+        });
+    });
+
+    function validarMontoAbono(input) {
+        var montoAbono = input.value.trim();
+
+        if (montoAbono === "") {
+            document.getElementById("errorMontoAbono").innerText = "El campo 'Monto Abono' no puede estar vacío.";
+        } else if (!/^\d+(\.\d{1,2})?$/.test(montoAbono) || parseFloat(montoAbono) < 0) {
+            document.getElementById("errorMontoAbono").innerText = "Ingrese un monto válido (mayor o igual a cero y hasta dos decimales).";
+        } else {
+            document.getElementById("errorMontoAbono").innerText = "";
+        }
+    }
+</script>
+
 
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>

@@ -21,6 +21,6 @@ class compra extends Model
 
     public function detallesCompra()
     {
-        return $this->hasMany(detallecompras::class);
+        return $this->hasMany(detallecompra::class);
     }
 }

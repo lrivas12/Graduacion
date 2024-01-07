@@ -81,8 +81,8 @@
         Usuario</a><br><br>
 
                 <h3>Listado de Usuarios</h3>
-                <div>
-                    <table id="userTable" class="table table-hover table-bordered table-responsive">
+                <div class="table-responsive">
+                    <table id="userTable" class="table table-hover table-bordered ">
                         <thead class="thead-blue text-center">
                             <tr>
                                 <th>Id</th>
@@ -151,6 +151,9 @@
                                             <form method="POST" action="{{ route('usuario.update', $user->id) }}"
                                                 enctype="multipart/form-data">
                                                 @csrf
+                                                <label style="font-style: italic; ">
+                                                    Los campos marcados con  <span style=" color: red;">*</span> son obligatorios</span>
+                                                </label>
                                                 @method('PUT')
 
                                                 <div class="form-group row">
@@ -271,6 +274,12 @@
                                                             class="form-control @error('password') is-invalid @enderror"
                                                             name="password" autocomplete="new-password">
 
+
+                                                            <div class="input-group-append">
+                                                                <button class="btn btn-outline-secondary" type="button" id="showPasswordBtn">
+                                                                    <i class="fa fa-eye"></i> 
+                                                                </button>
+                                                                </div>                                                            
                                                         @error('password')
                                                             <span class="invalid-feedback" role="alert">
                                                                 <strong>{{ $message }}</strong>
@@ -286,6 +295,7 @@
                                                     <div class="col-md-6">
                                                         <input id="password-confirm" type="password" class="form-control"
                                                             name="password_confirmation" autocomplete="new-password">
+                                                            <div id="password-errors" class="col-md-6 offset-md-4"></div>
                                                     </div>
                                                 </div>
 
@@ -438,7 +448,10 @@
                                 <input id="password" type="password"
                                     class="form-control @error('password') is-invalid @enderror" name="password" required
                                     autocomplete="new-password">
-
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary" type="button" id="showPasswordBtn">
+                                            <i class="fa fa-eye"></i> </button>
+                                        </div>
                                 @error('password')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -451,10 +464,12 @@
                             <label for="password-confirm"
                                 class="col-md-4 col-form-label text-md-right">{{ __('Confirmar Contraseña:') }} <span class="text-danger">*</span></label>
 
-                            <div class="col-md-6">
+                                <div class="col-md-6">
                                 <input id="password-confirm" type="password" class="form-control"
-                                    name="password_confirmation" required autocomplete="new-password">
-                            </div>
+                                name="password_confirmation" autocomplete="new-password">
+                                        
+                                <div id="password-errors" class="col-md-6 offset-md-4"></div>
+                                </div>
                         </div>
 
                         <div class="modal-footer">

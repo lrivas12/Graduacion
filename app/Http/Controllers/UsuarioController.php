@@ -194,11 +194,18 @@ class UsuarioController extends Controller
     public function DesactivarUsuario($id)
     {
         $user = User::findOrFail($id);
+        $user = User::findOrFail($id);
 
-        // Cambia el estado del usuario (1 para activar, 0 para desactivar)
-        $user->estado = $user->estado == 1 ? 0 : 1;
-        $user->save();
-
-        return redirect()->back()->with('success', 'Usuario Actualizado Exitosamente');
+        // Verificar si el usuario actual es administrador y no es el mismo que el usuario objetivo
+        if ($user->privilegios=='Administrador' && $user->id !== $user->id) {
+            // Cambia el estado del usuario (1 para activar, 0 para desactivar)
+            $user->estado = $user->estado == 1 ? 0 : 1;
+            $user->save();
+    
+            return redirect()->back()->with('success', 'Usuario Actualizado Exitosamente');
+        }
+    
+        // Si la validación no se cumple, redirige con un mensaje de error
+        return redirect()->back()->with('error', 'No puedes desactivarte a ti mismo o realizar esta acción.');
     }
 }

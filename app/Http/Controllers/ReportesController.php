@@ -90,9 +90,17 @@ class ReportesController extends Controller
         $credito = pago::whereIn('facturas_id', $venta->pluck('id'))->get();
         $detallepagos = detallepago::whereIn('pagos_id', $pagos->pluck('id'))->get();
 
+        
+        $FechIniFact = $request->input('fechini');
+        $FechaFinFact = $request->input('fechfin');
+
+        $comprasfecha = DB::table('compras')
+        ->whereBetween('fechacompra', [$FechIniFact, $FechaFinFact])
+        ->get();
+
         return view('reporte.general', compact('productos', 'categorias', 'clientes', 'ventas', 'detalleventas', 'proveedores', 
         'compras', 'detallecompras', 'pagos', 'detallepagos', 'users',
-         'productosProximosAgotarse','venta','detallepagos', 'compras', 'comprasrecientes', 'cantidadporcompra', 'totalcompras'));
+         'productosProximosAgotarse','venta','detallepagos', 'compras','comprasfecha', 'comprasrecientes', 'cantidadporcompra', 'totalcompras'));
     }
 
     public function GenProdApdf()
@@ -188,5 +196,18 @@ class ReportesController extends Controller
     public function generarfacturacredito()
     {
         
+    }
+
+    public function generarComprasFecha(Request $request)
+    {
+        $FechIniFact = $request->input('fechini');
+        $FechaFinFact = $request->input('fechfin');
+
+        $comprasfecha = DB::table('compras')
+        ->whereBetween('fechacompra', [$FechIniFact, $FechaFinFact])
+        ->get();
+
+        $pdf = PDF::loadView('reporte.vercom', ['comprasfecha'=> $comprasfecha, 'fechaInicio'=> $FechIniFact, 'fechaFIn'=> $FechaFinFact]);
+        return $pdf->stream();
     }
 }

@@ -66,7 +66,7 @@
 <body>
     <?php
     $empresa = DB::table('empresas')->first();
-    //$user = Auth::user();
+    $user = Auth::user();
     ?>
     <div class="logo">   
 
@@ -84,7 +84,7 @@
                     <strong>Contacto: </strong> {{$empresa->contactoempresa}}<br>
                     <strong>Dirección: </strong> {{$empresa->direccionempresa}}<br>
                     <strong>Generado el: </strong> <?= date('d/m/Y H:i:s') ?><br>
-                    {{-- <strong>Generado por: </strong>{{ $user->usuario }} <br> --}}
+                     <strong>Generado por: </strong>{{ $user->usuario }} <br> 
 
                 </div>
                 
