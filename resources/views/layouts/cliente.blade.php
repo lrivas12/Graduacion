@@ -110,8 +110,8 @@
                 </div>
                 <div class="row">
                     <div class="col-md-4">
-                        <label for="nombre">Teléfono del cliente: </label>
-                        <input type="text" class="form-control @error('telefonocliente') is-invalid @enderror" id="telefonocliente" name="telefonocliente" autocomplete="telefonocliente" value="{{ old('telefonocliente')}}" autofocus>
+                        <label for="nombre">Teléfono del cliente: <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control @error('telefonocliente') is-invalid @enderror" id="telefonocliente" name="telefonocliente" autocomplete="telefonocliente" value="{{ old('telefonocliente')}}" autofocus required>
                         @error('telefonocliente')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -300,6 +300,38 @@
         ] 
     });
  });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Función para validar el campo de teléfono
+        function validarTelefono() {
+            var telefonoInput = document.getElementById('telefonocliente');
+            var telefonoValue = telefonoInput.value.trim();
+
+            if (telefonoValue === '') {
+                // Muestra un mensaje de error si el campo está vacío
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'El teléfono del cliente es requerido. No puede ir vacío.',
+                });
+                return false;
+            }
+
+            // Puedes agregar más validaciones aquí, por ejemplo, verificar si el teléfono es único
+
+            return true;  // Retorna true si la validación es exitosa
+        }
+
+        // Evento para manejar la validación al enviar el formulario
+        document.getElementById('tuFormulario').addEventListener('submit', function(event) {
+            // Previene el envío del formulario si la validación falla
+            if (!validarTelefono()) {
+                event.preventDefault();
+            }
+        });
+    });
 </script>
 
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
