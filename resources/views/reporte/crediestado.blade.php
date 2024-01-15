@@ -15,8 +15,7 @@
 
 <div class="titulo">
     <br>
-    <label for="titulo" for="titulo" class="tituloreporte">Crédito por Fecha desde {{-- {{ $FechIniFact }} --}} hasta
-    {{-- {{ $FechaFinFact }} --}}</label>
+    <label for="titulo" for="titulo" class="tituloreporte">Estado de Cuenta {{$datocliente}} </label>
     <br>
 
 </div>
@@ -28,18 +27,18 @@
                         <tr>
                             <th>#</th>
                             <th>Fecha</th>
-                            <th>Tipo venta</th>
-                            <th>Total</th>
+                            <th>Cliente</th>
+                            <th>Saldo Pendiente</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($ventasporfecha as $venta)
+                        @foreach ($credito as $creditos)
                         <tr class="text-center">
                            
-                            <td>{{$venta->id}}</td>
-                            <td>{{$venta->fechafactura}}</td>
-                            <td>{{$venta->tipoventa}}</td>
-                            <td>{{$venta->totalventa}}</td>
+                            <td>{{$creditos->id}}</td>
+                            <td>{{\Carbon\Carbon::parse ($creditos->fechafactura)->format('d/m/Y')}}</td>
+                            <td>{{$creditos->clientes->nombrecliente}} {{$creditos->clientes->apellidocliente}}</td>
+                            <td>{{number_format($creditos->detallepagos->saldodetallepago, 2, '.', ',')}}</td>
                         </tr>
                     @endforeach
                     </tbody>

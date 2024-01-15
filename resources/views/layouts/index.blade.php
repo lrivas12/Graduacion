@@ -21,6 +21,17 @@
 @stop
 
 @section('content')
+
+@auth
+<div class="user-panel">
+    <div class="pull-left image">
+        <img src="{{ auth()->user()->adminlte_image() }}" class="img-circle" alt="User Image">
+    </div>
+    <div class="pull-left info">
+        <p>{{ auth()->user()->usuario}}</p>
+    </div>
+</div>
+@endauth
 @stop
 
 
@@ -31,4 +42,11 @@
 @section('js')
     <script> console.log('Hi!'); </script>
     <script src="{{ asset('path/to/sweetalert2.min.js') }}"></script>
+
+    <script>
+
+        var globalUrl = "{{ asset('') }}"; // Usa asset para obtener la ruta raíz
+      
+
+    </script>
 @endsection

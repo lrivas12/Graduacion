@@ -310,6 +310,45 @@
                             <input type="date" class="form-control" value="{{$fechaFin ?? ''}}" name="fechfin" id="fechfin" onchange="validarfecha()" required>
                         </div>
                     </div>
+
+                    <div class="contenido" id="estadcuenta" style="display: none">
+                        <div class="text-center">
+                            <br>
+                          <label for="">Estado de Cuenta</label>
+                        </div>
+                        <br>
+                        <br>
+                        <div class="table-responsive">
+                            <table id="producto" class="table table-bordered">
+                                <thead class="thead-dark text-center">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Producto</th>
+                                        <th>Categoría</th>
+                                        <th>Cantidad</th>
+                                        <th>Stock Minimo</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($productos as $producto)
+                                        <tr class="text-center">
+                                            <td>{{$producto->id}}</td>
+                                            <td>{{$producto->nombreproducto}}</td>
+                                            <td>{{$producto->nombrecategoria}}</td>
+                                            <td  style="color: {{ $producto->cantidadproducto <= $producto->stockminimo ? 'red' : 'green' }}">
+                                                {{ $producto->cantidadproducto }}
+                                            </td>
+                                            <td>{{$producto->stockminimo}}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="float-right">
+                            <a href="{{ url('/productogen-pdf')}}" class="btn btn-outline-info"><i class="fas fa-print"></i> Generar Reporte</a>
+                        </div>
+                    </div>
+                    <br>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-close	"></i> Close</button>

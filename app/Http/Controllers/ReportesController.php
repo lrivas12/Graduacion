@@ -34,6 +34,9 @@ class ReportesController extends Controller
         $users = User::all();
         $venta = factura::all();
         $detallepagos = detallepago::all();
+        $datocliente = DB::table('clientes')
+        ->select('clientes.nombrecliente', 'clientes.apellidocliente')
+        ->get();
 
     // Realizar la consulta para obtener productos próximos a agotarse
         $productosProximosAgotarse = DB::table('productos')
@@ -98,9 +101,19 @@ class ReportesController extends Controller
         ->whereBetween('fechacompra', [$FechIniFact, $FechaFinFact])
         ->get();
 
+        $creditos = DB::table('facturas')
+        ->join('clientes', 'facturas.clientes_id', '=', 'clientes.clientes_id')
+        ->join('detallepagos', 'facturas.facturas_id', '=', 'detallepagos.facturas_id')
+        ->join('pagos', 'detallepagos.pagos_id', '=', 'pagos.pagos_id')
+        ->select('facturas.*', 'clientes.nombrecliente', 'clientes.apellidocliente','clientes.telefonocliente')
+        ->where('clientes.nombrecliente')
+        ->where('facturas.tipoventa', 'credito')
+        ->where('detallepagos.saldodetallepago', '>', 0)
+        ->get();
+        
         return view('reporte.general', compact('productos', 'categorias', 'clientes', 'ventas', 'detalleventas', 'proveedores', 
         'compras', 'detallecompras', 'pagos', 'detallepagos', 'users',
-         'productosProximosAgotarse','venta','detallepagos', 'compras','comprasfecha', 'comprasrecientes', 'cantidadporcompra', 'totalcompras'));
+         'productosProximosAgotarse','datocliente', 'venta','detallepagos','creditos', 'compras','comprasfecha', 'comprasrecientes', 'cantidadporcompra', 'totalcompras'));
     }
 
     public function GenProdApdf()
@@ -193,9 +206,20 @@ class ReportesController extends Controller
         return $pdf->stream();
     }
 
-    public function generarfacturacredito()
+    public function generarEstadocuenta()
     {
-        
+        $creditos = DB::table('facturas')
+            ->join('clientes', 'facturas.clientes_id', '=', 'clientes.clientes_id')
+            ->join('detallepagos', 'facturas.facturas_id', '=', 'detallepagos.facturas_id')
+            ->join('pagos', 'detallepagos.pagos_id', '=', 'pagos.pagos_id')
+            ->select('facturas.*', 'clientes.nombrecliente', 'clientes.apellidocliente','clientes.telefonocliente')
+            ->where('clientes.nombrecliente')
+            ->where('facturas.tipoventa', 'credito')
+            ->where('detallepagos.saldodetallepago', '>', 0)
+            ->get();        
+            
+        $pdf = PDF::loadview('reporte.crediestado', ['creditos'=> $creditos]);
+        return $pdf->stream();
     }
 
     public function generarComprasFecha(Request $request)
