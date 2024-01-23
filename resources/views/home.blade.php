@@ -72,7 +72,7 @@
             <div class="card-body">
                 <h3 class="text-center text-white"><strong> Total compras realizadas</strong></h3>
                 <br>
-                <h4 class="text-center text-white"><strong> C$ {{number_format($totalCompras, 2, '.', ',')  ?? 'Variable no definida'}}</strong></h4>
+                <h4 class="text-center text-white"><strong> C$ {{/* number_format( */$totalCompras/* , 2, '.', ',') */  ?? 'Variable no definida'}}</strong></h4>
             </div>
         </div>
     </div>
@@ -90,7 +90,7 @@
             <div class="card-body">
                 <h3 class="text-center text-white"><strong> Total monto al crédito</strong></h3>
                 <br>
-                 <h4 class="text-center text-white"><strong>C$ {{number_format($montoFacturasCredito, 2, '.', ',')  ?? 'Variable no definida'}}</strong></h4> 
+                 <h4 class="text-center text-white"><strong>C$ {{/* number_format( */$montoFacturasCredito/* , 2, '.', ',') */  ?? 'Variable no definida'}}</strong></h4> 
             </div>
         </div>
     </div>
