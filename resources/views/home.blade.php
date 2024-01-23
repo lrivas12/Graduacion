@@ -43,11 +43,11 @@
                 <div class="text-center">
                     <h4 ><strong>Ventas del Día</strong></h4>
                     <br>
-                    <h2 ><strong>C$ {{number_format($ingresosHoy, 2, '.', ',')   ?? '0' }}</strong></h2>
+                    <h2 ><strong>C$ {{/* number_format( */$ingresosHoy/* , 2, '.', ',') */   ?? '0' }}</strong></h2>
 
                     <h4 ><strong> Ventas del Mes</strong></h4>
                     <br>
-                    <h2 ><strong> C$ {{number_format($ingresosGenerales, 2, '.', ',')  ?? '0'}}</strong></h2>
+                    <h2 ><strong> C$ {{/* number_format( */$ingresosGenerales/* , 2, '.', ',') */  ?? '0'}}</strong></h2>
                     <a href="{{ route('factura.create') }}" id="updateButton" class="btn btn-success">
                         <i class="fas fa-money-check-alt"></i> Facturar
                     </a>
