@@ -43,11 +43,12 @@
                 <div class="text-center">
                     <h4 ><strong>Ventas del Día</strong></h4>
                     <br>
-                    <h2 ><strong>C$ {{/* number_format( */$ingresosHoy/* , 2, '.', ',') */   ?? '0' }}</strong></h2>
+                    <h2><strong>C$ {{ number_format($ingresosHoy, 2, '.', ',')}}</strong></h2>
+
 
                     <h4 ><strong> Ventas del Mes</strong></h4>
                     <br>
-                    <h2 ><strong> C$ {{/* number_format( */$ingresosGenerales/* , 2, '.', ',') */  ?? '0'}}</strong></h2>
+                    <h2 ><strong> C$ {{number_format($ingresosGenerales, 2, '.', ',') }}</strong></h2>
                     <a href="{{ route('factura.create') }}" id="updateButton" class="btn btn-success">
                         <i class="fas fa-money-check-alt"></i> Facturar
                     </a>
@@ -72,7 +73,7 @@
             <div class="card-body">
                 <h3 class="text-center text-white"><strong> Total compras realizadas</strong></h3>
                 <br>
-                <h4 class="text-center text-white"><strong> C$ {{/* number_format( */$totalCompras/* , 2, '.', ',') */  ?? 'Variable no definida'}}</strong></h4>
+                <h4 class="text-center text-white"><strong> C$ {{number_format($totalCompras, 2, '.', ',')  }}</strong></h4>
             </div>
         </div>
     </div>
@@ -81,7 +82,7 @@
             <div class="card-body">
                 <h3 class="text-center text-white"><strong> Total Facturas a Crédito</strong></h3>
                 <br>
-                 <h4 class="text-center text-white"><strong> {{$totalFacturasCredito  ?? 'Variable no definida' }}</strong></h4> 
+                 <h4 class="text-center text-white"><strong> {{$totalFacturasCredito  }}</strong></h4> 
             </div>
         </div>
     </div>
@@ -90,7 +91,7 @@
             <div class="card-body">
                 <h3 class="text-center text-white"><strong> Total monto al crédito</strong></h3>
                 <br>
-                 <h4 class="text-center text-white"><strong>C$ {{/* number_format( */$montoFacturasCredito/* , 2, '.', ',') */  ?? 'Variable no definida'}}</strong></h4> 
+                 <h4 class="text-center text-white"><strong>C$ {{number_format($montoFacturasCredito, 2, '.', ',') }}</strong></h4> 
             </div>
         </div>
     </div>
@@ -99,7 +100,7 @@
             <div class="card-body">
                 <h3 class="text-center text-white"><strong>Total facturas emitidas</strong></h3>
                 <br>
-                 <h4 class="text-center text-white"><strong>{{$totalFacturas  ?? 'Variable no definida'}}</strong></h4> 
+                 <h4 class="text-center text-white"><strong>{{$totalFacturas  }}</strong></h4> 
             </div>
         </div>
     </div>

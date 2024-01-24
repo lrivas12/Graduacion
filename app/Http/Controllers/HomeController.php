@@ -32,8 +32,13 @@ class HomeController extends Controller
 
         $fechaHoy = Carbon::now();
 
-        $ingresosHoy = factura::whereDate('fechafactura', $fechaHoy)
-        ->sum('totalventa');
+
+        /* $ingresosHoy = factura::whereDate('fechafactura', $fechaHoy)
+        ->sum('totalventa'); */
+       /*  $ingresosHoy = factura::whereDate('fechafactura', $fechaHoy)->sum('totalventa') ?? 0; */
+  
+       $ingresosHoy = factura::whereDate('fechafactura', Carbon::today())
+       ->sum('totalventa');
 
         
         $ingresosGenerales = factura::sum('totalventa');
@@ -46,18 +51,19 @@ class HomeController extends Controller
         ->limit(5)
         ->get();
 
-    // Preparar datos para el gráfico de tipo pie
-    $labels = $productosMasVendidos->pluck('nombreproducto');
-    $data = $productosMasVendidos->pluck('totalVentas');
+        // Preparar datos para el gráfico de tipo pie
+        $labels = $productosMasVendidos->pluck('nombreproducto');
+        $data = $productosMasVendidos->pluck('totalVentas');
 
-    $totalFacturasCredito = Factura::where('tipoventa', 'credito')->count();
+        $totalFacturasCredito = Factura::where('tipoventa', 'credito')->count();
 
-    $totalFacturas = Factura::count();
+        $totalFacturas = Factura::count();
 
-    $montoFacturasCredito = Factura::where('tipoventa', 'credito')->sum('totalventa');
-    $totalCompras = compra::sum('totalcompra');
+        $montoFacturasCredito = Factura::where('tipoventa', 'credito')->sum('totalventa');
 
-    return view('home', compact('fechaHoy', 'totalCompras', 'ingresosHoy', 'ingresosGenerales',
-    'totalFacturasCredito', 'totalFacturas', 'montoFacturasCredito', 'productosMasVendidos','labels','data'));
+        $totalCompras = compra::sum('totalcompra');
+
+        return view('home', compact('fechaHoy', 'totalCompras', 'ingresosHoy', 'ingresosGenerales',
+        'totalFacturasCredito', 'totalFacturas', 'montoFacturasCredito', 'productosMasVendidos','labels','data'));
     }
 }
