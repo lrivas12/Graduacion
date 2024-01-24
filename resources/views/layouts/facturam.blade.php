@@ -99,7 +99,7 @@
                    <label for="fechaventa">{{ __('Fecha') }}</label>
                    <input id="fechaventa" type="text"
                    class="form-control" name="fechaventa"
-                   value="{{ $ventas->fechafactura }}"  disabled>
+                   value="{{ \Carbon\Carbon::parse($ventas->fechafactura)->format('d/m/Y') }}"  disabled>
                </div>
                
            </div>
@@ -127,8 +127,8 @@
                        <td>{{ $detalle->producto->nombreproducto }}</td>
                        <td>{{ $detalle->cantidadventa }}</td>
                        <td>{{$detalle->producto->categoria->nombrecategoria}}</td>
-                       <td>C${{ $detalle->subtotalventa / $detalle->cantidadventa}} </td>
-                       <td>C${{ $detalle->subtotalventa }}</td> 
+                       <td>C${{ number_format($detalle->subtotalventa / $detalle->cantidadventa, 2, '.', ',')}} </td>
+                       <td>C${{ number_format($detalle->subtotalventa, 2, '.', ',') }}</td> 
                    </tr>
                   
                @endforeach
@@ -136,11 +136,11 @@
            <tfoot>
                <tr class="text-center"> 
                    <td class = "text-right" colspan="5"> <strong>Descuento </strong></td> <!-- Celdas vacías para alinear correctamente -->
-                   <td><strong> C$ {{ $ventas->descuentoventa }}</strong></td>
+                   <td><strong> C$ {{ number_format($ventas->descuentoventa, 2, '.', ',') }}</strong></td>
                </tr>
                <tr class="text-center"> 
                    <td class = "text-right" colspan="5"> <strong>Total </strong></td> <!-- Celdas vacías para alinear correctamente -->
-                   <td><strong> C$ {{ $ventas->totalventa }}</strong></td>
+                   <td><strong> C$ {{ number_format($ventas->totalventa, 2, '.', ',') }}</strong></td>
                </tr>
               
            </tfoot>

@@ -102,10 +102,10 @@
                                         <td>{{$loop->iteration}}</td>
                                         <td>{{ $venta->cliente->nombrecliente}}  {{ $venta->cliente->apellidocliente}} </td>
                                         <td>{{ $venta->tipoventa}}</td>
-                                        <td>{{ $venta->fechafactura}}</td>
+                                        <td>{{ \Carbon\Carbon::parse($venta->fechafactura)->format('d/m/Y')}}</td>
                                         {{-- <td>{{ $detalle->subtotal}}</td> --}}
                                         {{--  <td>{{ $Venta->saldo}}</td> relacionar con detalle de ventas --}}
-                                        <td>C$ {{ $venta->totalventa}}</td>
+                                        <td>C$ {{ number_format($venta->totalventa, 2, '.', ',')}}</td>
                                         <td> <!-- Los botones para desactivar o activar aparecen según el estado almacenado en la base de datos -->
                                             <div class="d-flex align-items-center">
                                                 <a  href="{{ route('factura.show',$venta->id) }}" style="margin-right: 10px;" title="Visualizar venta">
