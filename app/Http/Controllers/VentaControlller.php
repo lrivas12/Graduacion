@@ -134,7 +134,7 @@ class VentaControlller extends Controller
 
         if($ventas && $ventas->tipoventa === 'credito')
         {
-            $pagos = pago::where('pagos_id', $ventas->id)->first();
+            $pagos = pago::where('facturas_id', $ventas->id)->first();
             if($pagos)
             {
                 $cantidadpagos = $pagos->cantidadpago;
