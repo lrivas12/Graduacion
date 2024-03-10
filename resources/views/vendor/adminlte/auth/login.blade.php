@@ -31,7 +31,7 @@
 
             <div class="input-group-append">
                 <div class="input-group-text" style="border-width: 2px; border-color: white; background: white;">
-                    <span class="fas fa-envelope {{ config('adminlte.classes_auth_icon', '') }}" style="color: rgb(17, 0, 94);"></span>
+                    <span class="fas fa-envelope {{ config('adminlte.classes_auth_icon', '') }}" style="color: var(--primary);"></span>
                 </div>
             </div>
 

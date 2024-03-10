@@ -26,7 +26,6 @@
                 <table id="producto" class="table table-bordered">
                     <thead class="thead-dark text-center">
                         <tr>
-                            <th>#</th>
                             <th>Producto</th>
                             <th>Categoría</th>
                             <th>Cantidad</th>
@@ -37,7 +36,6 @@
                         @foreach ($productosProximosAgotarse as $prodagot)
                         <tr class="text-center">
                            
-                            <td>{{$prodagot->id}}</td>
                             <td>{{$prodagot->nombreproducto}}</td>
                             <td>{{$prodagot->nombrecategoria}}</td>
                             <td style="color:  'red' : 'green' }}">

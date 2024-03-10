@@ -84,13 +84,15 @@
                      <th>Fecha</th>
                  </tr>
                  @foreach ($ventas as $venta)
-                         @if(Carbon\Carbon::parse($venta->detallepagos->fechapago)->format('Y-m-d') === $venta->fechaventa)
-                         <tr class="text-center">
+                @if($venta->detallepagos)
+                    @if(Carbon\Carbon::parse($venta->detallepagos->fechapago)->format('Y-m-d') === $venta->fechaventa)
+                        <tr class="text-center">
                             <td>C$ {{ $venta->detallepagos->cantidaddetallepago }}</td>
                             <td>C$ {{ $venta->detallepagos->saldodetallepago }}</td>
                             <td>{{ Carbon\Carbon::parse($venta->detallepagos->fechapago)->format('d/m/Y') }}</td>
                         </tr>
                     @endif
+                @endif
             @endforeach
         </table>
 

@@ -36,7 +36,7 @@
 
 
 @section('footer')
-<p class="text-center "><strong>Derechos Reservados UNAN - Managua, FAREM - Matagalpa © 2023 </strong></p>
+<p class="text-center "><strong>Derechos Reservados UNAN - Managua, FAREM - Matagalpa © 2024 </strong></p>
 @stop
 
 @section('js')

@@ -25,20 +25,21 @@
                 <table id="producto" class="table table-bordered">
                     <thead class="thead-dark text-center">
                         <tr>
-                            <th>#</th>
                             <th>Fecha</th>
                             <th>Cliente</th>
+                            <th>Total</th>
                             <th>Saldo Pendiente</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($credito as $creditos)
+                        @foreach ($pagos as $pago)
                         <tr class="text-center">
                            
-                            <td>{{$creditos->id}}</td>
-                            <td>{{\Carbon\Carbon::parse ($creditos->fechafactura)->format('d/m/Y')}}</td>
-                            <td>{{$creditos->clientes->nombrecliente}} {{$creditos->clientes->apellidocliente}}</td>
-                            <td>{{number_format($creditos->detallepagos->saldodetallepago, 2, '.', ',')}}</td>
+                            <td>{{\Carbon\Carbon::parse ($pago->fechapago)->format('d/m/Y')}}</td>
+                            <td>{{$pago->factura->cliente->nombrecliente}} {{$pago->factura->cliente->apellidocliente}}</td> 
+                            <td>C$ {{ number_format($pago->factura->totalventa, 2, '.', ',')}}</td>
+                            <td>C$ {{ number_format($pago->cantidadpago - $pago->detallepago->sum('cantidaddetallepago'), 2, '.', ',')}}</td>
+                        
                         </tr>
                     @endforeach
                     </tbody>

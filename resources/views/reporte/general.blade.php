@@ -238,7 +238,7 @@
                         </div>
                     </div>
                     <br>
-                    <div class="contenido" id="cardprodagot" style="display: none">
+                    <div class="contenido" id="cardprodagot" style="display: block">
                         <div class="text-center">
                           <label for="">Producto Agotarse</label>
                         </div>
@@ -248,7 +248,6 @@
                             <table id="producto" class="table table-bordered">
                                 <thead class="thead-dark text-center">
                                     <tr>
-                                        <th>#</th>
                                         <th>Producto</th>
                                         <th>Categoría</th>
                                         <th>Cantidad</th>
@@ -258,12 +257,10 @@
                                 <tbody>
                                     @foreach ($productosProximosAgotarse as $prodagot)
                                         <tr class="text-center">
-                                            
-                                            <td>{{$prodagot->id}}</td>
                                             <td>{{$prodagot->nombreproducto}}</td>
                                             <td>{{$prodagot->nombrecategoria}}</td>
-                                            <td>
-                                                {{ $producto->cantidadproducto <=  $producto->stockminimo}}
+                                            <td style="color:{{ $producto->cantidadproducto <= $producto->stockminimo ?  'red' : 'green' }}">
+                                                {{ $prodagot->cantidadproducto}}
                                             </td>
                                             <td>{{$prodagot->stockminimo}}</td>
                                         </tr>
@@ -275,8 +272,6 @@
                             <a href="{{ url('/productoag-pdf')}}" class="btn btn-outline-info"><i class="fas fa-print"></i> Generar Reporte</a>
                         </div>
                     </div>
-
-
                 </div>
             </div>
         </div>
@@ -300,17 +295,6 @@
                         <option value="estadcuenta">Estado de cuenta</option>
                     </select>
 
-                    <div class="row">
-                        <div class="col-md-6" id="FechInCred" style="display: none;" onchange="MostrarDivCredito()">
-                            <label for="">Fecha Inicio</label>
-                            <input type="date" class="form-control" name="fechini" value="{{$fechaInicio ?? ''}}" id="fechini" onchange="validarfecha()" required>
-                        </div>
-                        <div class="col-md-6" id="FechFinCred" style="display: none;" onchange="MostrarDivCredito()">
-                            <label for="">Fecha Fin</label>
-                            <input type="date" class="form-control" value="{{$fechaFin ?? ''}}" name="fechfin" id="fechfin" onchange="validarfecha()" required>
-                        </div>
-                    </div>
-
                     <div class="contenido" id="estadcuenta" style="display: none">
                         <div class="text-center">
                             <br>
@@ -322,30 +306,28 @@
                             <table id="producto" class="table table-bordered">
                                 <thead class="thead-dark text-center">
                                     <tr>
-                                        <th>#</th>
-                                        <th>Producto</th>
-                                        <th>Categoría</th>
-                                        <th>Cantidad</th>
-                                        <th>Stock Minimo</th>
+                                        <th>Fecha</th>
+                                        <th>Cliente</th>
+                                        <th>Total</th>
+                                        <th>Saldo Pendiente</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($productos as $producto)
-                                        <tr class="text-center">
-                                            <td>{{$producto->id}}</td>
-                                            <td>{{$producto->nombreproducto}}</td>
-                                            <td>{{$producto->nombrecategoria}}</td>
-                                            <td  style="color: {{ $producto->cantidadproducto <= $producto->stockminimo ? 'red' : 'green' }}">
-                                                {{ $producto->cantidadproducto }}
-                                            </td>
-                                            <td>{{$producto->stockminimo}}</td>
-                                        </tr>
+                                    @foreach ($pagos as $pago)
+                                <tr class="text-center">
+                           
+                                    <td>{{\Carbon\Carbon::parse ($pago->fechapago)->format('d/m/Y')}}</td>
+                                    <td>{{$pago->factura->cliente->nombrecliente}} {{$pago->factura->cliente->apellidocliente}}</td> 
+                                    <td>C$ {{ number_format($pago->factura->totalventa, 2, '.', ',')}}</td>
+                                    <td>C$ {{ number_format($pago->cantidadpago - $pago->detallepago->sum('cantidaddetallepago'), 2, '.', ',')}}</td>
+                                
+                                </tr>
                                     @endforeach
                                 </tbody>
                             </table>
                         </div>
                         <div class="float-right">
-                            <a href="{{ url('/productogen-pdf')}}" class="btn btn-outline-info"><i class="fas fa-print"></i> Generar Reporte</a>
+                            <a href="{{ url('/estadcuenta-pdf')}}" class="btn btn-outline-info"><i class="fas fa-print"></i> Generar Reporte</a>
                         </div>
                     </div>
                     <br>

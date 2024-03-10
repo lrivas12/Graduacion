@@ -41,9 +41,9 @@ class ReportesController extends Controller
     // Realizar la consulta para obtener productos próximos a agotarse
         $productosProximosAgotarse = DB::table('productos')
         ->join('categorias', 'productos.id_categoria', '=', 'categorias.id')
-        ->select('productos.*', 'categorias.nombrecategoria')
-        ->where('productos.estadoproducto',  true) // Ajusta según tu estructura
-        ->where('productos.cantidadproducto', '<=', 'stockminimo')
+        ->select('productos.nombreproducto', 'productos.cantidadproducto', 'productos.stockminimo', 'categorias.nombrecategoria')
+        ->where('productos.estadoproducto', true)
+        ->whereColumn('productos.cantidadproducto', '<=', 'productos.stockminimo')
         ->get();
 
         $productos = DB::table('productos')
@@ -93,7 +93,20 @@ class ReportesController extends Controller
         $credito = pago::whereIn('facturas_id', $venta->pluck('id'))->get();
         $detallepagos = detallepago::whereIn('pagos_id', $pagos->pluck('id'))->get();
 
-        
+        $Estadocuenta = DB::table('pagos')
+        ->join('facturas', 'pagos.facturas_id', '=', 'facturas.id')
+        ->join('clientes', 'facturas.clientes_id', '=', 'clientes.id')
+        ->join('detallepagos', 'detallepagos.pagos_id', '=', 'pagos.id')
+        ->select(
+            'clientes.nombrecliente',
+            'clientes.apellidocliente',
+            'pagos.fechapago',
+            'facturas.totalventa',
+            DB::raw('SUM(detallepagos.cantidaddetallepago) as deuda_pendiente')
+        )
+        ->groupBy('clientes.nombrecliente', 'clientes.apellidocliente', 'pagos.fechapago', 'facturas.totalventa')
+        ->get();
+
         $FechIniFact = $request->input('fechaini');
         $FechaFinFact = $request->input('fechafin');
 
@@ -104,19 +117,18 @@ class ReportesController extends Controller
          
         return view('reporte.general', compact('productos', 'categorias', 'clientes', 'ventas', 'detalleventas', 'proveedores', 
         'compras', 'detallecompras', 'pagos', 'detallepagos', 'users',
-         'productosProximosAgotarse','datocliente', 'venta','detallepagos', 'compras','comprasfecha', 'comprasrecientes', 'cantidadporcompra', 'totalcompras'));
+         'productosProximosAgotarse', 'Estadocuenta','datocliente', 'venta','detallepagos', 'compras','comprasfecha', 'comprasrecientes', 'cantidadporcompra', 'totalcompras'));
     }
 
     public function GenProdApdf()
     {
-
-    // Realizar la consulta para obtener productos próximos a agotarse
+        // Realizar la consulta para obtener productos próximos a agotarse
         $productosProximosAgotarse = DB::table('productos')
         ->join('categorias', 'productos.id_categoria', '=', 'categorias.id')
-        ->select('productos.*', 'categorias.nombrecategoria')
-        ->where('productos.estadoproducto',  true) // Ajusta según tu estructura
-        ->where('productos.cantidadproducto', '<=', 'stockminimo')
-        ->get();
+        ->select('productos.nombreproducto', 'productos.cantidadproducto', 'productos.stockminimo', 'categorias.nombrecategoria')
+        ->where('productos.estadoproducto', true)
+        ->whereColumn('productos.cantidadproducto', '<=', 'productos.stockminimo')
+        ->get();    
 
         $pdf = PDF::loadview('reporte.prodagot', ['productosProximosAgotarse'=> $productosProximosAgotarse]); 
         return $pdf->stream();
@@ -199,6 +211,26 @@ class ReportesController extends Controller
 
     public function generarEstadocuenta()
     {
+        $Estadocuenta = DB::table('pagos')
+        ->join('facturas', 'pagos.facturas_id', '=', 'facturas.id')
+        ->join('clientes', 'facturas.clientes_id', '=', 'clientes.id')
+        ->join('detallepagos', 'detallepagos.pagos_id', '=', 'pagos.id')
+        ->select(
+            'clientes.nombrecliente',
+            'clientes.apellidocliente',
+            'pagos.fechapago',
+            'facturas.totalventa',
+            DB::raw('SUM(detallepagos.cantidaddetallepago) as deuda_pendiente')
+        )
+        ->groupBy('clientes.nombrecliente', 'clientes.apellidocliente', 'pagos.fechapago', 'facturas.totalventa')
+        ->get();
+
+        $datocliente = DB::table('clientes')
+        ->select('clientes.nombrecliente', 'clientes.apellidocliente')
+        ->get();
+    
+        $pdf = PDF::loadView('reporte.crediestado', ['EstadoPago'=> $Estadocuenta, 'datocliente'=>$datocliente,]);
+        return $pdf->stream();
     }
 
     public function generarComprasFecha(Request $request)
