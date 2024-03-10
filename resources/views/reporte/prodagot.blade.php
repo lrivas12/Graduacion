@@ -38,7 +38,7 @@
                            
                             <td>{{$prodagot->nombreproducto}}</td>
                             <td>{{$prodagot->nombrecategoria}}</td>
-                            <td style="color:  'red' : 'green' }}">
+                            <td style="color:{{ $prodagot->cantidadproducto <= $prodagot->stockminimo ?  'red' : 'green' }}">
                                   {{ $prodagot->cantidadproducto }} 
                             </td>
                             <td>{{$prodagot->stockminimo}}</td>

@@ -303,7 +303,7 @@
                         <br>
                         <br>
                         <div class="table-responsive">
-                            <table id="producto" class="table table-bordered">
+                            <table id="estadocuenta" class="table table-bordered">
                                 <thead class="thead-dark text-center">
                                     <tr>
                                         <th>Fecha</th>
@@ -331,10 +331,6 @@
                         </div>
                     </div>
                     <br>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-close	"></i> Close</button>
-                    <button type="button" class="btn btn-primary"><i class="fas fa-print"></i> Save</button>
                 </div>
             </div>
         </div>
@@ -443,6 +439,13 @@ var tiporeporteInventario;
         });    
 
     }
+</script>
+
+<script>
+    var TiporeporteCredito;
+
+    MostrarDivCredito();
+    
 </script>
 @endsection
 @endsection
