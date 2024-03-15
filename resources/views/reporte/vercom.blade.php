@@ -13,8 +13,8 @@
 
 <div class="titulo">
     <br>
-    <label for="titulo" for="titulo" class="tituloreporte">Compras por Fecha desde {{-- {{ $FechIniFact }} --}} hasta
-    {{-- {{ $FechaFinFact }} --}}</label>
+    <label for="titulo" for="titulo" class="tituloreporte">Compras por Fecha desde  {{ $FechIniFact }}  hasta
+    {{ $FechaFinFact }} </label>
     <br>
 
 </div>

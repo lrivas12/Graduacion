@@ -83,11 +83,11 @@ class ReportesController extends Controller
         }
 
         /* total de ventas */
-        $FechIniFact = $request->input('fechini');
-        $FechaFinFact = $request->input('fechfin');
+        $FechIniFactu = $request->input('fechini');
+        $FechaFinFactu = $request->input('fechfin');
 
         $ventasporfecha = DB::table('facturas')
-        ->whereBetween('fechafactura', [$FechIniFact, $FechaFinFact])
+        ->whereBetween('fechafactura', [$FechIniFactu, $FechaFinFactu])
         ->get();
 
         $credito = pago::whereIn('facturas_id', $venta->pluck('id'))->get();
@@ -107,8 +107,8 @@ class ReportesController extends Controller
         ->groupBy('clientes.nombrecliente', 'clientes.apellidocliente', 'pagos.fechapago', 'facturas.totalventa')
         ->get();
 
-        $FechIniFact = $request->input('fechaini');
-        $FechaFinFact = $request->input('fechafin');
+        $FechIniFact = $request->input('fechini');
+        $FechaFinFact = $request->input('fechfin');
 
         $comprasfecha = DB::table('compras')
         ->whereBetween('fechacompra', [$FechIniFact, $FechaFinFact])
@@ -116,7 +116,7 @@ class ReportesController extends Controller
 
          
         return view('reporte.general', compact('productos', 'categorias', 'clientes', 'ventas', 'detalleventas', 'proveedores', 
-        'compras', 'detallecompras', 'pagos', 'detallepagos', 'users',
+        'compras', 'detallecompras', 'pagos', 'detallepagos', 'users','FechIniFact', 'FechaFinFact', 'FechIniFactu', 'FechaFinFactu','fechaInicio', 'fechaFin',
          'productosProximosAgotarse', 'Estadocuenta','datocliente', 'venta','detallepagos', 'compras','comprasfecha', 'comprasrecientes', 'cantidadporcompra', 'totalcompras'));
     }
 
@@ -177,20 +177,20 @@ class ReportesController extends Controller
             $fechaCompra = $compras->fechacompra;
         }
 
-        $pdf = PDF::loadView('reporte.comprasrec', ['fechaInicio'=> $fechaInicio, 'fechaFIn'=> $fechaFin, 'comprasrecientes' => $comprasrecientes, 'totalcompras'=> $totalcompras, 'totalprod'=> $totalprod, 'fechacompra'=>$fechaCompra, 'cantidadporcompra'=> $cantidadporcompra ]);
+        $pdf = PDF::loadView('reporte.comprasrec', ['fechaInicio'=> $fechaInicio, 'fechaFin'=> $fechaFin, 'comprasrecientes' => $comprasrecientes, 'totalcompras'=> $totalcompras, 'totalprod'=> $totalprod, 'fechacompra'=>$fechaCompra, 'cantidadporcompra'=> $cantidadporcompra ]);
         return $pdf->stream();
     }
 
     public function generarPDFtotalventas(Request $request)
     {
-        $FechIniFact = $request->input('fechini');
-        $FechaFinFact = $request->input('fechfin');
+        $FechIniFactu = $request->input('fechini');
+        $FechaFinFactu = $request->input('fechfin');
 
         $ventasporfecha = DB::table('facturas')
-        ->whereBetween('fechafactura', [$FechIniFact, $FechaFinFact])
+        ->whereBetween('fechafactura', [$FechIniFactu, $FechaFinFactu])
         ->get();
 
-        $pdf = PDF::loadView('reporte.facxfech', ['ventasporfecha'=> $ventasporfecha, 'fechaInicio'=> $FechIniFact, 'fechaFIn'=> $FechaFinFact]);
+        $pdf = PDF::loadView('reporte.facxfech', ['ventasporfecha'=> $ventasporfecha, 'FechIniFactu'=> $FechIniFactu, 'FechaFinFactu'=> $FechaFinFactu]);
         return $pdf->stream();
     }
 
@@ -235,14 +235,14 @@ class ReportesController extends Controller
 
     public function generarComprasFecha(Request $request)
     {
-        $FechIniFact = $request->input('fechaini');
-        $FechaFinFact = $request->input('fechafin');
+        $FechIniFact = $request->input('fechini');
+        $FechaFinFact = $request->input('fechfin');
 
         $comprasfecha = DB::table('compras')
         ->whereBetween('fechacompra', [$FechIniFact, $FechaFinFact])
         ->get();
 
-        $pdf = PDF::loadView('reporte.vercom', ['comprasfecha'=> $comprasfecha, 'fechaInicio'=> $FechIniFact, 'fechaFIn'=> $FechaFinFact]);
+        $pdf = PDF::loadView('reporte.vercom', ['comprasfecha'=> $comprasfecha, 'FechIniFact'=> $FechIniFact, 'FechaFinFact'=> $FechaFinFact]);
         return $pdf->stream();
     }
 }

@@ -19,8 +19,8 @@
         }
     </style>
     <div class="titulo">
-        <br><label id="titulo" for="titulo" class="titulo-reporte">Total de Ingresos desde {{ $FechInFact }} hasta
-            {{ $FechFinFact }}</label>
+        <br><label id="titulo" for="titulo" class="titulo-reporte">Total de Ingresos desde {{ $FechIniFactu }} hasta
+            {{ $FechaFinFactu }}</label>
             <br>
     </div>
     <div class="content" id="content">

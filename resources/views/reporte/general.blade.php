@@ -118,13 +118,13 @@
                     </select>
                     
                     <div class="row">
-                        <div class="col-md-6" id="FechInFact" style="display: none;" onchange="MostrarDivFactura()">
+                        <div class="col-md-6" id="fechini" style="display: none;" onchange="MostrarDivFactura()">
                             <label for="">Fecha Inicio</label>
-                            <input type="date" class="form-control" name="fechini" value="{{$fechaInicio ?? ''}}" id="fechini" onchange="validarfecha()" required>
+                            <input type="date" class="form-control" name="fechini" value="{{$FechIniFactu ?? ''}}" id="fechaini" onchange="validarfecha()" required>
                         </div>
-                        <div class="col-md-6" id="FechFinFact" style="display: none;" onchange="MostrarDivFactura()">
+                        <div class="col-md-6" id="fechfin" style="display: none;" onchange="MostrarDivFactura()">
                             <label for="">Fecha Fin</label>
-                            <input type="date" class="form-control" value="{{$fechaFin ?? ''}}" name="fechfin" id="fechfin" onchange="validarfecha()" required>
+                            <input type="date" class="form-control" value="{{$FechaFinFactu ?? ''}}" name="fechfin" id="fechfin" onchange="validarfecha()" required>
                         </div>
                     </div>
 
@@ -345,17 +345,17 @@
         function MostrarDivFactura() {
             tipoinventariofactura = document.getElementById('tipoinventariofactura').value;
             var listclientes = document.getElementById('listclientes');
-            var FechInFact = document.getElementById('FechInFact');
-            var FechFinFact = document.getElementById('FechFinFact');
+            var FechIniFactu = document.getElementById('fechini');
+            var FechaFinFactu = document.getElementById('fechfin');
 
             // Asegura que todos los elementos estén ocultos al principio
             listclientes.style.display = 'none';
-            FechInFact.style.display = 'none';
-            FechFinFact.style.display = 'none';
+            FechIniFactu.style.display = 'none';
+            FechaFinFactu.style.display = 'none';
 
             if (tipoinventariofactura === 'verfactura') {
-                FechInFact.style.display = 'block';
-                FechFinFact.style.display = 'block';
+                FechIniFactu.style.display = 'block';
+                FechaFinFactu.style.display = 'block';
             } else if (tipoinventariofactura === 'verclientes') {
                 listclientes.style.display = 'block';
             }
