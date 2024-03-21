@@ -120,11 +120,11 @@
                     <div class="row">
                         <div class="col-md-6" id="fechini" style="display: none;" onchange="MostrarDivFactura()">
                             <label for="">Fecha Inicio</label>
-                            <input type="date" class="form-control" name="fechini" value="{{$FechIniFactu ?? ''}}" id="fechaini" onchange="validarfecha()" required>
+                            <input type="date" class="form-control" name="fechini" value="{{$FechIniFactu ?? ''}}" id="fechaini" {{-- onchange="validarfecha()" --}} required>
                         </div>
                         <div class="col-md-6" id="fechfin" style="display: none;" onchange="MostrarDivFactura()">
                             <label for="">Fecha Fin</label>
-                            <input type="date" class="form-control" value="{{$FechaFinFactu ?? ''}}" name="fechfin" id="fechfin" onchange="validarfecha()" required>
+                            <input type="date" class="form-control" value="{{$FechaFinFactu ?? ''}}" name="fechfin" id="fechfin" {{-- onchange="validarfecha()" --}} required>
                         </div>
                     </div>
 
@@ -193,11 +193,11 @@
                     <div class="row">
                         <div class="col-md-6" id="FechInINV" style="display: none;" onchange="MostrarDivInv()">
                             <label for="">Fecha Inicio</label>
-                            <input type="date" class="form-control" name="fechaini" value="{{$fechaInicio ?? ''}}" id="fechaini" onchange="validarfecha()" required>
+                            <input type="date" class="form-control" name="fechaini" value="{{$fechaInicio ?? ''}}" id="fechaini"{{--  onchange="validarfecha()" --}} required>
                         </div>
                         <div class="col-md-6" id="FechFinINV" style="display: none;" onchange="MostrarDivInv()">
                             <label for="">Fecha Fin</label>
-                            <input type="date" class="form-control" value="{{$fechaFin ?? ''}}" name="fechafin" id="fechafin" onchange="validarfecha()" required>
+                            <input type="date" class="form-control" value="{{$fechaFin ?? ''}}" name="fechafin" id="fechafin" {{-- onchange="validarfecha()" --}} required>
                         </div>
                     </div>
                     <div class="contenido" id="cardprodgen" style="display: none">
@@ -364,7 +364,8 @@
         $(document).ready(function() {
             var fechini = $('#fechini');
             var fechfin = $('#fechfin');
-
+            var FechIniFactu = $('#FechIniFactu');
+            var FechaFinFactu = $('#FechaFinFactu');
             $('#fechfin').change(function() {
                 mostrarUrl();
             });
