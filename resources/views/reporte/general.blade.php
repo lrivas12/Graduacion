@@ -114,7 +114,8 @@
                     <select name="tipoinventariofactura" class="form-control" id="tipoinventariofactura" onchange="MostrarDivFactura()">
                         <option value="">Seleccione el reporte</option>
                         <option value="verclientes">Lista de Clientes</option>
-                        <option value="verfactura">Lista de Facturas</option>
+                        <option value="verfactura">Facturas con Fecha</option>
+                        <option value="listfactura">Lista de Facturas</option>
                     </select>
                     
                     <div class="row">
@@ -166,6 +167,38 @@
                         </div>
                     </div>
 
+                    <div class="contenido" id="listfactura" style="display: none;">
+                        <div class="text-center">
+                          <label for="">Listado de Facturas</label>
+                        </div>
+                        <br>
+                        <br>
+                        <div class="table-responsive">
+                            <table id="producto" class="table table-bordered">
+                                <thead class="thead-dark text-center">
+                                    <tr>
+                                        <th>Cliente</th>
+                                        <th>Tipo Venta</th>
+                                        <th>Fecha</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($todoventas as $venta)
+                                    <tr class="text-center">
+                                        <td>{{ $venta->nombrecliente}}  {{ $venta->apellidocliente}} </td>
+                                        <td>{{ $venta->tipoventa}}</td>
+                                        <td>{{ \Carbon\Carbon::parse($venta->fechafactura)->format('d/m/Y')}}</td>
+                                        <td>C$ {{ number_format($venta->totalventa, 2, '.', ',')}}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="float-right">
+                            <a href="{{ url('/listfactura-pdf')}}" class="btn btn-outline-info"><i class="fas fa-print"></i> Generar Reporte</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -188,6 +221,7 @@
                         <option value="productosge">Inventario General</option>
                         <option value="prodagot">Productos a Agotarse</option>
                         <option value="comprasxfech">Compras por fecha</option>
+                        <option value="listcompra">Lista de Compras</option>
                     </select>
                     <br>
                     <div class="row">
@@ -272,6 +306,39 @@
                             <a href="{{ url('/productoag-pdf')}}" class="btn btn-outline-info"><i class="fas fa-print"></i> Generar Reporte</a>
                         </div>
                     </div>
+
+                    <div class="contenido" id="listcompra" style="display: none;">
+                        <div class="text-center">
+                          <label for="">Listado de Facturas</label>
+                        </div>
+                        <br>
+                        <br>
+                        <div class="table-responsive">
+                            <table id="producto" class="table table-bordered">
+                                <thead class="thead-dark text-center">
+                                    <tr>
+                                        <th>Proveedor</th>
+                                        <th>Fecha</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($todoscompra as $compra)
+                                    <tr class="text-center">
+                                    <td>{{$compra->razonsocialproveedor}}</td>
+                                    <td>{{ \Carbon\Carbon::parse ($compra->fechacompra)->format('d/m/Y')}}</td>
+                                    <td>{{ number_format($compra->totalcompra, 2, '.', ',')}}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="float-right">
+                            <a href="{{ url('/listcompra-pdf')}}" class="btn btn-outline-info"><i class="fas fa-print"></i> Generar Reporte</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
                 </div>
             </div>
         </div>
@@ -345,6 +412,7 @@
         function MostrarDivFactura() {
             tipoinventariofactura = document.getElementById('tipoinventariofactura').value;
             var listclientes = document.getElementById('listclientes');
+            var listfactura = document.getElementById('listfactura');
             var FechIniFactu = document.getElementById('fechaini');
             var FechaFinFactu = document.getElementById('fechafin');
 
@@ -358,6 +426,9 @@
                 FechaFinFactu.style.display = 'block';
             } else if (tipoinventariofactura === 'verclientes') {
                 listclientes.style.display = 'block';
+            }
+        else if (tipoinventariofactura === 'listfactura') {
+            listfactura.style.display = 'block';
             }
         }
 
@@ -397,6 +468,7 @@ var tiporeporteInventario;
         var tiporeporteInventario = document.getElementById('tiporeporteInventario').value;
         var cardprodgen = document.getElementById('cardprodgen');
         var cardprodagot = document.getElementById('cardprodagot');
+        var listcompra = document.getElementById('listcompra');
         var FechInINV = document.getElementById('FechInINV');
         var FechFinINV = document.getElementById('FechFinINV');
 
@@ -413,7 +485,10 @@ var tiporeporteInventario;
         cardprodgen.style.display = 'block'; // Mostrar el contenido
         } else if (tiporeporteInventario === 'prodagot') {
         cardprodagot.style.display = 'block'; // Mostrar el contenido
+        }        else if (tiporeporteInventario === 'listcompra') {
+            listcompra.style.display = 'block';
         }
+        
 
         $(document).ready(function() {
             var fechaini = $('#fechaini');

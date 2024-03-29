@@ -17,6 +17,8 @@ use Barryvdh\DomPDF\Facade\Pdf as PDF;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
+use function Laravel\Prompts\select;
+
 class ReportesController extends Controller
 {
     public function index(Request $request)
@@ -55,7 +57,16 @@ class ReportesController extends Controller
         ->select('clientes.*')
         ->get();
 
-        
+        $todoscompra = DB::table('compras')
+        ->join('proveedores', 'compras.proveedor_id', '=', 'proveedores.id')
+        ->select('compras.*', 'proveedores.razonsocialproveedor')
+        ->get();
+
+        $todoventas = DB::table('facturas')
+        ->join('clientes','facturas.clientes_id','=','clientes.id')
+        ->select('facturas.*','clientes.nombrecliente', 'clientes.apellidocliente')
+        ->get();
+
         $categorias = DB::table('categorias')
         ->select('categorias.*')
         ->get();
@@ -117,7 +128,7 @@ class ReportesController extends Controller
          
         return view('reporte.general', compact('productos', 'categorias', 'clientes', 'ventas', 'detalleventas', 'proveedores', 
         'compras', 'detallecompras', 'pagos', 'detallepagos', 'users','FechIniFact', 'FechaFinFact', 'FechIniFactu', 'FechaFinFactu','fechaInicio', 'fechaFin',
-         'productosProximosAgotarse', 'Estadocuenta','datocliente', 'venta','detallepagos', 'compras','comprasfecha', 'comprasrecientes', 'cantidadporcompra', 'totalcompras'));
+         'productosProximosAgotarse', 'Estadocuenta','datocliente','todoscompra','todoventas', 'venta','detallepagos', 'compras','comprasfecha', 'comprasrecientes', 'cantidadporcompra', 'totalcompras'));
     }
 
     public function GenProdApdf()
@@ -243,6 +254,28 @@ class ReportesController extends Controller
         ->get();
 
         $pdf = PDF::loadView('reporte.vercom', ['comprasfecha'=> $comprasfecha, 'FechIniFact'=> $FechIniFact, 'FechaFinFact'=> $FechaFinFact]);
+        return $pdf->stream();
+    }
+
+    public function generarVenta()
+    {
+        $todoventas = DB::table('facturas')
+        ->join('clientes','facturas.clientes_id','=','clientes.id')
+        ->select('facturas.*','clientes.nombrecliente', 'clientes.apellidocliente')
+        ->get();
+
+        $pdf = PDF::loadview('reporte.totalventas', ['todoventas'=> $todoventas]);
+        return $pdf->stream();
+    }
+
+    public function generarcompras()
+    {
+        $todoscompra = DB::table('compras')
+        ->join('proveedores', 'compras.proveedor_id', '=', 'proveedores.id')
+        ->select('compras.*', 'proveedores.razonsocialproveedor')
+        ->get();
+
+        $pdf = PDF::loadview('reporte.totalcompras', ['todoscompra'=> $todoscompra]);
         return $pdf->stream();
     }
 }
