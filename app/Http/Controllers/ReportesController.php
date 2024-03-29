@@ -83,8 +83,8 @@ class ReportesController extends Controller
         }
 
         /* total de ventas */
-        $FechIniFactu = $request->input('fechini');
-        $FechaFinFactu = $request->input('fechfin');
+        $FechIniFactu = $request->input('fechaini');
+        $FechaFinFactu = $request->input('fechafin');
 
         $ventasporfecha = DB::table('facturas')
         ->whereBetween('fechafactura', [$FechIniFactu, $FechaFinFactu])
@@ -183,8 +183,8 @@ class ReportesController extends Controller
 
     public function generarPDFtotalventas(Request $request)
     {
-        $FechIniFactu = $request->input('fechini');
-        $FechaFinFactu = $request->input('fechfin');
+        $FechIniFactu = $request->input('fechaini');
+        $FechaFinFactu = $request->input('fechafin');
 
         $ventasporfecha = DB::table('facturas')
         ->whereBetween('fechafactura', [$FechIniFactu, $FechaFinFactu])
