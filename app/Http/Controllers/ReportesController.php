@@ -207,8 +207,6 @@ class ReportesController extends Controller
 
     public function generarPDFcredito(Request $request)
     {
-        $FechIniFact = $request->input('fechini');
-        $FechaFinFact = $request->input('fechfin');
         
         $pagos = pago::all();
         $venta = factura::all();
@@ -216,7 +214,7 @@ class ReportesController extends Controller
         $detallepagos = detallepago::whereIn('pagos_id', $pagos->pluck('id'))->get();
 
 
-        $pdf = PDF::loadView('reporte.crediestado', ['credito'=> $credito,'detallepagos'=> $detallepagos , 'fechaInicio'=> $FechIniFact, 'fechaFIn'=> $FechaFinFact]);
+        $pdf = PDF::loadView('reporte.crediestado', ['credito'=> $credito,'detallepagos'=> $detallepagos ]);
         return $pdf->stream();
     }
 
