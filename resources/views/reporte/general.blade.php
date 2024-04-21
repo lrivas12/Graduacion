@@ -121,11 +121,11 @@
                     <div class="row">
                         <div class="col-md-6" id="fechaini" style="display: none;" onchange="MostrarDivFactura()">
                             <label for="">Fecha Inicio</label>
-                            <input type="date" class="form-control" name="fechaini" value="{{$FechIniFactu ?? ''}}" id="fechaini" {{-- onchange="validarfecha()" --}} required>
+                            <input type="date" class="form-control" name="fechaininput"  id="fechaininput" {{-- onchange="validarfecha()" --}} required>
                         </div>
                         <div class="col-md-6" id="fechafin" style="display: none;" onchange="MostrarDivFactura()">
                             <label for="">Fecha Fin</label>
-                            <input type="date" class="form-control" value="{{$FechaFinFactu ?? ''}}" name="fechafin" id="fechafin" {{-- onchange="validarfecha()" --}} required>
+                            <input type="date" class="form-control"  name="fechafininput" id="fechafininput" {{-- onchange="validarfecha()" --}} required>
                         </div>
                     </div>
 
@@ -415,7 +415,6 @@
             var listfactura = document.getElementById('listfactura');
             var FechIniFactu = document.getElementById('fechaini');
             var FechaFinFactu = document.getElementById('fechafin');
-
             // Asegura que todos los elementos estén ocultos al principio
             listclientes.style.display = 'none';
             FechIniFactu.style.display = 'none';
@@ -432,20 +431,21 @@
             }
         }
 
-        $(document).ready(function() {
-            var fechaini = $('#fechaini');
-            var fechafin = $('#fechafin');
-            var FechIniFactu = $('#FechIniFactu');
-            var FechaFinFactu = $('#FechaFinFactu');
-            $('#fechafin').change(function() {
-                mostrarUrl();
+
+        var fechaini = $('#fechaininput');
+        var fechafin = $('#fechafininput');
+        $('#fechafininput').change(function() {
+              mostrarUrl(); 
+                console.log($('#fechafininput').val());
             });
 
-            function mostrarUrl() {
+            
+        function mostrarUrl() {
                 var ruta = "";
-                var start_date_val = fechaini.val();
-                var end_date_val = fechafin.val();
-                console.log(fechini);
+                var start_date_val = fechaini.val(); 
+                var end_date_val = fechafin.val(); 
+                /* console.log(start_date_val);
+                console.log(end_date_val); */
 
                 if (tipoinventariofactura == 'verfactura') {
                     ruta = `/totalventas-pdf?fechaini=${start_date_val}&fechafin=${end_date_val}`;
@@ -455,7 +455,36 @@
                     window.open(ruta, '_blank');
                 }
             }
-        });    
+
+       /*  $(document).ready(function() { 
+            var fechaini = $('#fechaini');
+            var fechafin = $('#fechafin');
+            var FechIniFactu = $('#FechIniFactu');
+            var FechaFinFactu = $('#FechaFinFactu');
+            $('#fechafin').change(function() {
+                mostrarUrl();
+            });
+            
+            
+
+            function mostrarUrl() {
+                var ruta = "";
+                 var start_date_val = document.getElementById('fechainicio').value;  
+                var end_date_val = document.getElementById('fechafinal').value;  
+                var start_date_val = fechaini.val(); 
+                var end_date_val = fechafin.val(); 
+                console.log(start_date_val);
+                console.log(end_date_val);
+
+                if (tipoinventariofactura == 'verfactura') {
+                    ruta = `/totalventas-pdf?fechaini=${start_date_val}&fechafin=${end_date_val}`;
+                }
+
+                if (ruta !== "") {
+                    window.open(ruta, '_blank');
+                }
+            }
+         });   */  
 
 </script>
 
@@ -518,9 +547,9 @@ var tiporeporteInventario;
 </script>
 
 <script>
-    var TiporeporteCredito;
+    /* var TiporeporteCredito;
 
-    MostrarDivCredito();
+     */
     
 </script>
 @endsection

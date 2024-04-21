@@ -94,11 +94,11 @@ class ReportesController extends Controller
         }
 
         /* total de ventas */
-        $FechIniFactu = $request->input('fechaini');
-        $FechaFinFactu = $request->input('fechafin');
+        $fechaini = $request->input('fechaini');
+        $fechafin = $request->input('fechafin');
 
         $ventasporfecha = DB::table('facturas')
-        ->whereBetween('fechafactura', [$FechIniFactu, $FechaFinFactu])
+        ->whereBetween('fechafactura', [$fechaini, $fechafin])
         ->get();
 
         $credito = pago::whereIn('facturas_id', $venta->pluck('id'))->get();
@@ -127,7 +127,7 @@ class ReportesController extends Controller
 
          
         return view('reporte.general', compact('productos', 'categorias', 'clientes', 'ventas', 'detalleventas', 'proveedores', 
-        'compras', 'detallecompras', 'pagos', 'detallepagos', 'users','FechIniFact', 'FechaFinFact', 'FechIniFactu', 'FechaFinFactu','fechaInicio', 'fechaFin',
+        'compras', 'detallecompras', 'pagos', 'detallepagos', 'users','FechIniFact', 'FechaFinFact', 'fechaini', 'fechafin','fechaInicio', 'fechaFin',
          'productosProximosAgotarse', 'Estadocuenta','datocliente','todoscompra','todoventas', 'venta','detallepagos', 'compras','comprasfecha', 'comprasrecientes', 'cantidadporcompra', 'totalcompras'));
     }
 
@@ -194,14 +194,14 @@ class ReportesController extends Controller
 
     public function generarPDFtotalventas(Request $request)
     {
-        $FechIniFactu = $request->input('fechaini');
-        $FechaFinFactu = $request->input('fechafin');
+        $fechaini = $request->input('fechaini');
+        $fechafin = $request->input('fechafin');
 
         $ventasporfecha = DB::table('facturas')
-        ->whereBetween('fechafactura', [$FechIniFactu, $FechaFinFactu])
+        ->whereBetween('fechafactura', [$fechaini, $fechafin])
         ->get();
 
-        $pdf = PDF::loadView('reporte.facxfech', ['ventasporfecha'=> $ventasporfecha, 'FechIniFactu'=> $FechIniFactu, 'FechaFinFactu'=> $FechaFinFactu]);
+        $pdf = PDF::loadView('reporte.facxfech', ['ventasporfecha'=> $ventasporfecha, 'fechaini'=> $fechaini, 'fechafin'=> $fechafin]);
         return $pdf->stream();
     }
 

@@ -15,8 +15,8 @@
 
 <div class="titulo">
     <br>
-    <label for="titulo" for="titulo" class="tituloreporte">Facturas por fecha desde  {{ $FechIniFactu }}  hasta
-     {{ $FechaFinFactu }} </label>
+    <label for="titulo" for="titulo" class="tituloreporte">Facturas por fecha desde  {{ $fechaini }}  hasta
+     {{ $fechafin }} </label>
     <br>
 
 </div>

@@ -99,10 +99,21 @@ class VentaControlller extends Controller
             $detallepago->pagos_id = $pagos->id;
             $detallepago->save();
         }
-    
-        return redirect()->route('factura.create')->with('successC', 'Venta creado con éxito');
-    
+        if ($ventas) {
+            if ($request->input('guardarImp') == true) {
+                // Si se presionó el botón "Guardar e Imprimir"
+                return response()->json(['id' => $ventas->id]);
+                
+            } else {
+                // Si se presionó el botón "Guardar"
+                return redirect()->route('factura.create')->with('successC', 'Venta creada con éxito.');
+            }
+        } else {
+            // Error al guardar la venta
+            return response()->json(['error' => 'Error al guardar la venta.'], 500);
+        }
     }
+
     
     public function apiShowProductos(producto $producto)
     {

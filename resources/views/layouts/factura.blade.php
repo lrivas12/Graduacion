@@ -407,21 +407,23 @@
         if (guardarEImprimirBtn && ventaForm) {
             guardarEImprimirBtn.addEventListener('click', function (event) {
                 event.preventDefault();
-
+                $("#guardarEImprimir").prop('disabled', true);
                 // Obtener el valor del input de número de venta
              
                 // Establecer el valor del input oculto "guardarImp"
                 document.getElementById('guardarImp').value = "true";
                 
-
-                fetch(ventaForm.action, {
+            
+                  fetch(ventaForm.action, {
                     method: ventaForm.method,
                     body: new FormData(ventaForm)
                    
-                })
+                }) 
+                
+                  
                
                 .then(response => {
-                   
+                   console.log(response.json());
                     if (!response.ok) {
                         throw new Error('Error en la solicitud.');
 
@@ -452,7 +454,7 @@
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
-                        text: "Error al imprimir",
+                        text: error,
                         allowOutsideClick: false,
                         showCancelButton: false,
                         confirmButtonText: 'OK'
@@ -461,7 +463,7 @@
 
                  // Detectar cambios en el historial (Retroceso)
                 
-            }); 
+            });  
 
         }
         // Función para mostrar mensajes de SweetAlert2
