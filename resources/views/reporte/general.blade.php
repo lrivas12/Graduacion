@@ -225,13 +225,13 @@
                     </select>
                     <br>
                     <div class="row">
-                        <div class="col-md-6" id="FechInINV" style="display: none;" onchange="MostrarDivInv()">
+                        <div class="col-md-6" id="divfechini" style="display: none;" onchange="MostrarDivInv()">
                             <label for="">Fecha Inicio</label>
-                            <input type="date" class="form-control" name="fechini" value="{{$fechaInicio ?? ''}}" id="fechini"{{--  onchange="validarfecha()" --}} required>
+                            <input type="date" class="form-control" name="fechaininput"  id="fechaininput"{{--  onchange="validarfecha()" --}} required>
                         </div>
-                        <div class="col-md-6" id="FechFinINV" style="display: none;" onchange="MostrarDivInv()">
+                        <div class="col-md-6" id="divfechfin" style="display: none;" onchange="MostrarDivInv()">
                             <label for="">Fecha Fin</label>
-                            <input type="date" class="form-control" value="{{$fechaFin ?? ''}}" name="fechfin" id="fechfin" {{-- onchange="validarfecha()" --}} required>
+                            <input type="date" class="form-control"  name="fechafininput" id="fechafininput" {{-- onchange="validarfecha()" --}} required>
                         </div>
                     </div>
                     <div class="contenido" id="cardprodgen" style="display: none">
@@ -309,7 +309,7 @@
 
                     <div class="contenido" id="listcompra" style="display: none;">
                         <div class="text-center">
-                          <label for="">Listado de Facturas</label>
+                          <label for="">Listado de Compras</label>
                         </div>
                         <br>
                         <br>
@@ -456,60 +456,29 @@
                 }
             }
 
-       /*  $(document).ready(function() { 
-            var fechaini = $('#fechaini');
-            var fechafin = $('#fechafin');
-            var FechIniFactu = $('#FechIniFactu');
-            var FechaFinFactu = $('#FechaFinFactu');
-            $('#fechafin').change(function() {
-                mostrarUrl();
-            });
-            
-            
-
-            function mostrarUrl() {
-                var ruta = "";
-                 var start_date_val = document.getElementById('fechainicio').value;  
-                var end_date_val = document.getElementById('fechafinal').value;  
-                var start_date_val = fechaini.val(); 
-                var end_date_val = fechafin.val(); 
-                console.log(start_date_val);
-                console.log(end_date_val);
-
-                if (tipoinventariofactura == 'verfactura') {
-                    ruta = `/totalventas-pdf?fechaini=${start_date_val}&fechafin=${end_date_val}`;
-                }
-
-                if (ruta !== "") {
-                    window.open(ruta, '_blank');
-                }
-            }
-         });   */  
 
 </script>
 
 <script>
 
-    
-var tiporeporteInventario;
+    var tiporeporteInventario
     function MostrarDivInv()
     {
         var tiporeporteInventario = document.getElementById('tiporeporteInventario').value;
         var cardprodgen = document.getElementById('cardprodgen');
         var cardprodagot = document.getElementById('cardprodagot');
         var listcompra = document.getElementById('listcompra');
-        var FechInINV = document.getElementById('FechInINV');
-        var FechFinINV = document.getElementById('FechFinINV');
+        var divfechini = document.getElementById('fechaini');
+        var divfechfin = document.getElementById('fechafin');
 
         cardprodagot.style.display = 'none';
         cardprodgen.style.display = 'none';
-        FechInINV.style.display = 'none';
-        FechFinINV.style.display = 'none';
-
+        divfechini.style.display = 'none';
+        divfechfin.style.display = 'none';
 
         if (tiporeporteInventario === 'comprasxfech') {
-            FechInINV.style.display = 'block';
-            FechFinINV.style.display = 'block';
+            divfechini.style.display = 'block';
+            divfechfin.style.display = 'block';
         }else if (tiporeporteInventario === 'productosge') {
         cardprodgen.style.display = 'block'; // Mostrar el contenido
         } else if (tiporeporteInventario === 'prodagot') {
@@ -517,32 +486,29 @@ var tiporeporteInventario;
         }        else if (tiporeporteInventario === 'listcompra') {
             listcompra.style.display = 'block';
         }
-        
 
-        $(document).ready(function() {
-            var fechaini = $('#fechaini');
-            var fechafin = $('#fechafin');
-
-            $('#fechafin').change(function() {
-                mostrarUrl();
+        var fechaini = $('#fechaininput');
+        var fechafin = $('#fechafininput');
+        $('#fechafininput').change(function() {
+              mostrarUrl(); 
+                console.log($('#fechafininput').val());
             });
 
             function mostrarUrl() {
                 var ruta = "";
-                var start_date_val = fechaini.val();
-                var end_date_val = fechafin.val();
-                console.log(fechini);
+                var start_date_val = fechaini.val(); 
+                var end_date_val = fechafin.val(); 
+                /* console.log(start_date_val);
+                console.log(end_date_val); */
 
-                if (tiporeporteInventario == 'comprasxfech') {
+                if (tipoinventariofactura == 'comprasxfech') {
                     ruta = `/comprasfecha-pdf?fechaini=${start_date_val}&fechafin=${end_date_val}`;
                 }
 
                 if (ruta !== "") {
                     window.open(ruta, '_blank');
                 }
-            }
-        });    
-
+        }
     }
 </script>
 

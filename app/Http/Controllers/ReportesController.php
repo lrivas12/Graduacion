@@ -118,16 +118,16 @@ class ReportesController extends Controller
         ->groupBy('clientes.nombrecliente', 'clientes.apellidocliente', 'pagos.fechapago', 'facturas.totalventa')
         ->get();
 
-        $FechIniFact = $request->input('fechini');
-        $FechaFinFact = $request->input('fechfin');
+        $fechaini = $request->input('fechaini');
+        $fechafin = $request->input('fechafin');
 
         $comprasfecha = DB::table('compras')
-        ->whereBetween('fechacompra', [$FechIniFact, $FechaFinFact])
+        ->whereBetween('fechacompra', [$fechaini, $fechafin])
         ->get();
 
          
         return view('reporte.general', compact('productos', 'categorias', 'clientes', 'ventas', 'detalleventas', 'proveedores', 
-        'compras', 'detallecompras', 'pagos', 'detallepagos', 'users','FechIniFact', 'FechaFinFact', 'fechaini', 'fechafin','fechaInicio', 'fechaFin',
+        'compras', 'detallecompras', 'pagos', 'detallepagos', 'users','fechaini', 'fechafin','fechaInicio', 'fechaFin',
          'productosProximosAgotarse', 'Estadocuenta','datocliente','todoscompra','todoventas', 'venta','detallepagos', 'compras','comprasfecha', 'comprasrecientes', 'cantidadporcompra', 'totalcompras'));
     }
 
@@ -205,19 +205,6 @@ class ReportesController extends Controller
         return $pdf->stream();
     }
 
-    public function generarPDFcredito(Request $request)
-    {
-        
-        $pagos = pago::all();
-        $venta = factura::all();
-        $credito = pago::whereIn('facturas_id', $venta->pluck('id'))->get();
-        $detallepagos = detallepago::whereIn('pagos_id', $pagos->pluck('id'))->get();
-
-
-        $pdf = PDF::loadView('reporte.crediestado', ['credito'=> $credito,'detallepagos'=> $detallepagos ]);
-        return $pdf->stream();
-    }
-
     public function generarEstadocuenta()
     {
         $Estadocuenta = DB::table('pagos')
@@ -244,14 +231,14 @@ class ReportesController extends Controller
 
     public function generarComprasFecha(Request $request)
     {
-        $FechIniFact = $request->input('fechini');
-        $FechaFinFact = $request->input('fechfin');
+        $fechaini = $request->input('fechaini');
+        $fechafin = $request->input('fechafin');
 
         $comprasfecha = DB::table('compras')
-        ->whereBetween('fechacompra', [$FechIniFact, $FechaFinFact])
+        ->whereBetween('fechacompra', [$fechaini, $fechafin])
         ->get();
 
-        $pdf = PDF::loadView('reporte.vercom', ['comprasfecha'=> $comprasfecha, 'FechIniFact'=> $FechIniFact, 'FechaFinFact'=> $FechaFinFact]);
+        $pdf = PDF::loadView('reporte.vercom', ['comprasfecha'=> $comprasfecha, 'fechaini'=> $fechaini, 'fechafin'=> $fechafin]);
         return $pdf->stream();
     }
 

@@ -16,8 +16,8 @@
 } */
 </style>
 <div class="titulo">
-    <br><label id="titulo" for="titulo" class="titulo-reporte">Compras recientes desde {{ $fechaInicio }} hasta
-        {{ $fechaFin }}</label>
+    <br><label id="titulo" for="titulo" class="titulo-reporte">Compras recientes desde {{ $fechaibi }} hasta
+        {{ $fechafin }}</label>
 </div>
 <div class="content" id="content">
     <div class="cardestadofact" id="cardestadofact">

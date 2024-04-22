@@ -15,8 +15,8 @@
 
 <div class="titulo">
     <br>
-    <label for="titulo" for="titulo" class="tituloreporte">Facturas por fecha desde  {{ $fechaini }}  hasta
-     {{ $fechafin }} </label>
+    <label for="titulo" for="titulo" class="tituloreporte">Facturas por fecha desde  {{ \Carbon\Carbon::parse ($fechaini)->format('d-m-Y') }}  hasta
+     {{ \Carbon\Carbon::parse ($fechafin)->format('d-m-Y') }} </label>
     <br>
 
 </div>
