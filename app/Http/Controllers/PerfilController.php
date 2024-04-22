@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Mail;
 
 class PerfilController extends Controller
 {
-     use MustVerifyEmail;
+    use MustVerifyEmail;
     /**
      * Display a listing of the resource.
      */
@@ -62,44 +62,44 @@ class PerfilController extends Controller
     {
         $user = Auth::user();
         $validator = Validator::make($request->all(), [
-            'usuario'=> 'required|string|max:255|unique:users,usuario,' .$user->id,
-            'email' => 'required|string|email|max:255|unique:users,email,' .$user->id,
-            'password'=> 'nullable|string|min:8',
-            'foto'=>'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'usuario' => 'required|string|max:255|unique:users,usuario,' . $user->id,
+            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+            'password' => 'nullable|string|min:8',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        if($validator->fails()){
+        if ($validator->fails()) {
 
-            session(['error_id'=>$user->id]);
-            return redirect()->route('perfil.show',$user->id)->withErrors($validator)->withInput()->with('error', 'Error al actualizar tus datos, revise e intente nuevamente');
+            session(['error_id' => $user->id]);
+            return redirect()->route('perfil.show', $user->id)->withErrors($validator)->withInput()->with('error', 'Error al actualizar tus datos, revise e intente nuevamente');
         }
 
         $user->usuario = $request->input('usuario');
         $user->email = $request->input('email');
         $user->password = $request->input('password');
 
-        $user-> sendEmailVerificationNotification();
+        // $user->sendEmailVerificationNotification(); // este metodo 'no existe o no esta definido en User' y crashea el sistema a la hora de actualizar datos de perfil
 
         // Actualizar la contraseña si se proporciona
         if ($request->has('password')) {
             $hashedPassword = bcrypt($request->input('password'));
             $user->password = $hashedPassword;
         }
-       
 
-        if($request->hasFile('foto')){
-            if(Storage::disk('public')->exists($user->foto)){
-            Storage::disk('public')->delete($user->foto);
+
+        if ($request->hasFile('foto')) {
+            if (Storage::disk('public')->exists($user->foto)) {
+                Storage::disk('public')->delete($user->foto);
             }
 
-                $uploadedFile=$request->file('foto');
-                $photoName=$request->input('usuario') . '.' . $uploadedFile->getClientOriginalExtension();
-                $photoPath=$uploadedFile->storeAs('public/usuarios', $photoName);
-                $user->foto=$photoName;
+            $uploadedFile = $request->file('foto');
+            $photoName = $request->input('usuario') . '.' . $uploadedFile->getClientOriginalExtension();
+            $photoPath = $uploadedFile->storeAs('public/usuarios', $photoName);
+            $user->foto = $photoPath;
         }
         $user->save();
-        
-        return redirect()->route('perfil.show',$user->id)->with('success', '¡Tus datos se actualizaron correctamente!');
+
+        return redirect()->route('perfil.show', $user->id)->with('success', '¡Tus datos se actualizaron correctamente!');
     }
 
     /**
