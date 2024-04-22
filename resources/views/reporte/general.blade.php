@@ -327,7 +327,7 @@
                                     <tr class="text-center">
                                     <td>{{$compra->razonsocialproveedor}}</td>
                                     <td>{{ \Carbon\Carbon::parse ($compra->fechacompra)->format('d/m/Y')}}</td>
-                                    <td>{{ number_format($compra->totalcompra, 2, '.', ',')}}</td>
+                                    <td>C$ {{ number_format($compra->totalcompra, 2, '.', ',')}}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>
