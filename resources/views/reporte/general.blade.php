@@ -361,7 +361,12 @@
                         <option value="">Seleccione el reporte</option>
                         <option value="estadcuenta">Estado de cuenta</option>
                     </select>
-
+                    <div>
+                        <select name="cliente" id="cliente">
+                            {{-- <option value="">Seleccione el cliente</option>
+                            <option value="{{$datocliente->id}}">{{$datocliente->nombrecliente}} {{$datocliente->apellidocliente}}</option>
+                        --}} </select>
+                    </div>
                     <div class="contenido" id="estadcuenta" style="display: none">
                         <div class="text-center">
                             <br>
