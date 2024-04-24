@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Recibo</title>
     <style>
@@ -8,7 +9,8 @@
             margin: 0;
             padding: 0;
         }
-       /*  #header {  
+
+        /*  #header {
             background-color: #f2f2f2;
             color: #333;
             padding: 10px;
@@ -19,6 +21,7 @@
         .center {
             text-align: center;
         }
+
         .italic {
             font-style: italic;
         }
@@ -31,61 +34,70 @@
 
         table {
             border-collapse: collapse;
-           /*  width: 100%; */
+            /*  width: 100%; */
         }
 
-        table, th, td {
+        table,
+        th,
+        td {
             border: none;
         }
-
     </style>
 </head>
+
 <body>
-    <img id="logo" src="{{ asset($empresa->logo) }}" alt="Logo de la empresa" style="width: 70px; height: auto; margin-bottom: 0px; filter: grayscale(100%);">
-    <div style="width: 100%; padding-left: 50px; text-align: center; font-style: italic;">{{ $empresa->nombreempresa }}</div>
+    <img id="logo" src="{{ public_path('vendor/adminlte/dist/img/' . $empresa->logo) }}" alt="Logo de la empresa"
+        style="width: 70px; height: auto; margin-bottom: 0px; filter: grayscale(100%);">
+    <div style="width: 100%; padding-left: 50px; text-align: center; font-style: italic;">{{ $empresa->nombreempresa }}
+    </div>
     <br>
     <label style="text-align: center; display: block; margin: 0 auto;">RUC: {{ $empresa->rucempresa }}</label><br>
-    <label style="text-align: center; display: block; margin: 0 auto;">Contacto: {{ $empresa->contactoempresa }}</label><br>
-    
-        <br><label>Factura Nº {{ $ventas->id }} </label>
-        <br><label>Fecha: {{ Carbon\Carbon::parse($ventas->fechafactura)->format('d/m/Y') }}</label><br>
-        <br><label>Cliente: {{ $ventas->cliente->nombrecliente }} {{ $ventas->cliente->apellidocliente }}</label>
-        <br><label>Creado Por:: {{ $ventas->User->usuario }}</label>
-        <br><br>
-    
-        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<label for="" style="text-align: center; display: block; margin: 0 auto;">{{ $ventas->tipoventa === 'contado' ? 'Factura de contado' : 'Factura de crédito' }}</label>
-        
-        <table>
-                 @foreach ($ventas->detallefactura as $detalle)
-                 <hr class="hr">  
-                     <tr>
-                         <td style="width:180px; text-align:left;">{{ $detalle->producto->nombreproducto }}</td>
-                     </tr>
-                     <tr>
-                         
-                         <td style="width:150px; text-align:right;">{{ $detalle->cantidadventa }} | {{ $detalle->producto->categoria->nombrecategoria }}| --x--> C$  {{ $detalle->producto->precioproducto }} = C$ {{ $detalle->subtotalventa }}</td>
-                         <br>
-                     </tr>
-                 @endforeach
-                
-         </table>
-         <hr>
+    <label style="text-align: center; display: block; margin: 0 auto;">Contacto:
+        {{ $empresa->contactoempresa }}</label><br>
 
-         <label for="">Neto: C$ {{ number_format($detalle->subtotalventa, 2) }}</label><br>
-         <label for="">Descuento: C$ {{ number_format($ventas->descuentoventa, 2) }}</label><hr>
-         <label for="">Total: C$ {{ number_format($ventas->totalventa , 2) }}</label>
-         
-         @if($ventas->tipoventa === 'credito')
-         <br><br>
-             <table border="0" style="text-align: center;">
-                 <tr>
-                     <th>Adelanto</th>
-                     <th>Saldo</th>
-                     <th>Fecha</th>
-                 </tr>
-                 @foreach ($ventas as $detapagos)
-                @if($ventas->detallepagos)
-                    @if(Carbon\Carbon::parse($venta->detallepagos->fechapago)->format('Y-m-d') === $ventas->fechaventa)
+    <br><label>Factura Nº {{ $ventas->id }} </label>
+    <br><label>Fecha: {{ Carbon\Carbon::parse($ventas->fechafactura)->format('d/m/Y') }}</label><br>
+    <br><label>Cliente: {{ $ventas->cliente->nombrecliente }} {{ $ventas->cliente->apellidocliente }}</label>
+    <br><label>Creado Por:: {{ $ventas->User->usuario }}</label>
+    <br><br>
+
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<label for=""
+        style="text-align: center; display: block; margin: 0 auto;">{{ $ventas->tipoventa === 'contado' ? 'Factura de contado' : 'Factura de crédito' }}</label>
+
+    <table>
+        @foreach ($ventas->detallefactura as $detalle)
+            <hr class="hr">
+            <tr>
+                <td style="width:180px; text-align:left;">{{ $detalle->producto->nombreproducto }}</td>
+            </tr>
+            <tr>
+
+                <td style="width:150px; text-align:right;">{{ $detalle->cantidadventa }} |
+                    {{ $detalle->producto->categoria->nombrecategoria }}| --x--> C$
+                    {{ $detalle->producto->precioproducto }} = C$ {{ $detalle->subtotalventa }}</td>
+                <br>
+            </tr>
+        @endforeach
+
+    </table>
+    <hr>
+
+    <label for="">Neto: C$ {{ number_format($detalle->subtotalventa, 2) }}</label><br>
+    <label for="">Descuento: C$ {{ number_format($ventas->descuentoventa, 2) }}</label>
+    <hr>
+    <label for="">Total: C$ {{ number_format($ventas->totalventa, 2) }}</label>
+
+    @if ($ventas->tipoventa === 'credito')
+        <br><br>
+        <table border="0" style="text-align: center;">
+            <tr>
+                <th>Adelanto</th>
+                <th>Saldo</th>
+                <th>Fecha</th>
+            </tr>
+            @foreach ($ventas as $detapagos)
+                @if ($ventas->detallepagos)
+                    @if (Carbon\Carbon::parse($venta->detallepagos->fechapago)->format('Y-m-d') === $ventas->fechaventa)
                         <tr class="text-center">
                             <td>C$ {{ $ventas->detallepagos->cantidaddetallepago }}</td>
                             <td>C$ {{ $ventas->detallepagos->saldodetallepago }}</td>
@@ -97,11 +109,12 @@
         </table>
 
         <!-- Firma del Cliente -->
-       <p style="text-align: center;">_______________________________<br>Firma del cliente</p>
+        <p style="text-align: center;">_______________________________<br>Firma del cliente</p>
 
-       <!-- Firma del Vendedor -->
-       <p style="text-align: center;">_______________________________<br>Firma del vendedor</p>
-   @endif
-       <p style="text-align: center;">--------------------------------------------<br>¡Muchas gracias por su compra!</p>
+        <!-- Firma del Vendedor -->
+        <p style="text-align: center;">_______________________________<br>Firma del vendedor</p>
+    @endif
+    <p style="text-align: center;">--------------------------------------------<br>¡Muchas gracias por su compra!</p>
 </body>
+
 </html>
