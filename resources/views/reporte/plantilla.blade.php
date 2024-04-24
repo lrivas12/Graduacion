@@ -64,14 +64,15 @@
     </style>
 </head>
 <body>
-    <?php
+    @php
     $empresa = DB::table('empresas')->first();
     $user = Auth::user();
-    ?>
+    // debemos user base64_encode para convertir todo el valor de logo de la tabla empresas a string
+    // la imagen era la que daba problemas con los reportes
+    $imagenEmpresa = base64_encode(file_get_contents(public_path($empresa->logo)));
+    @endphp
     <div class="logo">   
-
-                    <img src="{{ asset($empresa->logo) }}" class="logo">
-                    
+                    <img src="data:image/png;base64,{{ $imagenEmpresa }}" class="logo">
                 </div>
     <div class="header">
         <div class="empresa">
