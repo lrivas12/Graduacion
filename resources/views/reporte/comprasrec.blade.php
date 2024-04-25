@@ -16,8 +16,8 @@
 } */
 </style>
 <div class="titulo">
-    <br><label id="titulo" for="titulo" class="titulo-reporte">Compras recientes desde {{ $fechaibi }} hasta
-        {{ $fechafin }}</label>
+    <br><label id="titulo" for="titulo" class="titulo-reporte">Compras recientes desde {{ \Carbon\Carbon::parse ($fechaibi)->format('d-m-Y') }} hasta
+        {{ \Carbon\Carbon::parse ($fechafin)->format('d-m-Y') }}</label>
 </div>
 <div class="content" id="content">
     <div class="cardestadofact" id="cardestadofact">
