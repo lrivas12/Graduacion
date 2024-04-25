@@ -119,13 +119,13 @@
                     </select>
                     
                     <div class="row">
-                        <div class="col-md-6" id="fechaini" style="display: none;" onchange="MostrarDivFactura()">
+                        <div class="col-md-6" id="fechaIniFactura" style="display: none;" onchange="MostrarDivFactura()">
                             <label for="">Fecha Inicio</label>
-                            <input type="date" class="form-control" name="fechaininput"  id="fechaininput" {{-- onchange="validarfecha()" --}} required>
+                            <input type="date" class="form-control" name="fechaIniInputFactura"  id="fechaIniInputFactura" {{-- onchange="validarfecha()" --}} required>
                         </div>
-                        <div class="col-md-6" id="fechafin" style="display: none;" onchange="MostrarDivFactura()">
+                        <div class="col-md-6" id="fechaFinFactura" style="display: none;" onchange="MostrarDivFactura()">
                             <label for="">Fecha Fin</label>
-                            <input type="date" class="form-control"  name="fechafininput" id="fechafininput" {{-- onchange="validarfecha()" --}} required>
+                            <input type="date" class="form-control"  name="fechaFinInputFactura" id="fechaFinInputFactura" {{-- onchange="validarfecha()" --}} required>
                         </div>
                     </div>
 
@@ -196,7 +196,7 @@
                             </table>
                         </div>
                         <div class="float-right">
-                            <a href="{{ url('/listfactura-pdf')}}" class="btn btn-outline-info"><i class="fas fa-print"></i> Generar Reporte</a>
+                            <a href="{{ route('generarVenta')}}" class="btn btn-outline-info"><i class="fas fa-print">Generar Reporte</i></a>
                         </div>
                     </div>
                 </div>
@@ -225,13 +225,13 @@
                     </select>
                     <br>
                     <div class="row">
-                        <div class="col-md-6" id="divfechini" style="display: none;" onchange="MostrarDivInv()">
+                        <div class="col-md-6" id="divfechaIniInv" style="display: none;" onchange="MostrarDivInv()">
                             <label for="">Fecha Inicio</label>
-                            <input type="date" class="form-control" name="fechaininput"  id="fechaininput"{{--  onchange="validarfecha()" --}} required>
+                            <input type="date" class="form-control" name="fechaIniInputInv"  id="fechaIniInputInv"{{--  onchange="validarfecha()" --}} required>
                         </div>
-                        <div class="col-md-6" id="divfechfin" style="display: none;" onchange="MostrarDivInv()">
+                        <div class="col-md-6" id="divfechaFinInv" style="display: none;" onchange="MostrarDivInv()">
                             <label for="">Fecha Fin</label>
-                            <input type="date" class="form-control"  name="fechafininput" id="fechafininput" {{-- onchange="validarfecha()" --}} required>
+                            <input type="date" class="form-control"  name="fechaFinInputInv" id="fechaFinInputInv" {{-- onchange="validarfecha()" --}} required>
                         </div>
                     </div>
                     <div class="contenido" id="cardprodgen" style="display: none">
@@ -272,7 +272,7 @@
                         </div>
                     </div>
                     <br>
-                    <div class="contenido" id="cardprodagot" style="display: block">
+                    <div class="contenido" id="cardprodagot" style="display: none">
                         <div class="text-center">
                           <label for="">Producto Agotarse</label>
                         </div>
@@ -418,10 +418,11 @@
             tipoinventariofactura = document.getElementById('tipoinventariofactura').value;
             var listclientes = document.getElementById('listclientes');
             var listfactura = document.getElementById('listfactura');
-            var FechIniFactu = document.getElementById('fechaini');
-            var FechaFinFactu = document.getElementById('fechafin');
+            var FechIniFactu = document.getElementById('fechaIniFactura');
+            var FechaFinFactu = document.getElementById('fechaFinFactura');
             // Asegura que todos los elementos estén ocultos al principio
             listclientes.style.display = 'none';
+            listfactura.style.display = 'none';
             FechIniFactu.style.display = 'none';
             FechaFinFactu.style.display = 'none';
 
@@ -437,11 +438,11 @@
         }
 
 
-        var fechaini = $('#fechaininput');
-        var fechafin = $('#fechafininput');
-        $('#fechafininput').change(function() {
+        var fechaini = $('#fechaIniInputFactura');
+        var fechafin = $('#fechaFinInputFactura');
+        $('#fechaFinInputFactura').change(function() {
               mostrarUrl(); 
-                console.log($('#fechafininput').val());
+                // console.log($('#fechaFinInputFactura').val());
             });
 
             
@@ -473,10 +474,11 @@
         var cardprodgen = document.getElementById('cardprodgen');
         var cardprodagot = document.getElementById('cardprodagot');
         var listcompra = document.getElementById('listcompra');
-        var divfechini = document.getElementById('fechaini');
-        var divfechfin = document.getElementById('fechafin');
+        var divfechini = document.getElementById('divfechaIniInv');
+        var divfechfin = document.getElementById('divfechaFinInv');
 
         cardprodagot.style.display = 'none';
+        listcompra.style.display = 'none';
         cardprodgen.style.display = 'none';
         divfechini.style.display = 'none';
         divfechfin.style.display = 'none';
@@ -485,28 +487,27 @@
             divfechini.style.display = 'block';
             divfechfin.style.display = 'block';
         }else if (tiporeporteInventario === 'productosge') {
-        cardprodgen.style.display = 'block'; // Mostrar el contenido
+            cardprodgen.style.display = 'block'; // Mostrar el contenido
         } else if (tiporeporteInventario === 'prodagot') {
-        cardprodagot.style.display = 'block'; // Mostrar el contenido
+            cardprodagot.style.display = 'block'; // Mostrar el contenido
         }        else if (tiporeporteInventario === 'listcompra') {
             listcompra.style.display = 'block';
         }
 
-        var fechaini = $('#fechaininput');
-        var fechafin = $('#fechafininput');
-        $('#fechafininput').change(function() {
-              mostrarUrl(); 
-                console.log($('#fechafininput').val());
+        var fechaini = $('#fechaIniInputInv');
+        var fechafin = $('#fechaFinInputInv');
+        $(fechafin).change(function() {
+            show(); 
             });
 
-            function mostrarUrl() {
+            function show() {
                 var ruta = "";
                 var start_date_val = fechaini.val(); 
                 var end_date_val = fechafin.val(); 
                 /* console.log(start_date_val);
                 console.log(end_date_val); */
 
-                if (tipoinventariofactura == 'comprasxfech') {
+                if (tiporeporteInventario == 'comprasxfech') {
                     ruta = `/comprasfecha-pdf?fechaini=${start_date_val}&fechafin=${end_date_val}`;
                 }
 
