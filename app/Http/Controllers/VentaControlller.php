@@ -146,26 +146,23 @@ class VentaControlller extends Controller
                 $detallepagos = $pagos->saldodetallepago;
             }
         }
-
         if (!$ventas) {
             abort(404, 'Venta no encontrado');
         }
-
-        $pdf = new TCPDF('p', 'mm', 'A4', false, 'UTF-8');
-        $pdf->setPrintHeader(false);
-        $pdf->setPrintFooter(false);
-
+        
+        $pdf = new TCPDF('p', 'mm', 'A4', true, 'UTF-8', false); // unicode era falso (4to argumento en la creación de objeto TCPDF), esto provocaba la aparición de caracteres extraños en la vista.
+        // UNICODE lo que hace es dar la posibilidad de renderizas cualquier caracter de cualquier idioma correctamente, entonces es clave setearlo a TRUE
+        // $pdf->setPrintHeader(false);
+        // $pdf->setPrintFooter(false);
         $pdf->SetAutoPageBreak(false, 0);
         $pdf->SetMargins(2, 0.5, 2);
         $pdf->AddPage();
         $pdf->SetFont('helvetica', '', 8);
         $html = view('layouts.pdf', compact('ventas', 'empresa', 'cantidadpagos', 'detallepagos'))->render();
 
-
         $altura = $this->obtenerAlturaPdf($html);
         $pdf->setPageFormat([56, $altura]); // este metodo es protected por defecto, lo cual impide usarlo aun incluso instanciando el metodo, se puede usar en la misma clase o subclase. Lo que hice fue convertirlo a public ese metodo en la clase y ya.
         $pdf->writeHTML($html, true, false, true, false, '');
-
 
         // Salida del archivo
         return $pdf->Output('recibo.pdf', 'I');

@@ -52,12 +52,12 @@ Route::resource('/reportes', (ReportesController::class))->middleware("Roles:Adm
 Route::resource('/backup', (MantenimientoController::class))->middleware("Roles:Administrador");
 Route::resource('/empresa', (EmpresaController::class))->middleware("Roles:Administrador");
 Route::get('/obtener-datos-empresa', [EmpresaController::class, 'ObtenerDatos'])->middleware("Roles:Administrador");
-Route::get('/productogen-pdf',[ReportesController::class, 'prodgpdf'])->name('productogen-pdf')->middleware("Roles:Administrador");
-Route::get('/productoag-pdf',[ReportesController::class, 'GenProdApdf'])->name('GenProdApdf-pdf')->middleware("Roles:Administrador");
-Route::get('/listclien-pdf',[ReportesController::class, 'verclientpdf'])->name('verclientpdf-pdf')->middleware("Roles:Administrador");
-Route::get('/listfactura-pdf',[ReportesController::class, 'generarVenta'])->name('generarVenta')->middleware("Roles:Administrador");
-Route::get('/listcompra-pdf',[ReportesController::class, 'generarcompras'])->name('generarcompras')->middleware("Roles:Administrador");
-Route::get('/productoag-pdf',[ReportesController::class, 'GenProdApdf'])->name('GenProdApdf-pdf')->middleware("Roles:Administrador");
+Route::get('/productogen-pdf', [ReportesController::class, 'prodgpdf'])->name('productogen-pdf')->middleware("Roles:Administrador");
+Route::get('/productoag-pdf', [ReportesController::class, 'GenProdApdf'])->name('GenProdApdf-pdf')->middleware("Roles:Administrador");
+Route::get('/listclien-pdf', [ReportesController::class, 'verclientpdf'])->name('verclientpdf-pdf')->middleware("Roles:Administrador");
+Route::get('/listfactura-pdf', [ReportesController::class, 'generarVenta'])->name('generarVenta')->middleware("Roles:Administrador");
+Route::get('/listcompra-pdf', [ReportesController::class, 'generarcompras'])->name('generarcompras')->middleware("Roles:Administrador");
+Route::get('/productoag-pdf', [ReportesController::class, 'GenProdApdf'])->name('GenProdApdf-pdf')->middleware("Roles:Administrador");
 Route::get('/obtener-saldo/{clientes_id}', [clienteController::class, 'obtenerSaldo'])->name('obtener-saldo')->middleware("Roles:Administrador");
 Route::get('/comprasrec-pdf', [ReportesController::class, 'generarPDFComprasRecientes'])->name('comprasrec-pdf')->middleware("Roles:Administrador");
 Route::get('/comprasfecha-pdf', [ReportesController::class, 'generarComprasFecha'])->name('comprasfecha-pdf')->middleware("Roles:Administrador");
@@ -76,3 +76,6 @@ Route::get('/exportarfacturas', [MantenimientoController::class, 'exportSalesWit
 
 Route::get('/ventas/{id}/factura', [VentaControlller::class, 'Imprimirfactura'])->name('facturas.Imprimirfactura')->middleware("Roles:Administrador,Editor,Vendedor");
 Route::resource('/perfil', (PerfilController::class))->middleware("Roles:Administrador,Editor,Vendedor");
+// Ruta para reportes de credito
+Route::get('reportes/consultarEstadoCuenta/{id}', [ReportesController::class, 'consultarEstadoCuenta'])->name('consultarEstadoCuenta')->middleware("Roles:Administrador,Editor,Vendedor");
+Route::get('generarEstadoCuentaPDF', [ReportesController::class, 'generarEstadoCuentaPDF'])->name('generarEstadoCuentaPDF')->middleware("Roles:Administrador,Editor,Vendedor");

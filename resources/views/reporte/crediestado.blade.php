@@ -1,26 +1,26 @@
 @extends('reporte.plantilla')
 
 @section('content')
-<style>
-.titulo
-{
+    <style>
+        .titulo {
 
-    text-align: center;
-    display: flex;
-    align-items: center;
-}
-
-</style>
+            text-align: center;
+            display: flex;
+            align-items: center;
+        }
+    </style>
 
 
-<div class="titulo">
-    <br>
-    <label for="titulo" for="titulo" class="tituloreporte">Estado de Cuenta {{$datocliente}} </label>
-    <br>
+    <div class="titulo">
+        <br>
+        <label for="titulo" for="titulo" class="tituloreporte">Estado de Cuenta
+            {{ $datocliente->nombrecliente }} {{ $datocliente->apellidocliente }}
+        </label>
+        <br>
 
-</div>
-<div class="content" id="content">
-    <div class="cardprodgen" id="cardprodgen"> 
+    </div>
+    <div class="content" id="content">
+        <div class="cardprodgen" id="cardprodgen">
             <div class="table-responsive">
                 <table id="producto" class="table table-bordered">
                     <thead class="thead-dark text-center">
@@ -33,15 +33,13 @@
                     </thead>
                     <tbody>
                         @foreach ($pagos as $pago)
-                        <tr class="text-center">
-                           
-                            <td>{{\Carbon\Carbon::parse ($pago->fechapago)->format('d/m/Y')}}</td>
-                            <td>{{$pago->factura->cliente->nombrecliente}} {{$pago->factura->cliente->apellidocliente}}</td> 
-                            <td>C$ {{ number_format($pago->factura->totalventa, 2, '.', ',')}}</td>
-                            <td>C$ {{ number_format($pago->cantidadpago - $pago->detallepago->sum('cantidaddetallepago'), 2, '.', ',')}}</td>
-                        
-                        </tr>
-                    @endforeach
+                            <tr class="text-center">
+                                <td>{{ \Carbon\Carbon::parse($pago->fechapago)->format('d/m/Y') }}</td>
+                                <td>{{ $pago->nombrecliente }} {{ $pago->apellidocliente }}</td>
+                                <td>C$ {{ $pago->totalventa }}</td>
+                                <td>C$ {{ $pago->deuda_pendiente }}</td>
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>
