@@ -165,7 +165,7 @@
                     </section>
                     <div class="card-body">
                         <div class="text-center" style="display: flex; justify-content: center; align-items: center;">
-                                <a href="{{-- {{ url('/exportVariosModelos') } --}}}" type="submit" class="btndownload" id="btnExportar">
+                                <a href="{{ url('/exportVariosModelos') }}" type="submit" class="btndownload" id="btnExportar">
                                     <br><i class="fas fa-cloud-download-alt text-primary"></i>
                                     <i class="fas fa-arrow-right"></i><i class="fas fa-file-excel text-success"></i><br><br>
                                     <label for="" class="text-primary">Descargar Datos del negocio a Excel</label>

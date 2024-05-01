@@ -1,7 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
     <title>Recibo</title>
     <style>
         body {
@@ -46,9 +49,17 @@
 </head>
 
 <body>
-    <img id="logo" src="{{ public_path('vendor/adminlte/dist/img/' . $empresa->logo) }}" alt="Logo de la empresa"
-        style="width: 70px; height: auto; margin-bottom: 0px; filter: grayscale(100%);">
-    <div style="width: 100%; padding-left: 50px; text-align: center; font-style: italic;">{{ $empresa->nombreempresa }}
+    @php
+        // debemos user base64_encode para convertir todo el valor de logo de la tabla empresas a string
+        // la imagen era la que daba problemas con los reportes
+        $imagenEmpresa = base64_encode(file_get_contents(public_path($empresa->logo)));
+    @endphp
+    <div class="header" style="text-align: center;">
+        <img src="data:image/png;base64,{{ $imagenEmpresa }}" id="logo" alt="Logo de la empresa"
+            style="width: 70px; height: 70px; filter: grayscale(100%);">
+        <h3 style="width: 100%; text-align: center; font-style: italic;">
+            {{ $empresa->nombreempresa }}
+        </h3>
     </div>
     <br>
     <label style="text-align: center; display: block; margin: 0 auto;">RUC: {{ $empresa->rucempresa }}</label><br>
@@ -60,7 +71,6 @@
     <br><label>Cliente: {{ $ventas->cliente->nombrecliente }} {{ $ventas->cliente->apellidocliente }}</label>
     <br><label>Creado Por:: {{ $ventas->User->usuario }}</label>
     <br><br>
-
     &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<label for=""
         style="text-align: center; display: block; margin: 0 auto;">{{ $ventas->tipoventa === 'contado' ? 'Factura de contado' : 'Factura de crédito' }}</label>
 
@@ -114,7 +124,9 @@
         <!-- Firma del Vendedor -->
         <p style="text-align: center;">_______________________________<br>Firma del vendedor</p>
     @endif
-    <p style="text-align: center;">--------------------------------------------<br>¡Muchas gracias por su compra!</p>
+    <p style="text-align: center;">--------------------------------------------<br>¡Muchas gracias por su compra!
+    </p>
+
 </body>
 
 </html>
