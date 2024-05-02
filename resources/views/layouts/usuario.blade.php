@@ -90,7 +90,7 @@
                                 <th>Usuario</th>
                                 <th>Correo Electrónico</th>
                                 <th>Rol</th>
-                                <th>Acciones</th>
+                                <th>Acciones</th>e
                             </tr>
                         </thead>
                         <tbody class="text-center">
@@ -441,15 +441,14 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="password"
+                            <label for="passwordlabel"
                                 class="col-md-4 col-form-label text-md-right">{{ __('Contraseña:') }} <span class="text-danger">*</span></label>
 
-                            <div class="col-md-6">
+                            <div class="col-md-6 input-group">
                                 <input id="password" type="password"
-                                    class="form-control @error('password') is-invalid @enderror" name="password" required
-                                    autocomplete="new-password">
+                                    class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
                                     <div class="input-group-append">
-                                        <button class="btn btn-outline-secondary" type="button" id="showPasswordBtn">
+                                        <button class="btn btn-outline-secondary" type="button" id="showPasswordBtn" title="Mostrar contraseña">
                                             <i class="fa fa-eye"></i> </button>
                                         </div>
                                 @error('password')
@@ -492,7 +491,7 @@
 @section('js')
     
     
-    <script>
+<script>
         const userModalBtn = document.getElementById("userModalBtn");
         const createUserModal = document.getElementById("createUserModal");
         const closeModal = document.getElementById("closeModal");
@@ -504,8 +503,7 @@
         closeModal.addEventListener("click", () => {
             createUserModal.style.display = "none";
         });
-    </script>
-    <script>
+
 
 $('#showPasswordBtn').click(function () {
             var passwordFields = $('#password, #password-confirm');
@@ -559,9 +557,8 @@ $('#showPasswordBtn').click(function () {
             }
         });
 
-    </script>
 
-    <script>
+
         document.addEventListener("DOMContentLoaded", function() {
             // Activar la pestaña "Crear Producto"
             function showAlert(icon, title, text) {
