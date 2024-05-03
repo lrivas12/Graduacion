@@ -343,7 +343,7 @@
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-text">CS</span>
                                                         </div>
-                                                        <input type="text" step="0.01" min="0"
+                                                        <input type="number" step="0.01" min="0"
                                                             class="form-control" id="descuento" name="descuento"
                                                             value="{{ old('descuento', '0') }}"
                                                             oninput="updateDescuento()">
