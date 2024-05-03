@@ -48,7 +48,7 @@ class UsuarioController extends Controller
             'regex:/\d/',    // Al menos un número
             'regex:/[A-Z]/', // Al menos una letra mayúscula
             'regex:/[\W_]/', // Al menos un carácter especial
-            // 'confirmed',      // Debe coincidir con el campo de confirmación de contraseña,
+            'confirmed',      // Debe coincidir con el campo de confirmación de contraseña,
         ],
         ]);
 
