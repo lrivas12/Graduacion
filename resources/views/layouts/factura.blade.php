@@ -343,7 +343,7 @@
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-text">CS</span>
                                                         </div>
-                                                        <input type="number" step="0.01" min="0"
+                                                        <input type="text" step="0.01" min="0"
                                                             class="form-control" id="descuento" name="descuento"
                                                             value="{{ old('descuento', '0') }}"
                                                             oninput="updateDescuento()">
@@ -834,7 +834,6 @@
             })); //convierte objeto en string
 
         };
-
         function checkCantidadVentaValidation() {
                 let cantidadventa = $("#cantidadventa").val();
                 $("#cantidadVentaError").html("");
@@ -853,11 +852,13 @@
             totalSD = totalSD ?? 0;
             descuento = $("#descuento").val();
             $("#descuentoError").html("");
+
             if (descuento == 0) {
                 $("#total").val(totalSD);
             }
             parseFloat(descuento ?? 0); // Parsear a número o 0 si no es un número válido
             if (descuento >= parseFloat(totalSD) && tablaDatos.length > 0) {
+
                 return $("#descuentoError").html("El descuento no puede ser mayor o igual al subtotal de la venta");
                 // Swal.fire({
                 //     icon: 'error',
@@ -870,6 +871,7 @@
                 // $("#total").val("");
                 // $("#descuento").val("");
                 // return;
+
             } else {
                 // Calcular el nuevo total con descuento
                 totaldescuento = totalSD - descuento;

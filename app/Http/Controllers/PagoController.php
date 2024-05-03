@@ -24,19 +24,17 @@ class PagoController extends Controller
     $pagos = pago::findOrFail($id);
     $clientes = cliente::all();
     $ventas = factura::all();
-    $detallepagos = detallepago::all();
+    $detallepagos = detallepago::where('pagos_id', $id)->get();
     return view('layouts.credito', compact('pagos', 'clientes', 'ventas', 'detallepagos'));
   }
 
   public function show($id)
   {
-
     $pagos = pago::findOrFail($id);
     $ventas = factura::all();
     $clientes = cliente::all();
     $detallepagos = detallepago::where('pagos_id', $id)->get();
     return view('layouts.credito', compact('pagos', 'ventas', 'clientes', 'detallepagos'));
-
   }
 
   public function update(Request $request, $id)
