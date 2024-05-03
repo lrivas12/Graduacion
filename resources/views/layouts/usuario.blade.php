@@ -440,7 +440,7 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="password"
+                            <label for="passwordE"
                                 class="col-md-4 col-form-label text-md-right">{{ __('Contraseña:') }} <span class="text-danger">*</span></label>
 
                             <div class="col-md-6 input-group">
