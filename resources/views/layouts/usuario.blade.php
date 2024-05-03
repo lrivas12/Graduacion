@@ -90,7 +90,7 @@
                                 <th>Usuario</th>
                                 <th>Correo Electrónico</th>
                                 <th>Rol</th>
-                                <th>Acciones</th>
+                                <th>Acciones</th>e
                             </tr>
                         </thead>
                         <tbody class="text-center">
@@ -269,17 +269,15 @@
                                                     <label for="password"
                                                         class="col-md-4 col-form-label text-md-right">{{ __('Contraseña:') }} <span class="text-danger">*</span></label>
 
-                                                    <div class="col-md-6">
+                                                    <div class="col-md-6 input-group">
                                                         <input id="password" type="password"
                                                             class="form-control @error('password') is-invalid @enderror"
                                                             name="password" autocomplete="new-password">
-
-
                                                             <div class="input-group-append">
-                                                                <button class="btn btn-outline-secondary" type="button" id="showPasswordBtn">
+                                                                <button class="btn btn-outline-secondary" type="button" id="showPasswordBtn" title="Mostrar contraseña">
                                                                     <i class="fa fa-eye"></i> 
                                                                 </button>
-                                                                </div>                                                            
+                                                            </div>                                                            
                                                         @error('password')
                                                             <span class="invalid-feedback" role="alert">
                                                                 <strong>{{ $message }}</strong>
@@ -294,9 +292,10 @@
 
                                                     <div class="col-md-6">
                                                         <input id="password-confirm" type="password" class="form-control"
-                                                            name="password_confirmation" autocomplete="new-password">
-                                                            <div id="password-errors" class="col-md-6 offset-md-4"></div>
+                                                            name="password_confirm" autocomplete="new-password">
+                                                            
                                                     </div>
+                                                    <div id="password-errors" class="col-md-6 offset-md-4"></div>
                                                 </div>
 
                                                 <div class="modal-footer">
@@ -441,17 +440,18 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="password"
+                            <label for="passwordE"
                                 class="col-md-4 col-form-label text-md-right">{{ __('Contraseña:') }} <span class="text-danger">*</span></label>
 
-                            <div class="col-md-6">
-                                <input id="password" type="password"
-                                    class="form-control @error('password') is-invalid @enderror" name="password" required
-                                    autocomplete="new-password">
+                            <div class="col-md-6 input-group">
+                                <input id="passwordE" type="password"
+                                    class="form-control @error('password') is-invalid @enderror"
+                                    name="passwordE" autocomplete="new-password">
                                     <div class="input-group-append">
-                                        <button class="btn btn-outline-secondary" type="button" id="showPasswordBtn">
-                                            <i class="fa fa-eye"></i> </button>
-                                        </div>
+                                        <button class="btn btn-outline-secondary" type="button" id="showPasswordBtnE" title="Mostrar contraseña">
+                                            <i class="fa fa-eye"></i> 
+                                        </button>
+                                    </div>                                                            
                                 @error('password')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -461,15 +461,15 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="password-confirm"
+                            <label for="password-co"
                                 class="col-md-4 col-form-label text-md-right">{{ __('Confirmar Contraseña:') }} <span class="text-danger">*</span></label>
 
-                                <div class="col-md-6">
-                                <input id="password-confirm" type="password" class="form-control"
-                                name="password_confirmation" autocomplete="new-password">
-                                        
-                                <div id="password-errors" class="col-md-6 offset-md-4"></div>
-                                </div>
+                            <div class="col-md-6">
+                                <input id="password-confirmE" type="password" class="form-control"
+                                    name="password_confirmE" autocomplete="new-password">
+                                    
+                            </div>
+                            <div id="password-errorsE" class="col-md-6 offset-md-4"></div>
                         </div>
 
                         <div class="modal-footer">
@@ -492,76 +492,119 @@
 @section('js')
     
     
-    <script>
-        const userModalBtn = document.getElementById("userModalBtn");
-        const createUserModal = document.getElementById("createUserModal");
-        const closeModal = document.getElementById("closeModal");
+<script>
+        $(document).ready(function () {
+            $('#showPasswordBtn').click(function () {
+                var passwordFields = $('#password, #password-confirm');
+                var passwordFieldType = passwordFields.attr('type');
+                if (passwordFieldType === 'password') {
+                    passwordFields.attr('type', 'text');
+                    $(this).html('<i class="fa fa-eye-slash"></i>');
+                } else {
+                    passwordFields.attr('type', 'password');
+                    $(this).html('<i class="fa fa-eye"></i>');
+                }
+            });
 
-        userModalBtn.addEventListener("click", () => {
-            createUserModal.style.display = "block";
+            // Validación de contraseña segura
+            $('#password, #password-confirm').on('input', function () {
+                var password = $('#password').val();
+                var confirmPassword = $('#password-confirm').val();
+                var passwordErrors = $('#password-errors');
+                var errors = [];
+
+                // Validar longitud mínima
+                if (password.length < 8) {
+                    errors.push("La contraseña debe tener al menos 8 caracteres.");
+                }
+
+                // Validar al menos un número
+                if (!/\d/.test(password)) {
+                    errors.push("La contraseña debe contener al menos un número.");
+                }
+
+                // Validar al menos una letra mayúscula
+                if (!/[A-Z]/.test(password)) {
+                    errors.push("La contraseña debe contener al menos una letra mayúscula.");
+                }
+
+                // Validar al menos un carácter especial
+                if (!/[\W_]/.test(password)) {
+                    errors.push("La contraseña debe contener al menos un carácter especial.");
+                }
+
+                // Validar que las contraseñas coincidan
+                if (password !== confirmPassword) {
+                    console.log("con" + password, "confir" + confirmPassword);
+                    errors.push("Las contraseñas no coinciden.");
+                }
+
+                // Mostrar los mensajes de error
+                if (errors.length > 0) {
+                    passwordErrors.html('<ul class="text-danger"><li>' + errors.join('</li><li>') + '</li></ul>');
+                } else {
+                    passwordErrors.html('');
+                }
+            });
+
+            $('#showPasswordBtnE').click(function () {
+                var passwordFieldsE = $('#passwordE, #password-confirmE');
+                var passwordFieldTypeE = passwordFieldsE.attr('type');
+                if (passwordFieldTypeE === 'password') {
+                    passwordFieldsE.attr('type', 'text');
+                    $(this).html('<i class="fa fa-eye-slash"></i>');
+                } else {
+                    passwordFieldsE.attr('type', 'password');
+                    $(this).html('<i class="fa fa-eye"></i>');
+                }
+            });
+
+            // Validación de contraseña segura
+            $('#passwordE, #password-confirmE').on('input', function () {
+                var passwordE = $('#passwordE').val();
+                var confirmPasswordE = $('#password-confirmE').val();
+                var passwordErrorsE = $('#password-errorsE');
+                var errorsE = [];
+
+                // Validar longitud mínima
+                if (passwordE.length < 8) {
+                    errorsE.push("La contraseña debe tener al menos 8 caracteres.");
+                }
+
+                // Validar al menos un número
+                if (!/\d/.test(passwordE)) {
+                    errorsE.push("La contraseña debe contener al menos un número.");
+                }
+
+                // Validar al menos una letra mayúscula
+                if (!/[A-Z]/.test(passwordE)) {
+                    errorsE.push("La contraseña debe contener al menos una letra mayúscula.");
+                }
+
+                // Validar al menos un carácter especial
+                if (!/[\W_]/.test(passwordE)) {
+                    errorsE.push("La contraseña debe contener al menos un carácter especial.");
+                }
+
+                // Validar que las contraseñas coincidan
+                if (passwordE !== confirmPasswordE) {
+                    console.log("con" + passwordE, "confir" + confirmPasswordE);
+
+                    errorsE.push("Las contraseñas no coinciden.");
+                    console.log(errorsE);
+                }
+
+                // Mostrar los mensajes de error
+                if (errorsE.length > 0) {
+                    passwordErrorsE.html('<ul class="text-danger"><li>' + errorsE.join('</li><li>') + '</li></ul>');
+                } else {
+                    passwordErrorsE.html('');
+                }
+            });
         });
+    
 
-        closeModal.addEventListener("click", () => {
-            createUserModal.style.display = "none";
-        });
-    </script>
-    <script>
 
-$('#showPasswordBtn').click(function () {
-            var passwordFields = $('#password, #password-confirm');
-            var passwordFieldType = passwordFields.attr('type');
-            if (passwordFieldType === 'password') {
-                passwordFields.attr('type', 'text');
-                $(this).html('<i class="fa fa-eye-slash"></i>');
-            } else {
-                passwordFields.attr('type', 'password');
-                $(this).html('<i class="fa fa-eye"></i>');
-            }
-        });
-
-        // Validación de contraseña segura
-        $('#password, #password-confirm').on('input', function () {
-            var password = $('#password').val();
-            var confirmPassword = $('#password-confirm').val();
-            var passwordErrors = $('#password-errors');
-            var errors = [];
-
-            // Validar longitud mínima
-            if (password.length < 8) {
-                errors.push("La contraseña debe tener al menos 8 caracteres.");
-            }
-
-            // Validar al menos un número
-            if (!/\d/.test(password)) {
-                errors.push("La contraseña debe contener al menos un número.");
-            }
-
-            // Validar al menos una letra mayúscula
-            if (!/[A-Z]/.test(password)) {
-                errors.push("La contraseña debe contener al menos una letra mayúscula.");
-            }
-
-            // Validar al menos un carácter especial
-            if (!/[\W_]/.test(password)) {
-                errors.push("La contraseña debe contener al menos un carácter especial.");
-            }
-
-            // Validar que las contraseñas coincidan
-            if (password !== confirmPassword) {
-                errors.push("Las contraseñas no coinciden.");
-            }
-
-            // Mostrar los mensajes de error
-            if (errors.length > 0) {
-                passwordErrors.html('<ul class="text-danger"><li>' + errors.join('</li><li>') + '</li></ul>');
-            } else {
-                passwordErrors.html('');
-            }
-        });
-
-    </script>
-
-    <script>
         document.addEventListener("DOMContentLoaded", function() {
             // Activar la pestaña "Crear Producto"
             function showAlert(icon, title, text) {

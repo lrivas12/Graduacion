@@ -34,20 +34,21 @@ class UsuarioController extends Controller
      */
     public function store(Request $request)
     {
+        // dd(request()->all());
         $validator = Validator::make($request->all(), [
             'usuario'=> 'required|string|max:255|unique:users,usuario,',
             'email' => 'required|string|email|max:255|unique:users,email,',
             'estado'=> 'required|string',
             'privilegios'=>'required|string|max:255',
             'foto'=>'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'password'=> ['required',
+            'passwordE'=> ['required',
             'string',
             'max:20',
             'min:8',         // Mínimo de 8 caracteres
             'regex:/\d/',    // Al menos un número
             'regex:/[A-Z]/', // Al menos una letra mayúscula
             'regex:/[\W_]/', // Al menos un carácter especial
-            'confirmed',      // Debe coincidir con el campo de confirmación de contraseña,
+            // 'confirmed',      // Debe coincidir con el campo de confirmación de contraseña,
         ],
         ]);
 
@@ -75,15 +76,15 @@ class UsuarioController extends Controller
 
 
         if($validator->fails()){
+            // dd($validator);
             return redirect()->route('usuario.index')->withErrors($validator)->withInput()->with('errorC', 'Error al crear el Usuario, revise e intente nuevamente');
         }
 
-        $hashedPassword = bcrypt($request->input('password'));
+        $hashedPassword = bcrypt($request->input('passwordE'));
 
         $users = User::create([
         'usuario'=>$request->input('usuario'),
         'email'=>$request->input('email'),
-        'password'=>$request->input('password'),
         'privilegios'=>$request->input('privilegios'),
         'estado'=>$request->input('estado'),
         'password'=>$hashedPassword,
