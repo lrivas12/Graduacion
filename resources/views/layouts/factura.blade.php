@@ -95,7 +95,6 @@
     <div class="modal" id="myModal">
         <div class="modal-dialog">
             <div class="modal-content d-flex align-items-center" style="max-width: 100%; height: auto;">
-
                 <!-- Contenido del modal -->
                 <div class="modal-body">
                     <img src="{{ asset('/vendor/adminlte/dist/img/AyudaFactura.jpg') }}" class="img-fluid"
@@ -151,8 +150,6 @@
                                                                 {{ old('tipoventa') == 'credito' ? 'selected' : '' }}>
                                                                 Crédito</option>
                                                         </select>
-
-
                                                     </div>
                                                 </div>
                                             </div>
@@ -262,7 +259,8 @@
                                                                 class="form-control @error('cantidadcompra') is-invalid @enderror"
                                                                 id="cantidadventa" name="cantidadventa"
                                                                 value="{{ old('cantidadventa') }}"
-                                                                oninput="this.value = Math.abs(this.value);">
+                                                                oninput="checkCantidadVentaValidation()">
+                                                                {{-- oninput="this.value = Math.abs(this.value);"> --}}
                                                             <div id="cantidadVentaError"
                                                                 style="color: red; font-style: italic;"></div>
                                                             @error('cantidadventa')
@@ -344,13 +342,14 @@
                                                     <div class="input-group">
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-text">CS</span>
-
                                                         </div>
                                                         <input type="text" step="0.01" min="0"
                                                             class="form-control" id="descuento" name="descuento"
                                                             value="{{ old('descuento', '0') }}"
                                                             oninput="updateDescuento()">
                                                     </div>
+                                                        <div id="descuentoError"
+                                                            style="color: red; font-style: italic;"></div>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label for="total">Total venta: </label>
@@ -382,6 +381,8 @@
                                                             value="{{ old('adelanto', '0') }}"
                                                             oninput="this.value = Math.abs(this.value);">
                                                     </div>
+                                                    <div id="adelantoError"
+                                                    style="color: red; font-style: italic;"></div>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label for="saldo">Saldo pendiente</label>
@@ -408,7 +409,7 @@
 
                             <button type="submit" class="btn btn-primary mr-2" name="guardar_e_imprimir"
                                 id="guardarEImprimir"><i class="fas fa-print"></i> Guardar e Imprimir</button>
-                            <button type="submit" class="btn btn-primary ml-2"><i class="fas fa-save"></i>
+                            <button type="submit" class="btn btn-primary ml-2" id="guardarVenta"><i class="fas fa-save"></i>
                                 Guardar</button>
                         </div>
                         <div class="col-md-12 mt-2 text-left">
@@ -439,7 +440,8 @@
             if (guardarEImprimirBtn && ventaForm) {
                 guardarEImprimirBtn.addEventListener('click', function(event) {
                     event.preventDefault();
-                    // $("#guardarEImprimir").prop('disabled', true);
+                    // evita que se pueda dar click mas de una vez en el boton de guardar e imprimir
+                    $("#guardarEImprimir").prop('disabled', true);
                     // Obtener el valor del input de número de venta
 
                     // Establecer el valor del input oculto "guardarImp"
@@ -490,8 +492,9 @@
                     //     // Detectar cambios en el historial (Retroceso)
 
                 });
-
             }
+
+
             // Función para mostrar mensajes de SweetAlert2
             function showAlert(icon, title, text, isError, position) {
                 const options = {
@@ -776,6 +779,7 @@
                 $("#detalleVentaTipoCredito").show();
             }
         });
+
         //funciones y variables propiamente de ventas
         var totalSD;
         const showTable = () => {
@@ -830,28 +834,44 @@
             })); //convierte objeto en string
 
         };
+        function checkCantidadVentaValidation() {
+                let cantidadventa = $("#cantidadventa").val();
+                $("#cantidadVentaError").html("");
+                //Validaciones propias de la venta
+                if (cantidadventa <= 0) {
+                    return $("#cantidadVentaError").html("La cantidad debe ser mayor que cero");
+                }          
+                
+                if (cantidadventa > cantidadproducto) {
+                    return $("#cantidadVentaError").html("La cantidad de venta no debe ser mayor que las existencias");
+            }
+        }
 
         // Escuchar el evento de cambio en el campo "descuento", propiamnete de ventas
-        
         function updateDescuento() {
             totalSD = totalSD ?? 0;
             descuento = $("#descuento").val();
+            $("#descuentoError").html("");
+
             if (descuento == 0) {
                 $("#total").val(totalSD);
             }
             parseFloat(descuento ?? 0); // Parsear a número o 0 si no es un número válido
             if (descuento >= parseFloat(totalSD) && tablaDatos.length > 0) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'El descuento no puede ser mayor o igual al subtotal de la venta',
-                    allowOutsideClick: false, // No permitir que se cierre haciendo clic fuera del modal
-                    showCancelButton: false, // No mostrar el botón de cancelar
-                    confirmButtonText: 'OK' // Personaliza el texto del botón "OK"
-                });
-                $("#total").val("");
-                $("#descuento").val("");
-                return;
+
+                return $("#descuentoError").html("El descuento no puede ser mayor o igual al subtotal de la venta");
+                // Swal.fire({
+                //     icon: 'error',
+                //     title: 'Error',
+                //     text: 'El descuento no puede ser mayor o igual al subtotal de la venta',
+                //     allowOutsideClick: false, // No permitir que se cierre haciendo clic fuera del modal
+                //     showCancelButton: false, // No mostrar el botón de cancelar
+                //     confirmButtonText: 'OK' // Personaliza el texto del botón "OK"
+                // });
+                // $("#total").val("");
+                // $("#descuento").val("");
+                // return;
+
             } else {
                 // Calcular el nuevo total con descuento
                 totaldescuento = totalSD - descuento;
@@ -864,21 +884,20 @@
         $("#adelanto").on("input", function() {
             // Obtener el valor del descuento
             let adelanto = parseFloat($(this).val()) || 0; // Parsear a número o 0 si no es un número válido
-            console.log('adelanto:' + adelanto);
-            console.log('totaldescuento:' + totalSD - descuento);
+            $("#adelantoError").html("");
             if (adelanto >= parseFloat(totalSD - descuento)) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'El adelanto no puede ser mayor o igual al total de la venta',
-                    allowOutsideClick: false, // No permitir que se cierre haciendo clic fuera del modal
-                    showCancelButton: false, // No mostrar el botón de cancelar
-                    confirmButtonText: 'OK' // Personaliza el texto del botón "OK"
-                });
-                $("#saldo").val("");
-                $("#adelanto").val("");
-
-                return;
+                return $("#adelantoError").html("El adelanto no puede ser mayor o igual al total de la venta");
+                // Swal.fire({
+                //     icon: 'error',
+                //     title: 'Error',
+                //     text: 'El adelanto no puede ser mayor o igual al total de la venta',
+                //     allowOutsideClick: false, // No permitir que se cierre haciendo clic fuera del modal
+                //     showCancelButton: false, // No mostrar el botón de cancelar
+                //     confirmButtonText: 'OK' // Personaliza el texto del botón "OK"
+                // });
+                // $("#saldo").val("");
+                // $("#adelanto").val("");
+                // return;
             } else {
                 recalcularSaldoPendiente(adelanto);
             }
@@ -938,6 +957,9 @@
         $("form").submit(function(event) {
             if (!validarProductosAgregados()) {
                 event.preventDefault(); // Evitar el envío del formulario si no se han agregado productos
+            }
+            else {
+                $("#guardarVenta").prop('disabled', true);
             }
         });
     </script>
