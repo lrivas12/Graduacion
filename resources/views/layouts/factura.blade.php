@@ -95,7 +95,6 @@
     <div class="modal" id="myModal">
         <div class="modal-dialog">
             <div class="modal-content d-flex align-items-center" style="max-width: 100%; height: auto;">
-
                 <!-- Contenido del modal -->
                 <div class="modal-body">
                     <img src="{{ asset('/vendor/adminlte/dist/img/AyudaFactura.jpg') }}" class="img-fluid"
@@ -151,8 +150,6 @@
                                                                 {{ old('tipoventa') == 'credito' ? 'selected' : '' }}>
                                                                 Crédito</option>
                                                         </select>
-
-
                                                     </div>
                                                 </div>
                                             </div>
@@ -262,7 +259,8 @@
                                                                 class="form-control @error('cantidadcompra') is-invalid @enderror"
                                                                 id="cantidadventa" name="cantidadventa"
                                                                 value="{{ old('cantidadventa') }}"
-                                                                oninput="this.value = Math.abs(this.value);">
+                                                                oninput="checkCantidadVentaValidation()">
+                                                                {{-- oninput="this.value = Math.abs(this.value);"> --}}
                                                             <div id="cantidadVentaError"
                                                                 style="color: red; font-style: italic;"></div>
                                                             @error('cantidadventa')
@@ -323,7 +321,6 @@
                                                     <th>Precio</th>
                                                     <th>Subtotal</th>
                                                     <th colspan="2">Acciones</th>
-
                                                 </tr>
                                             </thead>
                                             <tbody id="cuerpoVenta" class="text-center">
@@ -345,13 +342,14 @@
                                                     <div class="input-group">
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-text">CS</span>
-
                                                         </div>
-                                                        <input type="number" step="0.01" min="0"
+                                                        <input type="text" step="0.01" min="0"
                                                             class="form-control" id="descuento" name="descuento"
                                                             value="{{ old('descuento', '0') }}"
-                                                            oninput="this.value = Math.abs(this.value);">
+                                                            oninput="updateDescuento()">
                                                     </div>
+                                                        <div id="descuentoError"
+                                                            style="color: red; font-style: italic;"></div>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label for="total">Total venta: </label>
@@ -383,6 +381,8 @@
                                                             value="{{ old('adelanto', '0') }}"
                                                             oninput="this.value = Math.abs(this.value);">
                                                     </div>
+                                                    <div id="adelantoError"
+                                                    style="color: red; font-style: italic;"></div>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label for="saldo">Saldo pendiente</label>
@@ -409,7 +409,7 @@
 
                             <button type="submit" class="btn btn-primary mr-2" name="guardar_e_imprimir"
                                 id="guardarEImprimir"><i class="fas fa-print"></i> Guardar e Imprimir</button>
-                            <button type="submit" class="btn btn-primary ml-2"><i class="fas fa-save"></i>
+                            <button type="submit" class="btn btn-primary ml-2" id="guardarVenta"><i class="fas fa-save"></i>
                                 Guardar</button>
                         </div>
                         <div class="col-md-12 mt-2 text-left">
@@ -440,7 +440,8 @@
             if (guardarEImprimirBtn && ventaForm) {
                 guardarEImprimirBtn.addEventListener('click', function(event) {
                     event.preventDefault();
-                    // $("#guardarEImprimir").prop('disabled', true);
+                    // evita que se pueda dar click mas de una vez en el boton de guardar e imprimir
+                    $("#guardarEImprimir").prop('disabled', true);
                     // Obtener el valor del input de número de venta
 
                     // Establecer el valor del input oculto "guardarImp"
@@ -491,8 +492,9 @@
                     //     // Detectar cambios en el historial (Retroceso)
 
                 });
-
             }
+
+
             // Función para mostrar mensajes de SweetAlert2
             function showAlert(icon, title, text, isError, position) {
                 const options = {
@@ -728,7 +730,6 @@
             let subtotalventa = parseFloat(cantidadventa) * parseFloat(precioproducto);
             subtotalventa = parseFloat(subtotalventa.toFixed(2));
 
-
             //Validaciones propias de la venta
             if (cantidadventa <= 0) {
                 $("#cantidadVentaError").html("La cantidad debe ser mayor que cero");
@@ -747,13 +748,12 @@
                 return;
             }
 
-
             let datos = {
                 id,
                 nombreproducto,
                 cantidadventa,
                 precioproducto,
-                subtotalventa
+                subtotalventa,
             }
             //Busca el indice del arreglo para sustituirlo
             let indice = tablaDatos.findIndex(objeto => objeto.id === id);
@@ -764,14 +764,13 @@
                 tablaDatos[indice] = datos; // si existe lo sustituye
             }
             showTable(); // Muestra la tabla actualizada de ventas
+            $("#total").val(totalSD);
 
             //vacia las cajas de texto de la card de los productos
             $("#seleccionarProducto").attr("nombre", "");
             $("#seleccionarProducto").attr("key", "");
             $("#seleccionarProducto").val("");
-
             $("#producto-input").val("");
-
             $("#precioproducto").val("");
             $("#cantidadventa").val("");
             $("#cantidadVentaError").html("");
@@ -779,11 +778,8 @@
             if (tipoVenta === 'credito') {
                 $("#detalleVentaTipoCredito").show();
             }
-
-
-
-
         });
+
         //funciones y variables propiamente de ventas
         var totalSD;
         const showTable = () => {
@@ -808,7 +804,6 @@
                             <a key="${x.id}" id="btnEditVenta" class = "mx-4" title="Editar producto" >
                                 <i class="fas fa-pencil-alt text-success"></i> 
                             </a>
-                            
                         </div> 
                     </td>
                     <td>
@@ -838,82 +833,84 @@
                 total
             })); //convierte objeto en string
 
+        };
+
+        function checkCantidadVentaValidation() {
+                let cantidadventa = $("#cantidadventa").val();
+                $("#cantidadVentaError").html("");
+                //Validaciones propias de la venta
+                if (cantidadventa <= 0) {
+                    return $("#cantidadVentaError").html("La cantidad debe ser mayor que cero");
+                }          
+                
+                if (cantidadventa > cantidadproducto) {
+                    return $("#cantidadVentaError").html("La cantidad de venta no debe ser mayor que las existencias");
+            }
         }
 
         // Escuchar el evento de cambio en el campo "descuento", propiamnete de ventas
-        $("#descuento").on("change", function() {
-            // Obtener el valor del descuento
-            descuento = parseFloat($(this).val()) || 0; // Parsear a número o 0 si no es un número válido
-            console.log('totalSD:' + totalSD);
-            console.log('Descuento:' + descuento);
-            if (descuento >= parseFloat(totalSD)) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'El descuento no puede ser mayor o igual al subtotal de la venta',
-                    allowOutsideClick: false, // No permitir que se cierre haciendo clic fuera del modal
-                    showCancelButton: false, // No mostrar el botón de cancelar
-                    confirmButtonText: 'OK' // Personaliza el texto del botón "OK"
-                });
-                $("#total").val("");
-                $("#descuento").val("");
-
-                return;
-
+        function updateDescuento() {
+            totalSD = totalSD ?? 0;
+            descuento = $("#descuento").val();
+            $("#descuentoError").html("");
+            if (descuento == 0) {
+                $("#total").val(totalSD);
+            }
+            parseFloat(descuento ?? 0); // Parsear a número o 0 si no es un número válido
+            if (descuento >= parseFloat(totalSD) && tablaDatos.length > 0) {
+                return $("#descuentoError").html("El descuento no puede ser mayor o igual al subtotal de la venta");
+                // Swal.fire({
+                //     icon: 'error',
+                //     title: 'Error',
+                //     text: 'El descuento no puede ser mayor o igual al subtotal de la venta',
+                //     allowOutsideClick: false, // No permitir que se cierre haciendo clic fuera del modal
+                //     showCancelButton: false, // No mostrar el botón de cancelar
+                //     confirmButtonText: 'OK' // Personaliza el texto del botón "OK"
+                // });
+                // $("#total").val("");
+                // $("#descuento").val("");
+                // return;
             } else {
-
                 // Calcular el nuevo total con descuento
                 totaldescuento = totalSD - descuento;
-                console.log('totalConDescuento:' + totaldescuento);
-
                 // Actualizar el elemento en el HTML para mostrar el total con descuento
                 $("#total").val(totaldescuento.toFixed(2));
                 recalcularSaldoPendiente($("#adelanto").val());
-
-
             }
+        };
 
-        });
-
-        $("#adelanto").on("change", function() {
+        $("#adelanto").on("input", function() {
             // Obtener el valor del descuento
             let adelanto = parseFloat($(this).val()) || 0; // Parsear a número o 0 si no es un número válido
-            console.log('adelanto:' + adelanto);
-            console.log('totaldescuento:' + totalSD - descuento);
+            $("#adelantoError").html("");
             if (adelanto >= parseFloat(totalSD - descuento)) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'El adelanto no puede ser mayor o igual al total de la venta',
-                    allowOutsideClick: false, // No permitir que se cierre haciendo clic fuera del modal
-                    showCancelButton: false, // No mostrar el botón de cancelar
-                    confirmButtonText: 'OK' // Personaliza el texto del botón "OK"
-                });
-                $("#saldo").val("");
-                $("#adelanto").val("");
-
-                return;
+                return $("#adelantoError").html("El adelanto no puede ser mayor o igual al total de la venta");
+                // Swal.fire({
+                //     icon: 'error',
+                //     title: 'Error',
+                //     text: 'El adelanto no puede ser mayor o igual al total de la venta',
+                //     allowOutsideClick: false, // No permitir que se cierre haciendo clic fuera del modal
+                //     showCancelButton: false, // No mostrar el botón de cancelar
+                //     confirmButtonText: 'OK' // Personaliza el texto del botón "OK"
+                // });
+                // $("#saldo").val("");
+                // $("#adelanto").val("");
+                // return;
             } else {
                 recalcularSaldoPendiente(adelanto);
             }
-
         });
         //funciones propiamente de ventas
         function recalcularSaldoPendiente(adelanto) {
             let saldoPen;
-
             if (totaldescuento) {
                 saldoPen = (totaldescuento - adelanto).toFixed(2);
             } else {
                 saldoPen = (totalSD - adelanto).toFixed(2);
             }
-            console.log('totalcD:' + totaldescuento);
-            console.log('saldoPen:' + saldoPen);
-
             // Actualizar el elemento en el HTML para mostrar el saldo pendiente
             $("#saldo").val(saldoPen);
         }
-
         $("#cuerpoVenta").on("click", "#btnEditVenta", function() {
             $("#detalleproducto").show();
             $('html, body').animate({
@@ -921,30 +918,25 @@
             }, 1000);
             let id = $(this).attr("key");
             let producto = tablaDatos.filter(x => x.id === id);
-
-
             $("#seleccionarProducto").attr("nombre", producto[0].nombreproducto);
             $("#seleccionarProducto").attr("key", producto[0].id);
             $("#seleccionarProducto").val(producto[0].id);
             $("#producto-input").val(producto[0].id);
             $("#precioproducto").val(producto[0].precioproducto);
-
-
             $("#precioproducto").val(producto[0].precioproducto);
-
             $("#cantidadventa").val(producto[0].cantidadventa);
-            console.log(producto);
-
-
+            updateDescuento()
         });
         $("#cuerpoVenta").on("click", "#btnDelVenta", function() {
             let id = $(this).attr("key");
             $("#productosExistentes button[cod='" + id + "']").prop("disabled", false);
-
             tablaDatos = tablaDatos.filter(objeto => objeto.id !== id);
-
             //renderiza la tabla
+            if (tablaDatos.length == 0) {
+                totalSD = 0;
+            }
             showTable();
+            updateDescuento();  
         });
 
         function validarProductosAgregados() {
@@ -963,6 +955,9 @@
         $("form").submit(function(event) {
             if (!validarProductosAgregados()) {
                 event.preventDefault(); // Evitar el envío del formulario si no se han agregado productos
+            }
+            else {
+                $("#guardarVenta").prop('disabled', true);
             }
         });
     </script>
