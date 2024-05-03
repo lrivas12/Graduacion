@@ -94,7 +94,11 @@
                         <td>
                             <div class="d-flex align-items-center">
                                 <a  href ="{{ route('pagos.edit', $pago->id)}}"  title="Abonar">
+                                    @if (number_format($pago->cantidadpago - $pago->detallepago->sum('cantidaddetallepago'), 2, '.', ',') > 0)
                                     <i class="fab fa-algolia fa-lg text-success" > Abonar</i>
+                                    @else
+                                    <i class="fas fa-credit-card fa-lg text-success" > Ver</i>
+                                    @endif
                                 </a> 
                             </div>
                         </td> 

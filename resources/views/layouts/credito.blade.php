@@ -119,7 +119,7 @@
                         </div>
                     </div>
                     <br>
-                    <button type="submit" class="btn btn-primary"> <i class="fas fa-save"></i> Agregar</button>
+                    <button type="submit" class="btn btn-primary" id="btnAgregarBono"> <i class="fas fa-save"></i> Agregar</button>
                     <br>
                     <br>
                         <h2>Pagos Abonados</h2>
@@ -139,7 +139,7 @@
                                         <td>{{$detallepago->id}}</td>
                                         <td>{{\Carbon\Carbon::parse ($detallepago->fechadetallepago)->format('d/m/Y')}}</td>
                                         <td>{{number_format($detallepago->cantidaddetallepago, 2, '.', ',')}}</td>
-                                        <td>{{number_format($detallepago->saldodetallepago, 2, '.', ',')}}</td>
+                                        <td id="saldoPendiente">{{number_format($detallepago->saldodetallepago, 2, '.', ',')}}</td>
                                     </tr>
                                     @endforeach
                                 </tbody>
@@ -173,8 +173,12 @@
         });
 
         document.addEventListener('DOMContentLoaded', function () {
-        
-
+        if (document.getElementById('saldoPendiente').textContent == 0) { // validaciones en caso de que el saldo pendiente sea cero
+            let botonAgregar = document.getElementById('btnAgregarBono');
+            let montoAbono = document.getElementById('cantidaddetallepago');
+            botonAgregar.setAttribute("disabled", ""); // desactivar el boton agregar en caso de que el saldo pendiente sea cero
+            montoAbono.setAttribute("disabled", ""); // desactivar el input de Monto Abono
+        }
         // Función para mostrar mensajes de SweetAlert2
         function showAlert(icon, title, text, isError, position) {
             const options = {
