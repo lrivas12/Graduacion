@@ -323,7 +323,6 @@
                                                     <th>Precio</th>
                                                     <th>Subtotal</th>
                                                     <th colspan="2">Acciones</th>
-
                                                 </tr>
                                             </thead>
                                             <tbody id="cuerpoVenta" class="text-center">
@@ -347,10 +346,10 @@
                                                             <span class="input-group-text">CS</span>
 
                                                         </div>
-                                                        <input type="number" step="0.01" min="0"
+                                                        <input type="text" step="0.01" min="0"
                                                             class="form-control" id="descuento" name="descuento"
                                                             value="{{ old('descuento', '0') }}"
-                                                            oninput="this.value = Math.abs(this.value);">
+                                                            oninput="updateDescuento()">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
@@ -728,7 +727,6 @@
             let subtotalventa = parseFloat(cantidadventa) * parseFloat(precioproducto);
             subtotalventa = parseFloat(subtotalventa.toFixed(2));
 
-
             //Validaciones propias de la venta
             if (cantidadventa <= 0) {
                 $("#cantidadVentaError").html("La cantidad debe ser mayor que cero");
@@ -747,13 +745,12 @@
                 return;
             }
 
-
             let datos = {
                 id,
                 nombreproducto,
                 cantidadventa,
                 precioproducto,
-                subtotalventa
+                subtotalventa,
             }
             //Busca el indice del arreglo para sustituirlo
             let indice = tablaDatos.findIndex(objeto => objeto.id === id);
@@ -764,14 +761,13 @@
                 tablaDatos[indice] = datos; // si existe lo sustituye
             }
             showTable(); // Muestra la tabla actualizada de ventas
+            $("#total").val(totalSD);
 
             //vacia las cajas de texto de la card de los productos
             $("#seleccionarProducto").attr("nombre", "");
             $("#seleccionarProducto").attr("key", "");
             $("#seleccionarProducto").val("");
-
             $("#producto-input").val("");
-
             $("#precioproducto").val("");
             $("#cantidadventa").val("");
             $("#cantidadVentaError").html("");
@@ -779,10 +775,6 @@
             if (tipoVenta === 'credito') {
                 $("#detalleVentaTipoCredito").show();
             }
-
-
-
-
         });
         //funciones y variables propiamente de ventas
         var totalSD;
@@ -808,7 +800,6 @@
                             <a key="${x.id}" id="btnEditVenta" class = "mx-4" title="Editar producto" >
                                 <i class="fas fa-pencil-alt text-success"></i> 
                             </a>
-                            
                         </div> 
                     </td>
                     <td>
@@ -838,15 +829,18 @@
                 total
             })); //convierte objeto en string
 
-        }
+        };
 
         // Escuchar el evento de cambio en el campo "descuento", propiamnete de ventas
-        $("#descuento").on("change", function() {
-            // Obtener el valor del descuento
-            descuento = parseFloat($(this).val()) || 0; // Parsear a número o 0 si no es un número válido
-            console.log('totalSD:' + totalSD);
-            console.log('Descuento:' + descuento);
-            if (descuento >= parseFloat(totalSD)) {
+        
+        function updateDescuento() {
+            totalSD = totalSD ?? 0;
+            descuento = $("#descuento").val();
+            if (descuento == 0) {
+                $("#total").val(totalSD);
+            }
+            parseFloat(descuento ?? 0); // Parsear a número o 0 si no es un número válido
+            if (descuento >= parseFloat(totalSD) && tablaDatos.length > 0) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
@@ -857,25 +851,17 @@
                 });
                 $("#total").val("");
                 $("#descuento").val("");
-
                 return;
-
             } else {
-
                 // Calcular el nuevo total con descuento
                 totaldescuento = totalSD - descuento;
-                console.log('totalConDescuento:' + totaldescuento);
-
                 // Actualizar el elemento en el HTML para mostrar el total con descuento
                 $("#total").val(totaldescuento.toFixed(2));
                 recalcularSaldoPendiente($("#adelanto").val());
-
-
             }
+        };
 
-        });
-
-        $("#adelanto").on("change", function() {
+        $("#adelanto").on("input", function() {
             // Obtener el valor del descuento
             let adelanto = parseFloat($(this).val()) || 0; // Parsear a número o 0 si no es un número válido
             console.log('adelanto:' + adelanto);
@@ -896,24 +882,18 @@
             } else {
                 recalcularSaldoPendiente(adelanto);
             }
-
         });
         //funciones propiamente de ventas
         function recalcularSaldoPendiente(adelanto) {
             let saldoPen;
-
             if (totaldescuento) {
                 saldoPen = (totaldescuento - adelanto).toFixed(2);
             } else {
                 saldoPen = (totalSD - adelanto).toFixed(2);
             }
-            console.log('totalcD:' + totaldescuento);
-            console.log('saldoPen:' + saldoPen);
-
             // Actualizar el elemento en el HTML para mostrar el saldo pendiente
             $("#saldo").val(saldoPen);
         }
-
         $("#cuerpoVenta").on("click", "#btnEditVenta", function() {
             $("#detalleproducto").show();
             $('html, body').animate({
@@ -921,30 +901,25 @@
             }, 1000);
             let id = $(this).attr("key");
             let producto = tablaDatos.filter(x => x.id === id);
-
-
             $("#seleccionarProducto").attr("nombre", producto[0].nombreproducto);
             $("#seleccionarProducto").attr("key", producto[0].id);
             $("#seleccionarProducto").val(producto[0].id);
             $("#producto-input").val(producto[0].id);
             $("#precioproducto").val(producto[0].precioproducto);
-
-
             $("#precioproducto").val(producto[0].precioproducto);
-
             $("#cantidadventa").val(producto[0].cantidadventa);
-            console.log(producto);
-
-
+            updateDescuento()
         });
         $("#cuerpoVenta").on("click", "#btnDelVenta", function() {
             let id = $(this).attr("key");
             $("#productosExistentes button[cod='" + id + "']").prop("disabled", false);
-
             tablaDatos = tablaDatos.filter(objeto => objeto.id !== id);
-
             //renderiza la tabla
+            if (tablaDatos.length == 0) {
+                totalSD = 0;
+            }
             showTable();
+            updateDescuento();  
         });
 
         function validarProductosAgregados() {
