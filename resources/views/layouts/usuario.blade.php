@@ -591,12 +591,12 @@
                     console.log("con" + passwordE, "confir" + confirmPasswordE);
 
                     errorsE.push("Las contraseñas no coinciden.");
-                    console.LOG(errorsE);
+                    console.log(errorsE);
                 }
 
                 // Mostrar los mensajes de error
-                if (errors.length > 0) {
-                    passwordErrorsE.html('<ul class="text-danger"><li>' + errors.join('</li><li>') + '</li></ul>');
+                if (errorsE.length > 0) {
+                    passwordErrorsE.html('<ul class="text-danger"><li>' + errorsE.join('</li><li>') + '</li></ul>');
                 } else {
                     passwordErrorsE.html('');
                 }
