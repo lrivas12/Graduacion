@@ -247,23 +247,25 @@
                                                         @enderror
                                                     </div>
                                                 </div>
-                                            
-                                                
-                                                <div class="form-group row">
-                                                    <label for="estado" class="col-md-4 col-form-label text-md-right">{{ __('Estado') }}<span class="text-danger">*</span></label>
-                                                    <div class="col-md-6">
-                                                        <select id="estado" class="form-control @error('estado') is-invalid @enderror" name="estado" required autocomplete="estado">
-                                                            <option value="1"{{ old('estado', $user->estado) ? ' selected' : '' }}>Activo</option>
-                                                            <option value="0"{{ !old('estado', $user->estado) ? ' selected' : '' }}>Inactivo</option>
-                                                        </select>
-                                                        @error('estadousuario')
+                                                @php
+                                                    $AuthUser = App\Models\User::findOrFail(auth()->id());
+                                                @endphp 
+                                                @if ($AuthUser->id != $user->id)     
+                                                    <div class="form-group row">
+                                                        <label for="estado" class="col-md-4 col-form-label text-md-right">{{ __('Estado') }}<span class="text-danger">*</span></label>
+                                                        <div class="col-md-6">
+                                                            <select id="estado" class="form-control @error('estado') is-invalid @enderror" name="estado" required autocomplete="estado">
+                                                                <option value="1"{{ old('estado', $user->estado) ? ' selected' : '' }}>Activo</option>
+                                                                <option value="0"{{ !old('estado', $user->estado) ? ' selected' : '' }}>Inactivo</option>
+                                                            </select>
+                                                            @error('estadousuario')
                                                             <span class="invalid-feedback" role="alert">
                                                                 <strong>{{ $message }}</strong>
                                                             </span>
-                                                        @enderror
+                                                            @enderror
+                                                        </div>
                                                     </div>
-                                                </div>
-
+                                                @endif
 
                                                 <div class="form-group row">
                                                     <label for="password"
