@@ -90,7 +90,7 @@
                                 <th>Usuario</th>
                                 <th>Correo Electrónico</th>
                                 <th>Rol</th>
-                                <th>Acciones</th>e
+                                <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody class="text-center">
