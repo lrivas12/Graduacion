@@ -241,13 +241,13 @@ class ReportesController extends Controller
                 'clientes.apellidocliente',
                 'pagos.fechapago',
                 'facturas.totalventa',
-                DB::raw('SUM(detallepagos.cantidaddetallepago) as deuda_pendiente')
+                DB::raw('pagos.cantidadpago - SUM(detallepagos.cantidaddetallepago) as deuda_pendiente')
             )
             ->when($cliente_id, function ($query) use ($cliente_id) { // si obtenemos un cliente_id quiere decir que se seleccionó un cliente, y se va a generar un PDF para ESE CLIENTE EN ESPECÍFICO, caso contrario se generará un PDF general.
                 $query->where('clientes.id', $cliente_id);
             })
             // ->where('clientes.id', $cliente_id)
-            ->groupBy('clientes.nombrecliente', 'clientes.apellidocliente', 'pagos.fechapago', 'facturas.totalventa')
+            ->groupBy('clientes.nombrecliente', 'clientes.apellidocliente', 'pagos.fechapago', 'facturas.totalventa', 'pagos.cantidadpago')
             ->get();
 
         $datocliente = DB::table('clientes')
@@ -270,10 +270,12 @@ class ReportesController extends Controller
                 'clientes.apellidocliente',
                 'pagos.fechapago',
                 'facturas.totalventa',
-                DB::raw('SUM(detallepagos.cantidaddetallepago) as deuda_pendiente')
-            )->where('clientes.id', $cliente_id)
-            ->groupBy('clientes.nombrecliente', 'clientes.apellidocliente', 'pagos.fechapago', 'facturas.totalventa')
+                DB::raw('pagos.cantidadpago - SUM(detallepagos.cantidaddetallepago) as deuda_pendiente')
+            )
+            ->where('clientes.id', $cliente_id)
+            ->groupBy('clientes.nombrecliente', 'clientes.apellidocliente', 'pagos.fechapago', 'facturas.totalventa', 'pagos.cantidadpago')
             ->get();
+
         return $Estadocuenta;
     }
 
