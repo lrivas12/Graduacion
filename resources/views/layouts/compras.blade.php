@@ -482,6 +482,24 @@ document.addEventListener('DOMContentLoaded', function () {
     
 </script>
 
+<script>
+
+document.getElementById('btnAddProducto').addEventListener('click', function() {
+        var precioInput = document.getElementById('precioproducto').value;
+
+        // Validar si el campo de precio está vacío o es menor que cero
+        if (precioInput === '' || parseFloat(precioInput) <= 0) {
+            // Mostrar advertencia con Sweet Alert si el campo de precio es inválido
+            Swal.fire({
+                icon: 'warning',
+                title: '¡Advertencia!',
+                text: 'Por favor ingrese un precio válido mayor  a cero o que no este vacío',
+                confirmButtonText: 'Entendido'
+            }
+        )}
+            });
+</script>
+
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
