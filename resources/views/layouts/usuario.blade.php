@@ -35,7 +35,7 @@
             /* Bordes redondeados */
         }
 
-        .imguser img{
+        .imguser img {
             height: 50px;
             width: 50px;
         }
@@ -54,31 +54,33 @@
 
 @section('content')
 
-<div class="modal" id="myModal">
-    <div class="modal-dialog">
-      <div class="modal-content d-flex align-items-center" style="max-width: 100%; height: auto;">
-        
-        <!-- Contenido del modal -->
-        <div class="modal-body">
-            <img src="{{asset('/vendor/adminlte/dist/img/AyudaUsuario.jpg')}}" class="img-fluid" alt="Ayuda Usuario" style="max-width: 1000px; height: auto;">
+    <div class="modal" id="myModal">
+        <div class="modal-dialog">
+            <div class="modal-content d-flex align-items-center" style="max-width: 100%; height: auto;">
+
+                <!-- Contenido del modal -->
+                <div class="modal-body">
+                    <img src="{{ asset('/vendor/adminlte/dist/img/AyudaUsuario.jpg') }}" class="img-fluid"
+                        alt="Ayuda Usuario" style="max-width: 1000px; height: auto;">
+                </div>
+                <!-- Botón de cierre del modal -->
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+            </div>
         </div>
-        <!-- Botón de cierre del modal -->
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
-        </div>
-      </div>
     </div>
 
-<section class="sectionT2">
-    <div class="header">
-        <h3><i class="fas fa-user-plus"></i> Generar  Usuarios </h3>
-    </div>
-</section>
-<div class="card">
+    <section class="sectionT2">
+        <div class="header">
+            <h3><i class="fas fa-user-plus"></i> Generar Usuarios </h3>
+        </div>
+    </section>
+    <div class="card">
         <div class="col-md-15x">
-        <div class="card-body">
-    <a id="userModalBtn" class="btn btn-primary" data-toggle="modal" data-target="#createUserModal" data-whatever="@mdo">
-        <i class="fas fa-user-plus"></i> Crear
-        Usuario</a><br><br>
+            <div class="card-body">
+                <a id="userModalBtn" class="btn btn-primary" data-toggle="modal" data-target="#createUserModal"
+                    data-whatever="@mdo">
+                    <i class="fas fa-user-plus"></i> Crear
+                    Usuario</a><br><br>
 
                 <h3>Listado de Usuarios</h3>
                 <div class="table-responsive">
@@ -99,7 +101,7 @@
                                     <td>{{ $user->id }}</td>
                                     <td class="imguser">
                                         @if ($user->foto)
-                                            <img src="{{ asset('storage/usuarios/'. $user->foto) }}"
+                                            <img src="{{ asset('storage/usuarios/' . $user->foto) }}"
                                                 style="max-width: 50px; border-radius: 50%;">
                                         @else
                                             <img src="{{ asset('storage/usuarios/PlaceholderUser.jpg') }}"
@@ -117,8 +119,9 @@
                                         <i class="fas fa-edit text-warning"></i>
                                     </button>
                                     <a>
-                                       
-                                        <form method="POST" action="{{ route('usuario.desactivate', ['id' => $user->id]) }}">
+
+                                        <form method="POST"
+                                            action="{{ route('usuario.desactivate', ['id' => $user->id]) }}">
                                             @csrf
                                             @if ($user->estado == 1)
                                                 <input type="hidden" name="estado" value="0">
@@ -152,7 +155,8 @@
                                                 enctype="multipart/form-data">
                                                 @csrf
                                                 <label style="font-style: italic; ">
-                                                    Los campos marcados con  <span style=" color: red;">*</span> son obligatorios</span>
+                                                    Los campos marcados con <span style=" color: red;">*</span> son
+                                                    obligatorios</span>
                                                 </label>
                                                 @method('PUT')
 
@@ -189,7 +193,8 @@
                                                 </div>
                                                 <div class="form-group row">
                                                     <label for="usuario"
-                                                        class="col-md-4 col-form-label text-md-right">{{ __('Usuario:') }} <span class="text-danger">*</span></label>
+                                                        class="col-md-4 col-form-label text-md-right">{{ __('Usuario:') }}
+                                                        <span class="text-danger">*</span></label>
 
                                                     <div class="col-md-6">
                                                         <input id="usuario" type="text"
@@ -207,7 +212,8 @@
 
                                                 <div class="form-group row">
                                                     <label for="email"
-                                                        class="col-md-4 col-form-label text-md-right">{{ __('Correo Electrónico:') }} <span class="text-danger">*</span></label>
+                                                        class="col-md-4 col-form-label text-md-right">{{ __('Correo Electrónico:') }}
+                                                        <span class="text-danger">*</span></label>
 
                                                     <div class="col-md-6">
                                                         <input id="email" type="email"
@@ -224,7 +230,8 @@
                                                 </div>
                                                 <div class="form-group row">
                                                     <label for="rol"
-                                                        class="col-md-4 col-form-label text-md-right">{{ __('Rol:') }} <span class="text-danger">*</span></label>
+                                                        class="col-md-4 col-form-label text-md-right">{{ __('Rol:') }}
+                                                        <span class="text-danger">*</span></label>
 
                                                     <div class="col-md-6">
                                                         <select id="privilegios"
@@ -236,7 +243,7 @@
                                                             <option
                                                                 value="Editor"{{ old('privilegios', $user->privilegios) === 'Editor' ? ' selected' : '' }}>
                                                                 Editor</option>
-                                                                <option
+                                                            <option
                                                                 value="Vendedor"{{ old('privilegios', $user->privilegios) === 'Vendedor' ? ' selected' : '' }}>
                                                                 Vendedor</option>
                                                         </select>
@@ -247,39 +254,44 @@
                                                         @enderror
                                                     </div>
                                                 </div>
-                                                @php
-                                                    $AuthUser = App\Models\User::findOrFail(auth()->id());
-                                                @endphp 
-                                                @if ($AuthUser->id != $user->id)     
-                                                    <div class="form-group row">
-                                                        <label for="estado" class="col-md-4 col-form-label text-md-right">{{ __('Estado') }}<span class="text-danger">*</span></label>
-                                                        <div class="col-md-6">
-                                                            <select id="estado" class="form-control @error('estado') is-invalid @enderror" name="estado" required autocomplete="estado">
-                                                                <option value="1"{{ old('estado', $user->estado) ? ' selected' : '' }}>Activo</option>
-                                                                <option value="0"{{ !old('estado', $user->estado) ? ' selected' : '' }}>Inactivo</option>
-                                                            </select>
-                                                            @error('estadousuario')
+                                                <div class="form-group row">
+                                                    <label for="estado"
+                                                        class="col-md-4 col-form-label text-md-right">{{ __('Estado') }}<span
+                                                            class="text-danger">*</span></label>
+                                                    <div class="col-md-6">
+                                                        <select id="estado"
+                                                            class="form-control @error('estado') is-invalid @enderror"
+                                                            name="estado" required autocomplete="estado">
+                                                            <option
+                                                                value="1"{{ old('estado', $user->estado) ? ' selected' : '' }}>
+                                                                Activo</option>
+                                                            <option
+                                                                value="0"{{ !old('estado', $user->estado) ? ' selected' : '' }}>
+                                                                Inactivo</option>
+                                                        </select>
+                                                        @error('estadousuario')
                                                             <span class="invalid-feedback" role="alert">
                                                                 <strong>{{ $message }}</strong>
                                                             </span>
-                                                            @enderror
-                                                        </div>
+                                                        @enderror
                                                     </div>
-                                                @endif
+                                                </div>
 
                                                 <div class="form-group row">
                                                     <label for="password"
-                                                        class="col-md-4 col-form-label text-md-right">{{ __('Contraseña:') }} <span class="text-danger">*</span></label>
+                                                        class="col-md-4 col-form-label text-md-right">{{ __('Contraseña:') }}
+                                                        <span class="text-danger">*</span></label>
 
                                                     <div class="col-md-6 input-group">
                                                         <input id="password" type="password"
                                                             class="form-control @error('password') is-invalid @enderror"
                                                             name="password" autocomplete="new-password">
-                                                            <div class="input-group-append">
-                                                                <button class="btn btn-outline-secondary" type="button" id="showPasswordBtn" title="Mostrar contraseña">
-                                                                    <i class="fa fa-eye"></i> 
-                                                                </button>
-                                                            </div>                                                            
+                                                        <div class="input-group-append">
+                                                            <button class="btn btn-outline-secondary" type="button"
+                                                                id="showPasswordBtn" title="Mostrar contraseña">
+                                                                <i class="fa fa-eye"></i>
+                                                            </button>
+                                                        </div>
                                                         @error('password')
                                                             <span class="invalid-feedback" role="alert">
                                                                 <strong>{{ $message }}</strong>
@@ -290,12 +302,13 @@
 
                                                 <div class="form-group row">
                                                     <label for="password-confirm"
-                                                        class="col-md-4 col-form-label text-md-right">{{ __('Confirmar Contraseña:') }} <span class="text-danger">*</span></label>
+                                                        class="col-md-4 col-form-label text-md-right">{{ __('Confirmar Contraseña:') }}
+                                                        <span class="text-danger">*</span></label>
 
                                                     <div class="col-md-6">
                                                         <input id="password-confirm" type="password" class="form-control"
                                                             name="password_confirm" autocomplete="new-password">
-                                                            
+
                                                     </div>
                                                     <div id="password-errors" class="col-md-6 offset-md-4"></div>
                                                 </div>
@@ -337,9 +350,9 @@
 
                         @csrf
                         <label style="font-style: italic; ">
-                            Los campos marcados con  <span style=" color: red;">*</span> son obligatorios</span>
+                            Los campos marcados con <span style=" color: red;">*</span> son obligatorios</span>
                         </label>
-                        
+
                         <div class="form-group row">
                             <label for="photo" class="col-md-4 col-form-label text-md-right">Fotografía</label>
                             <br>
@@ -359,8 +372,8 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="usuario"
-                                class="col-md-4 col-form-label text-md-right">{{ __('Usuario:') }} <span class="text-danger">*</span></label>
+                            <label for="usuario" class="col-md-4 col-form-label text-md-right">{{ __('Usuario:') }}
+                                <span class="text-danger">*</span></label>
 
                             <div class="col-md-6">
                                 <input id="usuario" type="text"
@@ -377,7 +390,8 @@
                         </div>
                         <div class="form-group row">
                             <label for="email"
-                                class="col-md-4 col-form-label text-md-right">{{ __('Correo Electrónico:') }} <span class="text-danger">*</span></label>
+                                class="col-md-4 col-form-label text-md-right">{{ __('Correo Electrónico:') }} <span
+                                    class="text-danger">*</span></label>
 
                             <div class="col-md-6">
                                 <input id="email" type="email"
@@ -393,8 +407,8 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="privilegios"
-                                class="col-md-4 col-form-label text-md-right">{{ __('Rol:') }} <span class="text-danger">*</span></label>
+                            <label for="privilegios" class="col-md-4 col-form-label text-md-right">{{ __('Rol:') }}
+                                <span class="text-danger">*</span></label>
 
                             <div class="col-md-6">
                                 <select id="seleccion" class="form-control @error('privilegios') is-invalid @enderror"
@@ -420,8 +434,8 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="estado"
-                                class="col-md-4 col-form-label text-md-right">{{ __('Estado:') }} <span class="text-danger">*</span></label>
+                            <label for="estado" class="col-md-4 col-form-label text-md-right">{{ __('Estado:') }} <span
+                                    class="text-danger">*</span></label>
 
                             <div class="col-md-6">
                                 <select id="estado" class="form-control @error('estado') is-invalid @enderror"
@@ -442,18 +456,19 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="passwordE"
-                                class="col-md-4 col-form-label text-md-right">{{ __('Contraseña:') }} <span class="text-danger">*</span></label>
+                            <label for="passwordE" class="col-md-4 col-form-label text-md-right">{{ __('Contraseña:') }}
+                                <span class="text-danger">*</span></label>
 
                             <div class="col-md-6 input-group">
                                 <input id="passwordE" type="password"
-                                    class="form-control @error('password') is-invalid @enderror"
-                                    name="passwordE" autocomplete="new-password">
-                                    <div class="input-group-append">
-                                        <button class="btn btn-outline-secondary" type="button" id="showPasswordBtnE" title="Mostrar contraseña">
-                                            <i class="fa fa-eye"></i> 
-                                        </button>
-                                    </div>                                                            
+                                    class="form-control @error('password') is-invalid @enderror" name="passwordE"
+                                    autocomplete="new-password">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" type="button" id="showPasswordBtnE"
+                                        title="Mostrar contraseña">
+                                        <i class="fa fa-eye"></i>
+                                    </button>
+                                </div>
                                 @error('password')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -464,12 +479,13 @@
 
                         <div class="form-group row">
                             <label for="password-co"
-                                class="col-md-4 col-form-label text-md-right">{{ __('Confirmar Contraseña:') }} <span class="text-danger">*</span></label>
+                                class="col-md-4 col-form-label text-md-right">{{ __('Confirmar Contraseña:') }} <span
+                                    class="text-danger">*</span></label>
 
                             <div class="col-md-6">
                                 <input id="password-confirmE" type="password" class="form-control"
                                     name="password_confirmE" autocomplete="new-password">
-                                    
+
                             </div>
                             <div id="password-errorsE" class="col-md-6 offset-md-4"></div>
                         </div>
@@ -492,11 +508,11 @@
 
 
 @section('js')
-    
-    
-<script>
-        $(document).ready(function () {
-            $('#showPasswordBtn').click(function () {
+
+
+    <script>
+        $(document).ready(function() {
+            $('#showPasswordBtn').click(function() {
                 var passwordFields = $('#password, #password-confirm');
                 var passwordFieldType = passwordFields.attr('type');
                 if (passwordFieldType === 'password') {
@@ -509,7 +525,7 @@
             });
 
             // Validación de contraseña segura
-            $('#password, #password-confirm').on('input', function () {
+            $('#password, #password-confirm').on('input', function() {
                 var password = $('#password').val();
                 var confirmPassword = $('#password-confirm').val();
                 var passwordErrors = $('#password-errors');
@@ -543,13 +559,14 @@
 
                 // Mostrar los mensajes de error
                 if (errors.length > 0) {
-                    passwordErrors.html('<ul class="text-danger"><li>' + errors.join('</li><li>') + '</li></ul>');
+                    passwordErrors.html('<ul class="text-danger"><li>' + errors.join('</li><li>') +
+                        '</li></ul>');
                 } else {
                     passwordErrors.html('');
                 }
             });
 
-            $('#showPasswordBtnE').click(function () {
+            $('#showPasswordBtnE').click(function() {
                 var passwordFieldsE = $('#passwordE, #password-confirmE');
                 var passwordFieldTypeE = passwordFieldsE.attr('type');
                 if (passwordFieldTypeE === 'password') {
@@ -562,7 +579,7 @@
             });
 
             // Validación de contraseña segura
-            $('#passwordE, #password-confirmE').on('input', function () {
+            $('#passwordE, #password-confirmE').on('input', function() {
                 var passwordE = $('#passwordE').val();
                 var confirmPasswordE = $('#password-confirmE').val();
                 var passwordErrorsE = $('#password-errorsE');
@@ -598,13 +615,14 @@
 
                 // Mostrar los mensajes de error
                 if (errorsE.length > 0) {
-                    passwordErrorsE.html('<ul class="text-danger"><li>' + errorsE.join('</li><li>') + '</li></ul>');
+                    passwordErrorsE.html('<ul class="text-danger"><li>' + errorsE.join('</li><li>') +
+                        '</li></ul>');
                 } else {
                     passwordErrorsE.html('');
                 }
             });
         });
-    
+
 
 
         document.addEventListener("DOMContentLoaded", function() {

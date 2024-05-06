@@ -191,6 +191,7 @@
                             <table id="producto" class="table table-bordered">
                                 <thead class="thead-dark text-center">
                                     <tr>
+                                        <th>N. Factura</th>
                                         <th>Cliente</th>
                                         <th>Tipo Venta</th>
                                         <th>Fecha</th>
@@ -200,6 +201,7 @@
                                 <tbody>
                                     @foreach ($todoventas as $venta)
                                         <tr class="text-center">
+                                            <td>{{ $venta->id }}</td>
                                             <td>{{ $venta->nombrecliente }} {{ $venta->apellidocliente }} </td>
                                             <td>{{ $venta->tipoventa }}</td>
                                             <td>{{ \Carbon\Carbon::parse($venta->fechafactura)->format('d/m/Y') }}</td>
@@ -407,22 +409,23 @@
                             <table id="estadocuenta" class="table table-bordered">
                                 <thead class="thead-dark text-center">
                                     <tr>
-                                        <th>Fecha</th>
+                                        <th>N. Factura</th>
                                         <th>Cliente</th>
-                                        <th>Total</th>
+                                        <th>Fecha Abono</th>
+                                        <th>Abonos</th>
                                         <th>Saldo Pendiente</th>
                                     </tr>
                                 </thead>
                                 <tbody id="estadosDeCuenta">
                                     @foreach ($pagos as $pago)
                                         <tr class="text-center">
-                                            <td>{{ \Carbon\Carbon::parse($pago->fechapago)->format('d/m/Y') }}</td>
-                                            <td>{{ $pago->factura->cliente->nombrecliente }}
-                                                {{ $pago->factura->cliente->apellidocliente }}</td>
-                                            <td>C$ {{ number_format($pago->factura->totalventa, 2, '.', ',') }}</td>
-                                            <td>C$
-                                                {{ number_format($pago->cantidadpago - $pago->detallepago->sum('cantidaddetallepago'), 2, '.', ',') }}
+                                            <td>{{ $pago->id }}</td>
+                                            <td>{{ $pago->nombrecliente }}
+                                                {{ $pago->apellidocliente }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($pago->fechadetallepago)->format('d/m/Y') }}
                                             </td>
+                                            <td>{{ number_format($pago->cantidaddetallepago, 2, '.', ',') }}</td>
+                                            <td>{{ number_format($pago->saldodetallepago, 2, '.', ',') }}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -556,40 +559,32 @@
             if (tipoReporteCredito == 'estado_cuenta') {
                 estadoCuenta = document.getElementById('estado_cuenta');
                 estadoCuenta.style.display = 'block';
-                isValidClient = document.getElementById('generarEstadoCuenta');
-                isValidClient.style.display = 'none'; // ocultamos el boton de generar pdf para evitar que se quiera exportar sin antes haber escogido un cliente
-                clienteEstadoSelector = document.getElementById('cliente_estado_cuenta');
-                if (clienteEstadoSelector.value != '') {
-                    cargarDatosCliente();
-                }
             }
         }
 
         function cargarDatosCliente() {
             clienteId = $('#cliente_estado_cuenta').val();
-            isValidClient.style.display = 'none'; // ocultamos el boton de generar pdf para evitar que se quiera exportar sin antes haber escogido un cliente
-            if (clienteId != '') {
-                isValidClient.style.display = 'block';
-                ruta = `/reportes/consultarEstadoCuenta/${clienteId}`;
-                fetch(ruta)
-                    .then((response) => {
-                        if (!response.ok) {
-                            throw new Error('Algo falló en la llamada al endpoint');
-                        }
-                        return response.json();
-                    })
-                    .then((data) => {
-                        // debemos obtener el contenedor de los registros de $pagos
-                        let estadosDeCuentaContenedor = document.getElementById('estadosDeCuenta');
-                        // Limpiamos los registros antes de continuar
-                        estadosDeCuentaContenedor.innerHTML = '';
-                        // volvemos a pintar nuestra tabla con registros actualizados
-                        recargarEstadoDeCuenta(data, estadosDeCuentaContenedor);
-                    })
-                    .catch((error) => {
-                        window.alert(error);
-                    })
-            }
+            if (clienteId == '') clienteId =
+                null; // si no se selecciona un cliente, debemos pasar un valor null como parametro al endpoint
+            ruta = `/reportes/consultarEstadoCuenta/${clienteId}`;
+            fetch(ruta)
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error('Algo falló en la llamada al endpoint');
+                    }
+                    return response.json();
+                })
+                .then((data) => {
+                    // debemos obtener el contenedor de los registros de $pagos
+                    let estadosDeCuentaContenedor = document.getElementById('estadosDeCuenta');
+                    // Limpiamos los registros antes de continuar
+                    estadosDeCuentaContenedor.innerHTML = '';
+                    // volvemos a pintar nuestra tabla con registros actualizados
+                    recargarEstadoDeCuenta(data, estadosDeCuentaContenedor);
+                })
+                .catch((error) => {
+                    window.alert(error);
+                })
         }
 
         function recargarEstadoDeCuenta(pagos, estadosDeCuentaContenedor) {
@@ -599,11 +594,11 @@
                 tr.classList.add('text-center');
                 // le agregamos un template html que contiene los td = table data = datos de tabla al elemento tr como su contenido
                 tr.innerHTML =
-                    `
-                <td>${pago.fechapago}</td>
-                <td>${pago.nombrecliente} ${pago.apellidocliente}</td>
-                <td>C$ ${pago.totalventa}</td>
-                <td>C$ ${pago.deuda_pendiente}</td>`; // esos nombres de variable vienen de la respuesta desde el backend, concretamente, del select en la query que nos retorna el endpoint
+                    `<td>${pago.id}</td>
+                    <td>${pago.nombrecliente} ${pago.apellidocliente}</td>
+                    <td>${pago.fechadetallepago}</td>
+                    <td>C$ ${pago.cantidaddetallepago}</td>
+                    <td>C$ ${pago.saldodetallepago}</td>`; // esos nombres de variable vienen de la respuesta desde el backend, concretamente, del select en la query que nos retorna el endpoint
                 // cada vez que se termine de armar un registro, deberemos agregarlo al contedor padre
                 estadosDeCuentaContenedor.appendChild(tr);
             });

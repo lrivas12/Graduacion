@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Auth\MustVerifyEmail;
+
 class UsuarioController extends Controller
 {
 
@@ -35,20 +36,21 @@ class UsuarioController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'usuario'=> 'required|string|max:255|unique:users,usuario,',
+            'usuario' => 'required|string|max:255|unique:users,usuario,',
             'email' => 'required|string|email|max:255|unique:users,email,',
-            'estado'=> 'required|string',
-            'privilegios'=>'required|string|max:255',
-            'foto'=>'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'passwordE'=> ['required',
-            'string',
-            'max:20',
-            'min:8',         // Mínimo de 8 caracteres
-            'regex:/\d/',    // Al menos un número
-            'regex:/[A-Z]/', // Al menos una letra mayúscula
-            'regex:/[\W_]/', // Al menos un carácter especial
-            'confirmed',      // Debe coincidir con el campo de confirmación de contraseña,
-        ],
+            'estado' => 'required|string',
+            'privilegios' => 'required|string|max:255',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'passwordE' => [
+                'required',
+                'string',
+                'max:20',
+                'min:8',         // Mínimo de 8 caracteres
+                'regex:/\d/',    // Al menos un número
+                'regex:/[A-Z]/', // Al menos una letra mayúscula
+                'regex:/[\W_]/', // Al menos un carácter especial
+                // 'confirmed',      // Debe coincidir con el campo de confirmación de contraseña,
+            ],
         ]);
 
         $customMessages = [
@@ -63,44 +65,43 @@ class UsuarioController extends Controller
         ];
 
         $customAttributes =
-        [
-            'usuario'=>'Nombre del  usuario',
-            'email'=>'Correo del usuario',
-            'password'=>'Contraseña del  usuario',
-            'privilegios'=>'Privilegios del usuario',
-        ];
+            [
+                'usuario' => 'Nombre del  usuario',
+                'email' => 'Correo del usuario',
+                'password' => 'Contraseña del  usuario',
+                'privilegios' => 'Privilegios del usuario',
+            ];
 
         $validator->setAttributeNames($customAttributes);
         $validator->setCustomMessages($customMessages);
 
 
-        if($validator->fails()){
-            // dd($validator);
+        if ($validator->fails()) {
             return redirect()->route('usuario.index')->withErrors($validator)->withInput()->with('errorC', 'Error al crear el Usuario, revise e intente nuevamente');
         }
 
         $hashedPassword = bcrypt($request->input('passwordE'));
 
         $users = User::create([
-        'usuario'=>$request->input('usuario'),
-        'email'=>$request->input('email'),
-        'privilegios'=>$request->input('privilegios'),
-        'estado'=>$request->input('estado'),
-        'password'=>$hashedPassword,
+            'usuario' => $request->input('usuario'),
+            'email' => $request->input('email'),
+            'privilegios' => $request->input('privilegios'),
+            'estado' => $request->input('estado'),
+            'password' => $hashedPassword,
         ]);
 
-       // $users->sendEmailVerificationNotification();
+        // $users->sendEmailVerificationNotification();
 
-        if($request->hasFile('foto')){
-            $uploadedFile=$request->file('foto');
-            $photoName=Str::slug($users->usuario) . '.' . $uploadedFile->getClientOriginalExtension();
-        $photoPath=$uploadedFile->storeAs('public/usuarios', $photoName);
-        $users->foto=$photoName;
+        if ($request->hasFile('foto')) {
+            $uploadedFile = $request->file('foto');
+            $photoName = Str::slug($users->usuario) . '.' . $uploadedFile->getClientOriginalExtension();
+            $photoPath = $uploadedFile->storeAs('public/usuarios', $photoName);
+            $users->foto = $photoPath;
         }
-        
+
         $users->save();
 
-       return redirect()->route('usuario.index', $users)->with('successC', '¡Usuario Creado Correctamente!');
+        return redirect()->route('usuario.index', $users)->with('successC', '¡Usuario Creado Correctamente!');
     }
 
     /**
@@ -124,14 +125,14 @@ class UsuarioController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $user= User::findOrFail($id);
+        $user = User::findOrFail($id);
         $validator = Validator::make($request->all(), [
-            'usuario'=> 'required|string|max:255|unique:users,usuario,'. $id,
-            'email' => 'required|string|email|max:255|unique:users,email,'. $id,
-            'estado'=> 'required|string',
-            'privilegios'=>'required|string|max:255',
-            'foto'=>'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'password'=> 'nullable|string|min:8|max:20',
+            'usuario' => 'required|string|max:255|unique:users,usuario,' . $id,
+            'email' => 'required|string|email|max:255|unique:users,email,' . $id,
+            'estado' => 'required|string',
+            'privilegios' => 'required|string|max:255',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'password' => 'nullable|string|min:8|max:20',
         ]);
         $customMessages = [
             'required' => 'El campo :attribute es obligatorio.',
@@ -145,12 +146,12 @@ class UsuarioController extends Controller
         ];
 
         $customAttributes =
-        [
-            'usuario'=>'Nombre del  usuario',
-            'email'=>'Correo del usuario',
-            'password'=>'Contraseña del  usuario',
-            'privilegios'=>'Privilegios del usuario',
-        ];
+            [
+                'usuario' => 'Nombre del  usuario',
+                'email' => 'Correo del usuario',
+                'password' => 'Contraseña del  usuario',
+                'privilegios' => 'Privilegios del usuario',
+            ];
 
         $validator->setAttributeNames($customAttributes);
         $validator->setCustomMessages($customMessages);
@@ -164,8 +165,14 @@ class UsuarioController extends Controller
 
         $user->usuario = $request->input('usuario');
         $user->email = $request->input('email');
-        $user->privilegios = $request->input('privilegios');
-        $user->estado = $request->input('estado');
+        $AuthUser = User::findOrFail(auth()->id());
+        if ($AuthUser->id != $user->id) { // El usuario autentificado no debería actualizar su propio rol ni estado
+            $user->privilegios = $request->input('privilegios');
+            $user->estado = $request->input('estado');
+        }
+        //  else {
+        //     return redirect()->back()->with('error', 'No puedes desactivarte a ti mismo ni modificar tu nivel de privilegio');
+        // }
 
         if ($request->has('password')) {
             $user->password = bcrypt($request->input('password'));
@@ -197,14 +204,14 @@ class UsuarioController extends Controller
         $userAuth = User::findOrFail(auth()->id()); // Esta variable contiene NUESTRA data
 
         // Verificar si el usuario actual es administrador y no es el mismo que el usuario objetivo
-        if ($userAuth->privilegios=='Administrador' && $user->id !== $userAuth->id) {
+        if ($userAuth->privilegios == 'Administrador' && $user->id !== $userAuth->id) {
             // Cambia el estado del usuario (1 para activar, 0 para desactivar)
             $user->estado = $user->estado == 1 ? 0 : 1;
             $user->save();
             return redirect()->back()->with('success', 'Usuario Actualizado Exitosamente');
-        }     
+        }
 
         // Si la validación no se cumple, redirige con un mensaje de error
-        return redirect()->back()->with('error', 'No puedes desactivarte a ti mismo o realizar esta acción.');    
+        return redirect()->back()->with('error', 'No puedes desactivarte a ti mismo o realizar esta acción.');
     }
 }
