@@ -204,7 +204,9 @@ class ReportesController extends Controller
         $totalcompras = $comprasrecientes->sum('totalcompra');
 
         $cantidadporcompra = detallecompra::select('compra_id', DB::raw('SUM(cantidadcompra) as cantidad_total_prod'))
-            ->whereIn('compras_id', function ($query) use ($fechaInicio, $fechaFin) {
+        ->join('proveedores', 'compras.proveedor_id', '=', 'proveedores.id')
+        ->select('compras.*', 'proveedores.razonsocialproveedor')    
+        ->whereIn('compras_id', function ($query) use ($fechaInicio, $fechaFin) {
                 $query->select('id')
                     ->from('compras')
                     ->whereBetween('fechacompra', [$fechaInicio, $fechaFin]);
@@ -382,6 +384,8 @@ class ReportesController extends Controller
 
         $comprasfecha = DB::table('compras')
             ->whereBetween('fechacompra', [$fechaini, $fechafin])
+            ->join('proveedores', 'compras.proveedor_id', '=', 'proveedores.id')
+            ->select('compras.*', 'proveedores.razonsocialproveedor')
             ->get();
 
         $pdf = PDF::loadView('reporte.vercom', ['comprasfecha' => $comprasfecha, 'fechaini' => $fechaini, 'fechafin' => $fechafin]);
