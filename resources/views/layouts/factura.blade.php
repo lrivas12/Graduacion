@@ -163,7 +163,7 @@
                                                             id="fechafactura" name="fechafactura"
                                                             value="{{ old('fechafactura', date('Y-m-d')) }}" readonly>
 
-                                                        <div id="contentCliente">
+                                                        <div id="contentCliente" style="display: block">
                                                             <label for="cliente">Cliente: <span
                                                                     class="text-danger">*</span></label>
                                                             <select
@@ -172,10 +172,7 @@
                                                                 <option value="{{ old('clientes_id') }}">Seleccionar cliente
                                                                 </option>
                                                                 @foreach ($clientes as $cliente)
-                                                                    <option value="{{ $cliente->id }}">
-                                                                        {{ $cliente->nombrecliente }}
-                                                                        {{ $cliente->apellidocliente }}
-                                                                        {{ $cliente->telefonocliente }}</option>
+                                                                    <option value="{{ $cliente->id }}">{{ $cliente->nombrecliente }} {{ $cliente->apellidocliente }} {{ $cliente->telefonocliente }}</option>
                                                                 @endforeach
                                                             </select>
 
@@ -186,7 +183,7 @@
                                                                 </span>
                                                             @enderror
                                                             <label for="clienteSeleccionado"></label>
-                                                            <input id="clienteSeleccionado" type="text"
+                                                            <input id="clienteSeleccionado" type="text" value="Hola"
                                                                 class="form-control" readonly style="display: none;">
 
                                                             <label for="deuda">Deuda:</label>
@@ -346,10 +343,13 @@
                                                         <input type="text" step="0.01" min="0"
                                                             class="form-control" id="descuento" name="descuento"
                                                             value="{{ old('descuento', '0') }}"
-                                                            oninput="updateDescuento()">
+                                                            oninput="updateDescuento()"
+                                                            onkeypress="return isNumberKey(event)"
+                                                            onpaste="handlePaste(event)">
                                                     </div>
                                                         <div id="descuentoError"
                                                             style="color: red; font-style: italic;"></div>
+                                                           
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label for="total">Total venta: </label>
@@ -370,7 +370,7 @@
                                         <div class="col-md-8" id="detalleVentaTipoCredito" style="display: none">
                                             <div class="row justify content-center">
                                                 <div class="col-md-6">
-                                                    <label for="adelanto">Adelanto</label>
+                                                    <label for="adel">Adelanto</label>
                                                     <div class="input-group">
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-text">CS</span>
@@ -379,10 +379,13 @@
                                                         <input type="number" step="0.01" min="0"
                                                             class="form-control" id="adelanto" name="adelanto"
                                                             value="{{ old('adelanto', '0') }}"
-                                                            oninput="this.value = Math.abs(this.value);">
+                                                            {{-- oninput="this.value = Math.abs(this.value);" --}}
+                                                            onkeypress="return isNumberKey(event)"
+                                                            onpaste="handlePaste(event)">
                                                     </div>
                                                     <div id="adelantoError"
                                                     style="color: red; font-style: italic;"></div>
+                                                   
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label for="saldo">Saldo pendiente</label>
@@ -432,6 +435,35 @@
         var cantidadproducto, pago, saldo, tipoVenta, totaldescuento = 0,
             descuento = 0; //propias de ventas
 
+         
+        function isNumberKey(evt) {
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        // Allow: backspace, delete, tab, escape, enter and .
+        if ([8, 9, 27, 13, 46].indexOf(charCode) !== -1 ||
+            // Allow: Ctrl+A, Command+A
+            (charCode === 65 && (evt.ctrlKey === true || evt.metaKey === true)) ||
+            // Allow: home, end, left, right, down, up
+            (charCode >= 35 && charCode <= 40)) {
+            // let it happen, don't do anything
+            return true;
+        }
+        // Ensure that it is a number and stop the keypress
+        if ((charCode < 48 || charCode > 57) && (charCode < 96 || charCode > 105)) {
+            return false;
+        }
+        return true;
+    }
+
+    function handlePaste(e) {
+        var clipboardData = e.clipboardData || window.clipboardData;
+        var pastedData = clipboardData.getData('Text');
+
+        if (!/^(\d*\.?\d*)$/.test(pastedData)) {
+            e.stopPropagation();
+            e.preventDefault();
+        }
+    }
+    
         document.addEventListener('DOMContentLoaded', function() {
 
             var guardarEImprimirBtn = document.getElementById('guardarEImprimir');
@@ -572,7 +604,7 @@
                 // Al hacer clic en el botón "Seleccionar"
                 $("#seleccionarCliente").click(function() {
                     // Obtener los valores seleccionados
-
+                   
                     const selectedCliente = $("#clientes_id option:selected").val();
                     const selectedClienteT = $("#clientes_id option:selected").text();
                     tipoVenta = $("#tipoventa").val();
@@ -596,12 +628,15 @@
                         });
                     } else {
                         if (selectedCliente.trim() !== "" && tipoVenta.trim() !== "") {
-                            console.log("click");
+                            console.log("click"+selectedClienteT);
                             // Si se seleccionó un cliente, mostrar el valor seleccionado en un campo de texto visible
                             $("#clienteSeleccionado").val(selectedClienteT);
+                            $('.cliente-select').next('.select2-container').hide();
+                            
 
                             // Ocultar el campo cliente_id y mostrar el campo de texto
-                            $("#clientes_id").hide();
+                           // $("#clientes_id").hide();
+                           // $('.select2').hide();
                             $("#clienteSeleccionado").show();
 
                             // Mostrar el div con id "card-agregarProd" que contiene los input para agregar la cantidad o editar el productos
