@@ -183,12 +183,15 @@
         });
 
         document.addEventListener('DOMContentLoaded', function () {
-        if (document.getElementById('saldoPendiente').textContent == 0) { // validaciones en caso de que el saldo pendiente sea cero
-            let botonAgregar = document.getElementById('btnAgregarBono');
-            let montoAbono = document.getElementById('cantidaddetallepago');
-            botonAgregar.setAttribute("disabled", ""); // desactivar el boton agregar en caso de que el saldo pendiente sea cero
-            montoAbono.setAttribute("disabled", ""); // desactivar el input de Monto Abono
-        }
+        saldosPendienteArray = document.querySelectorAll('#saldoPendiente'); // ya que pueden ser varios los abonos, debemos de recorrer todos esos abonos.
+        saldosPendienteArray.forEach(saldoPendiente => {
+            if (saldoPendiente.textContent == 0) { // en caso de que el ultimo abono actual sea cero, bloqueamos el boton de agregar y el input para agregar monto
+                let botonAgregar = document.getElementById('btnAgregarBono');
+                let montoAbono = document.getElementById('cantidaddetallepago');
+                botonAgregar.setAttribute("disabled", ""); // desactivar el boton agregar en caso de que el saldo pendiente sea cero
+                montoAbono.setAttribute("disabled", ""); // desactivar el input de Monto Abono
+            }
+        });
         // Función para mostrar mensajes de SweetAlert2
         function showAlert(icon, title, text, isError, position) {
             const options = {
