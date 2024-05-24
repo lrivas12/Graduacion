@@ -1,6 +1,12 @@
 @extends('layouts.index')
 
-@section('title', 'Credito')
+@section('title')
+    @if($pagos->estadopago == 0)
+    Historial de Abonados
+    @else
+    Registrando Abono
+    @endif
+@stop
 
 @section('css')
     <style>
@@ -80,8 +86,12 @@
                     @method('PUT')
                     <div class="row">
                         <div class="col-md-4">
+                            <label for="numerocredito">N° de Factura: <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" name="numerofactura" id="numerofactura" value="{{$pagos->factura->id}}" readonly>
+                        </div>
+                        <div class="col-md-4">
                             <label for="numerocredito">N° de Crédito: <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" name="numerocredito" id="numerocredito" value="{{$pagos->factura->id}}" readonly>
+                            <input type="text" class="form-control" name="numerocredito" id="numerocredito" value="{{$pagos->id}}" readonly>
                         </div>
                         <div class="col-md-4">
                             <label for="fechacredito">Fecha Crédito: <span class="text-danger">*</span></label>
