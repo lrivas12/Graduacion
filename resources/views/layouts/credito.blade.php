@@ -278,9 +278,9 @@
         }
     }
 
-    function actualizarEstadoBoton(cantidaddetallepago) {
+    function actualizarEstadoBoton(saldodetallepago) {
         var btnAgregarBono = document.getElementById('btnAgregarBono');
-        if (cantidaddetallepago == 0) {
+        if (saldodetallepago == 0) {
             btnAgregarBono.disabled = false;
         } else {
             btnAgregarBono.disabled = true;
