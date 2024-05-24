@@ -280,10 +280,10 @@
 
     function actualizarEstadoBoton(cantidaddetallepago) {
         var btnAgregarBono = document.getElementById('btnAgregarBono');
-        if (cantidaddetallepago === 0) {
-            btnAgregarBono.disabled = true;
-        } else {
+        if (cantidaddetallepago == 0) {
             btnAgregarBono.disabled = false;
+        } else {
+            btnAgregarBono.disabled = true;
         }
     }
 </script>
