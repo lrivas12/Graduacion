@@ -278,7 +278,14 @@
         }
     }
 
-    
+    function actualizarEstadoBoton(cantidaddetallepago) {
+        var btnAgregarBono = document.getElementById('btnAgregarBono');
+        if (cantidaddetallepago === 0) {
+            btnAgregarBono.disabled = true;
+        } else {
+            btnAgregarBono.disabled = false;
+        }
+    }
 </script>
 
 
