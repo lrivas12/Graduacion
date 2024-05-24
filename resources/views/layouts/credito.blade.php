@@ -1,7 +1,7 @@
 @extends('layouts.index')
 
 @section('title')
-    @if($pagos->estadopago == 0)
+    @if($pagos->cantidaddetallepago == 0)
     Historial de Abonados
     @else
     Registrando Abono
@@ -277,6 +277,8 @@
             document.getElementById("errorMontoAbono").innerText = "";
         }
     }
+
+    
 </script>
 
 
