@@ -488,7 +488,7 @@ document.getElementById('btnAddProducto').addEventListener('click', function() {
         var precioInput = document.getElementById('precioproducto').value;
 
         // Validar si el campo de precio está vacío o es menor que cero
-        if (precioInput === '' || parseFloat(precioInput) <= 0) {
+        if (precioInput === '' || parseFloat(precioInput) <= 0 && precioInput <=costocompra) {
             // Mostrar advertencia con Sweet Alert si el campo de precio es inválido
             Swal.fire({
                 icon: 'warning',
