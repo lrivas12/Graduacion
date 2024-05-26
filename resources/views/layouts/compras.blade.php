@@ -117,16 +117,18 @@
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text">C$</span>
                                                     <input type="number" class="form-control" id="costocompra" name="costocompra" min="1" onkeypress="return event.charCode >= 48 && event.charCode<=57">
-                                                    <div id="costocompraError" style="color: red;"></div>        
+                                                          
                                                 </div>
+                                                <div id="costocompraError" style="color: red;"></div>  
                                                 </div>
                                                 </div>
                                                 <label for="precioproducto">Precio venta: <span class="text-danger">*</span></label>
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text">C$</span>
                                                     <input type="precioproducto" class="form-control" id="precioproducto" name="precioproducto" min="1" onkeypress="return event.charCode >= 48 && event.charCode<=57">
-                                                    <div id="precioproductoError" style="color: red;"></div>        
-                                    </div>
+                                                          
+                                                </div>
+                                                <div id="precioproductoError" style="color: red;"></div>  
                                             <br>
                                             <div class="row">
                                                 <div class="col-md-12 mt-2 ">
@@ -322,13 +324,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
         let id = $("#nombreproducto").attr("key");
-        let nombreproducto = $("#nombreproducto").val();
-        let cantidadcompra = $("#cantidadcompra").val();
-        let costocompra = $("#costocompra").val();
-        let precioproducto = $("#precioproducto").val();
-        
-        let subtotal = parseFloat(cantidadcompra) * parseFloat(costocompra);
-        
         if (!id || id.trim() === "") {
             Swal.fire({
                 icon: 'error',
@@ -341,18 +336,33 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
             
         }
-        
 
-        if(cantidadcompra <= 0 || costocompra <= 0)
+        let nombreproducto = $("#nombreproducto").val();
+        let cantidadcompra = $("#cantidadcompra").val();
+        let costocompra = $("#costocompra").val();
+        let precioproducto = $("#precioproducto").val();
+        
+        let subtotal = parseFloat(cantidadcompra) * parseFloat(costocompra);
+        if(cantidadcompra <= 0 & costocompra <= 0)
         {
             $("#cantidadcompraError").html("La cantidad debe ser mayor que cero");
             $("#costocompraError").html("El costo debe ser mayor que cero");
             return;
         }
-
+        if(cantidadcompra <= 0 )
+        {
+            $("#cantidadcompraError").html("La cantidad debe ser mayor que cero");
+            return;
+        }
+        if( costocompra <= 0)
+        {
+            $("#costocompraError").html("El costo debe ser mayor que cero");
+            return;
+        }
+        
         // Agrega la condición para verificar que los precios de venta sean mayores que el costo
-        if (parseFloat(precioproducto) <= parseFloat(costocompra) ) {
-            $("#precioproductoError").html("El precio de venta deben ser mayores que el costo de compra");
+        if (parseFloat(precioproducto) <= parseFloat(costocompra) || precioproducto <= 0) {
+            $("#precioproductoError").html("El precio de venta deben ser mayor que el costo de compra");
             return;
         }
         // Agrega una validación para asegurarte de que se haya seleccionado al menos un producto
@@ -383,7 +393,8 @@ document.addEventListener('DOMContentLoaded', function () {
             $("#costocompra").val("");
             $("#cantidadcompraError").html("");
             $("#costocompraError").html("");
-            $("#precioVentaError").html("");
+            $("#precioproductoError").html("");
+            
 
     });
     //Funcion para mostrar los datos en la tabla, const:funcion unica
