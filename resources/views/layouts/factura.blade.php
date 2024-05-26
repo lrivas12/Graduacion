@@ -438,16 +438,13 @@
          
         function isNumberKey(evt) {
         var charCode = (evt.which) ? evt.which : evt.keyCode;
-        // Allow: backspace, delete, tab, escape, enter and .
+       
         if ([8, 9, 27, 13, 46].indexOf(charCode) !== -1 ||
-            // Allow: Ctrl+A, Command+A
             (charCode === 65 && (evt.ctrlKey === true || evt.metaKey === true)) ||
-            // Allow: home, end, left, right, down, up
             (charCode >= 35 && charCode <= 40)) {
-            // let it happen, don't do anything
             return true;
         }
-        // Ensure that it is a number and stop the keypress
+        
         if ((charCode < 48 || charCode > 57) && (charCode < 96 || charCode > 105)) {
             return false;
         }
@@ -799,10 +796,7 @@
                 tablaDatos[indice] = datos; // si existe lo sustituye
             }
             showTable(); // Muestra la tabla actualizada de ventas
-
-            // Inicializar los inputs de Total venta y Saldo pendiente
             $("#total").val(totalSD);
-            $("#saldo").val(totalSD);
 
             //vacia las cajas de texto de la card de los productos
             $("#seleccionarProducto").attr("nombre", "");
