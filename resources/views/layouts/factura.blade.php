@@ -799,10 +799,7 @@
                 tablaDatos[indice] = datos; // si existe lo sustituye
             }
             showTable(); // Muestra la tabla actualizada de ventas
-
-            // Inicializar los inputs de Total venta y Saldo pendiente
             $("#total").val(totalSD);
-            $("#saldo").val(totalSD);
 
             //vacia las cajas de texto de la card de los productos
             $("#seleccionarProducto").attr("nombre", "");

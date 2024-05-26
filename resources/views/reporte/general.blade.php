@@ -191,7 +191,6 @@
                             <table id="producto" class="table table-bordered">
                                 <thead class="thead-dark text-center">
                                     <tr>
-                                        <th>N. Factura</th>
                                         <th>Cliente</th>
                                         <th>Tipo Venta</th>
                                         <th>Fecha</th>
@@ -201,7 +200,6 @@
                                 <tbody>
                                     @foreach ($todoventas as $venta)
                                         <tr class="text-center">
-                                            <td>{{ $venta->id }}</td>
                                             <td>{{ $venta->nombrecliente }} {{ $venta->apellidocliente }} </td>
                                             <td>{{ $venta->tipoventa }}</td>
                                             <td>{{ \Carbon\Carbon::parse($venta->fechafactura)->format('d/m/Y') }}</td>
@@ -407,21 +405,24 @@
                         <br>
                         <div class="table-responsive">
                             <table id="estadocuenta" class="table table-bordered">
-                                <thead class="thead-dark text-center" id="estadosDeCuentaHeader">
-                                    <tr class="text-center">
+                                <thead class="thead-dark text-center">
+                                    <tr>
+                                        <th>Fecha</th>
                                         <th>Cliente</th>
-                                        <th>Total Credito</th>
-                                        <th>Saldo Deuda</th>
+                                        <th>Total</th>
+                                        <th>Saldo Pendiente</th>
                                     </tr>
                                 </thead>
                                 <tbody id="estadosDeCuenta">
-                                    @foreach ($datosCliente['cliente_id'] as $index => $cliente_id)
-                                        {{-- usamos la key cliente_id arriba para poder determinar la cantidad de iteraciones dependiendo la cantidad de registros guardados en ESA key --}}
+                                    @foreach ($pagos as $pago)
                                         <tr class="text-center">
-                                            <td>{{ $datosCliente['nombrecliente'][$index] }}
-                                                {{ $datosCliente['apellidocliente'][$index] }}</td>
-                                            <td>{{ $datosCliente['totalventa'][$index] }}</td>
-                                            <td>{{ $datosCliente['saldo_deuda'][$index] }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($pago->fechapago)->format('d/m/Y') }}</td>
+                                            <td>{{ $pago->factura->cliente->nombrecliente }}
+                                                {{ $pago->factura->cliente->apellidocliente }}</td>
+                                            <td>C$ {{ number_format($pago->factura->totalventa, 2, '.', ',') }}</td>
+                                            <td>C$
+                                                {{ number_format($pago->cantidadpago - $pago->detallepago->sum('cantidaddetallepago'), 2, '.', ',') }}
+                                            </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -555,91 +556,54 @@
             if (tipoReporteCredito == 'estado_cuenta') {
                 estadoCuenta = document.getElementById('estado_cuenta');
                 estadoCuenta.style.display = 'block';
+                isValidClient = document.getElementById('generarEstadoCuenta');
+                isValidClient.style.display = 'none'; // ocultamos el boton de generar pdf para evitar que se quiera exportar sin antes haber escogido un cliente
+                clienteEstadoSelector = document.getElementById('cliente_estado_cuenta');
+                if (clienteEstadoSelector.value != '') {
+                    cargarDatosCliente();
+                }
             }
         }
 
         function cargarDatosCliente() {
             clienteId = $('#cliente_estado_cuenta').val();
+            isValidClient.style.display = 'none'; // ocultamos el boton de generar pdf para evitar que se quiera exportar sin antes haber escogido un cliente
             if (clienteId != '') {
-                ruta = `/reportes/consultarEstadoCuentaCliente/${clienteId}`;
-            };
-            if (clienteId == '') {
-                clienteId = null;
-                ruta = `/reportes/consultarEstadoCuenta`;
-            };
-            fetch(ruta)
-                .then((response) => {
-                    if (!response.ok) {
-                        throw new Error('Algo falló en la llamada al endpoint');
-                    }
-                    return response.json();
-                })
-                .then((data) => {
-                    // debemos obtener la cabecera del contenedor de los registros de $pagos
-                    let estadosDeCuentaCabecera = document.getElementById('estadosDeCuentaHeader');
-                    // debemos obtener el contenedor de los registros de $pagos
-                    let estadosDeCuentaContenedor = document.getElementById('estadosDeCuenta');
-                    // Limpiamos los registros antes de continuar
-                    estadosDeCuentaCabecera.innerHTML = '';
-                    estadosDeCuentaContenedor.innerHTML = '';
-                    // volvemos a pintar nuestra tabla con registros actualizados
-                    if (clienteId != null) {
-                        console.log('entra a la ruta con cliente')
-                        recargarEstadoDeCuentaCliente(data, estadosDeCuentaCabecera, estadosDeCuentaContenedor);
-                    } else {
-                        console.log('entra a la ruta sin cliente')
-                        recargarEstadoDeCuenta(data, estadosDeCuentaCabecera, estadosDeCuentaContenedor);
-                    }
-                })
-                .catch((error) => {
-                    window.alert(error);
-                })
+                isValidClient.style.display = 'block';
+                ruta = `/reportes/consultarEstadoCuenta/${clienteId}`;
+                fetch(ruta)
+                    .then((response) => {
+                        if (!response.ok) {
+                            throw new Error('Algo falló en la llamada al endpoint');
+                        }
+                        return response.json();
+                    })
+                    .then((data) => {
+                        // debemos obtener el contenedor de los registros de $pagos
+                        let estadosDeCuentaContenedor = document.getElementById('estadosDeCuenta');
+                        // Limpiamos los registros antes de continuar
+                        estadosDeCuentaContenedor.innerHTML = '';
+                        // volvemos a pintar nuestra tabla con registros actualizados
+                        recargarEstadoDeCuenta(data, estadosDeCuentaContenedor);
+                    })
+                    .catch((error) => {
+                        window.alert(error);
+                    })
+            }
         }
 
-        function recargarEstadoDeCuenta(datosCliente, estadosDeCuentaCabecera, estadosDeCuentaContenedor) {
-            let tr = document.createElement('tr');
-            tr.classList.add('text-center');
-            tr.innerHTML = `
-                    <th>Cliente</th>
-                    <th>Total Crédito</th>
-                    <th>Saldo Deuda</th> `;
-            estadosDeCuentaCabecera.appendChild(tr);
-            //  console.log(pagos.cliente_id);
-            datosCliente["cliente_id"].forEach((dato_cliente, index) => {
-                // creamos el elemento tr = table row = fila
-                let tr = document.createElement('tr');
-                tr.classList.add('text-center');
-                // le agregamos un template html que contiene los td = table data = datos de tabla al elemento tr como su contenido
-                tr.innerHTML = `    
-                    <td>${datosCliente['nombrecliente'][index] }
-                    ${datosCliente['apellidocliente'][index] }</td>
-                    <td>${datosCliente['totalventa'][index] }</td>
-                    <td>${datosCliente['saldo_deuda'][index] }</td>
-                    `;
-                estadosDeCuentaContenedor.appendChild(tr);
-            });
-        }
-
-        function recargarEstadoDeCuentaCliente(pagos, estadosDeCuentaCabecera, estadosDeCuentaContenedor) {
-            let tr = document.createElement('tr');
-            tr.classList.add('text-center');
-            tr.innerHTML = `<th>N. Factura</th>
-                            <th>Cliente</th>
-                            <th>Fecha Abono</th>
-                            <th>Abonos</th>
-                            <th>Saldo Pendiente</th>`;
-            estadosDeCuentaCabecera.appendChild(tr);
+        function recargarEstadoDeCuenta(pagos, estadosDeCuentaContenedor) {
             pagos.forEach(pago => {
                 // creamos el elemento tr = table row = fila
                 let tr = document.createElement('tr');
                 tr.classList.add('text-center');
                 // le agregamos un template html que contiene los td = table data = datos de tabla al elemento tr como su contenido
                 tr.innerHTML =
-                    `<td>${pago.id}</td>
-                    <td>${pago.nombrecliente} ${pago.apellidocliente}</td>
-                    <td>${pago.fechadetallepago}</td>
-                    <td>C$ ${pago.cantidaddetallepago}</td>
-                    <td>C$ ${pago.saldodetallepago}</td>`; // esos nombres de variable vienen de la respuesta desde el backend, concretamente, del select en la query que nos retorna el endpoint
+                    `
+                <td>${pago.fechapago}</td>
+                <td>${pago.nombrecliente} ${pago.apellidocliente}</td>
+                <td>C$ ${pago.totalventa}</td>
+                <td>C$ ${pago.deuda_pendiente}</td>`; // esos nombres de variable vienen de la respuesta desde el backend, concretamente, del select en la query que nos retorna el endpoint
                 // cada vez que se termine de armar un registro, deberemos agregarlo al contedor padre
                 estadosDeCuentaContenedor.appendChild(tr);
             });
@@ -648,12 +612,7 @@
         function generarPDF() {
             // ahora generamos ese pdf de estado de cuenta para este usuario
             clienteId = $('#cliente_estado_cuenta').val();
-            if (clienteId != '') {
-                ruta = `/generarEstadoCuentaClientePDF?cliente_id=${clienteId}`;
-            };
-            if (clienteId == '') {
-                ruta = `/generarEstadoCuentaPDF`;
-            };
+            ruta = `/generarEstadoCuentaPDF?cliente_id=${clienteId}`;
             window.open(ruta, '_blank');
         }
     </script>

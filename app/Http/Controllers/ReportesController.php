@@ -118,10 +118,6 @@ class ReportesController extends Controller
             ->groupBy('clientes.nombrecliente', 'clientes.apellidocliente', 'pagos.fechapago', 'facturas.totalventa')
             ->get();
 
-        // CUERPO PARA ESTADO DE CUENTA INICIAL (INICIO)
-        $datosCliente = self::consultarEstadoCuenta();
-        // CUERPO PARA ESTADO DE CUENTA INICIAL (FINAL)
-
         $fechaini = $request->input('fechaini');
         $fechafin = $request->input('fechafin');
 
@@ -139,7 +135,6 @@ class ReportesController extends Controller
             'compras',
             'detallecompras',
             'pagos',
-            'datosCliente',
             'detallepagos',
             'users',
             'fechaini',
@@ -204,9 +199,7 @@ class ReportesController extends Controller
         $totalcompras = $comprasrecientes->sum('totalcompra');
 
         $cantidadporcompra = detallecompra::select('compra_id', DB::raw('SUM(cantidadcompra) as cantidad_total_prod'))
-        ->join('proveedores', 'compras.proveedor_id', '=', 'proveedores.id')
-        ->select('compras.*', 'proveedores.razonsocialproveedor')    
-        ->whereIn('compras_id', function ($query) use ($fechaInicio, $fechaFin) {
+            ->whereIn('compras_id', function ($query) use ($fechaInicio, $fechaFin) {
                 $query->select('id')
                     ->from('compras')
                     ->whereBetween('fechacompra', [$fechaInicio, $fechaFin]);
@@ -229,8 +222,6 @@ class ReportesController extends Controller
         $fechafin = $request->input('fechafin');
 
         $ventasporfecha = DB::table('facturas')
-            ->join('clientes', 'facturas.clientes_id', '=', 'clientes.id')
-            ->select('facturas.*', 'clientes.nombrecliente', 'clientes.apellidocliente')
             ->whereBetween('fechafactura', [$fechaini, $fechafin])
             ->get();
 
@@ -238,144 +229,53 @@ class ReportesController extends Controller
         return $pdf->stream();
     }
 
-    public function generarEstadoCuentaClientePDF(Request $request)
+    public function generarEstadoCuentaPDF(Request $request)
     {
         $cliente_id = $request->input('cliente_id') ?? null;
-        $pagos = array();
-        $total_deuda = 0;
-        $facturasChequeadas = array();
-        $datocliente = self::obtenerCliente($cliente_id);
-        $facturas = self::consultarEstadoCuentaCliente($datocliente->id);
-        foreach ($facturas as $factura) {
-            if (!in_array($factura->id, $facturasChequeadas)) { // evitamos que quiera volver a agregar más registros de la misma factura
-                $pagos[] = self::consultarEstadoCuentaCliente($datocliente->id, $factura->id);
-                $facturasChequeadas[] = $factura->id;
-                $total_deuda += self::obtenerTotalDeuda($factura)->saldodetallepago;
-            }
-        }
-        $pdf = PDF::loadView('reporte.crediEstadoCliente', ['pagos' => $pagos, 'datocliente' => $datocliente, 'total_deuda' => $total_deuda]);
-        return $pdf->stream();
-    }
-
-    public function consultarEstadoCuentaCliente($cliente_id = null, $factura_id = null)
-    {
-        $cliente_id = json_decode($cliente_id); // en caso de que no se seleccione ningún cliente, recibiremos un valor NULL desde el frontend, necesitaremos convertirlo en un valor null legible para PHP
-        $estadocuenta = pago::join('facturas', 'pagos.facturas_id', '=', 'facturas.id')
+        $pagos = DB::table('pagos')
+            ->join('facturas', 'pagos.facturas_id', '=', 'facturas.id')
             ->join('clientes', 'facturas.clientes_id', '=', 'clientes.id')
             ->join('detallepagos', 'detallepagos.pagos_id', '=', 'pagos.id')
-            ->select('clientes.id as cliente_id', 'facturas.id', 'facturas.totalventa', 'clientes.nombrecliente', 'clientes.apellidocliente', 'detallepagos.fechadetallepago',  'detallepagos.cantidaddetallepago', 'detallepagos.saldodetallepago')
+            ->select(
+                'clientes.nombrecliente',
+                'clientes.apellidocliente',
+                'pagos.fechapago',
+                'facturas.totalventa',
+                DB::raw('SUM(detallepagos.cantidaddetallepago) as deuda_pendiente')
+            )
             ->when($cliente_id, function ($query) use ($cliente_id) { // si obtenemos un cliente_id quiere decir que se seleccionó un cliente, y se va a generar un PDF para ESE CLIENTE EN ESPECÍFICO, caso contrario se generará un PDF general.
                 $query->where('clientes.id', $cliente_id);
             })
-            ->when($factura_id, function ($query) use ($factura_id) {
-                $query->where('facturas.id', $factura_id);
-            })
-            ->orderBy('clientes.id', 'asc')
+            // ->where('clientes.id', $cliente_id)
+            ->groupBy('clientes.nombrecliente', 'clientes.apellidocliente', 'pagos.fechapago', 'facturas.totalventa')
             ->get();
-        return $estadocuenta;
-    }
 
-    private function obtenerTotalDeuda($factura)
-    {
-        return detallepago::select('detallepagos.saldodetallepago')
-            ->where('detallepagos.pagos_id', $factura->id)
-            ->orderBy('detallepagos.saldodetallepago', 'asc')
-            ->limit(1)
+        $datocliente = DB::table('clientes')
+            ->where('clientes.id', $cliente_id)
             ->first();
-    }
 
-    private function obtenerCliente($cliente_id)
-    {
-        return DB::table('clientes')
-            ->when($cliente_id, function ($query) use ($cliente_id) {
-                $query->where('clientes.id', $cliente_id);
-            })
-            ->first();
-    }
-
-    public function generarEstadoCuentaPDF()
-    {
-        $datosCliente = self::consultarEstadoCuenta();
-        $pdf = PDF::loadView('reporte.crediEstado', ['datosCliente' => $datosCliente]);
+        $pdf = PDF::loadView('reporte.crediestado', ['pagos' => $pagos, 'datocliente' => $datocliente]);
+        // $pdf = PDF::loadView('reporte.crediestado', compact('pagos', 'datocliente'));
         return $pdf->stream();
     }
 
-    public function consultarEstadoCuenta()
+    public function consultarEstadoCuenta($cliente_id) // esta función es la que se encarga de actualizar la tabla de estado de cuenta en reporte de credito - estado de cuenta
     {
-        $estadosDeCuenta = pago::join('facturas', 'pagos.facturas_id', '=', 'facturas.id')
+        $Estadocuenta = DB::table('pagos')
+            ->join('facturas', 'pagos.facturas_id', '=', 'facturas.id')
             ->join('clientes', 'facturas.clientes_id', '=', 'clientes.id')
-            ->leftJoin('detallepagos', function ($join) {
-                $join->on('detallepagos.pagos_id', '=', 'pagos.id')
-                    ->whereRaw('detallepagos.id = 
-                 (SELECT MAX(id) FROM detallepagos WHERE detallepagos.pagos_id = pagos.id)');
-            })
+            ->join('detallepagos', 'detallepagos.pagos_id', '=', 'pagos.id')
             ->select(
-                'clientes.id as cliente_id',
                 'clientes.nombrecliente',
                 'clientes.apellidocliente',
+                'pagos.fechapago',
                 'facturas.totalventa',
-                DB::raw('SUM(detallepagos.saldodetallepago) as saldo_deuda')
-            )
-            ->groupBy(
-                'clientes.id',
-                'clientes.nombrecliente',
-                'clientes.apellidocliente',
-                'facturas.totalventa'
-            )
-            ->orderBy('clientes.id', 'asc')
+                DB::raw('SUM(detallepagos.cantidaddetallepago) as deuda_pendiente')
+            )->where('clientes.id', $cliente_id)
+            ->groupBy('clientes.nombrecliente', 'clientes.apellidocliente', 'pagos.fechapago', 'facturas.totalventa')
             ->get();
-
-        $datosCliente = array();
-        $clientesRecorridos = array();
-        $iterador = 0;
-        // $clientesRecorridos["nombres"][] = 'Jeffrey Soza';
-        // $clientesRecorridos["nombres"][] = 'Steven Rocha';
-        // dd($clientesRecorridos["nombres"][0], $clientesRecorridos["nombres"][1]); ASI RECORREMOS UN ARREGLO CON KEYS
-        foreach ($estadosDeCuenta as $index => $estado) {
-            $datocliente = self::obtenerCliente($estado->cliente_id);
-            if ($index > 0) {
-                if (($clientesRecorridos[$iterador] != $datocliente->id)) {
-                    $iterador++;
-                }
-            }
-            if (in_array($datocliente->id, $clientesRecorridos)) {
-                $datosCliente["totalventa"][$iterador] +=  $estado->totalventa;
-                $datosCliente["saldo_deuda"][$iterador] += $estado->saldo_deuda;
-            }
-            if (!in_array($datocliente->id, $clientesRecorridos)) {
-                $datosCliente["cliente_id"][$iterador] = $estado->cliente_id;
-                $datosCliente["nombrecliente"][$iterador] = $estado->nombrecliente;
-                $datosCliente["apellidocliente"][$iterador] = $estado->apellidocliente;
-                $datosCliente["totalventa"][$iterador] = $estado->totalventa;
-                $datosCliente["saldo_deuda"][$iterador] = $estado->saldo_deuda;
-                $clientesRecorridos[] = $estado->cliente_id;
-            }
-        }
-        return $datosCliente;
+        return $Estadocuenta;
     }
-
-    // public function consultarEstadoCuenta($cliente_id)
-    // {
-    //     $cliente_id = json_decode($cliente_id); // en caso de que no se seleccione ningún cliente, recibiremos un valor NULL desde el frontend, necesitaremos convertirlo en un valor null legible para PHP
-    //     $estadocuenta = pago::join('facturas', 'pagos.facturas_id', '=', 'facturas.id')
-    //         ->join('clientes', 'facturas.clientes_id', '=', 'clientes.id')
-    //         ->join('detallepagos', 'detallepagos.pagos_id', '=', 'pagos.id')
-    //         ->select(
-    //             'clientes.id as id_cliente',
-    //             'clientes.nombrecliente',
-    //             'clientes.apellidocliente',
-    //             'pagos.fechapago',
-    //             'facturas.totalventa',
-    //             // 'pagos.cantidadpago',
-    //             DB::raw('facturas.totalventa - SUM(detallepagos.cantidaddetallepago) as deuda_pendiente')
-    //         )
-    //         ->when($cliente_id, function ($query) use ($cliente_id) { // si obtenemos un cliente_id quiere decir que se seleccionó un cliente, y se va a generar un PDF para ESE CLIENTE EN ESPECÍFICO, caso contrario se generará un PDF general.
-    //             $query->where('clientes.id', $cliente_id);
-    //         })
-    //         ->groupBy('id_cliente', 'clientes.nombrecliente', 'clientes.apellidocliente', 'pagos.fechapago', 'facturas.totalventa', 'pagos.cantidadpago')
-    //         ->get();
-    //     return $estadocuenta;
-    // }
 
     public function generarComprasFecha(Request $request)
     {
@@ -384,8 +284,6 @@ class ReportesController extends Controller
 
         $comprasfecha = DB::table('compras')
             ->whereBetween('fechacompra', [$fechaini, $fechafin])
-            ->join('proveedores', 'compras.proveedor_id', '=', 'proveedores.id')
-            ->select('compras.*', 'proveedores.razonsocialproveedor')
             ->get();
 
         $pdf = PDF::loadView('reporte.vercom', ['comprasfecha' => $comprasfecha, 'fechaini' => $fechaini, 'fechafin' => $fechafin]);

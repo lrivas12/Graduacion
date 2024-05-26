@@ -212,7 +212,7 @@
                                             </div>
                                             <div class="form-group">
                                                 <label for="nombre">Correo eléctronico del cliente</label>
-                                                <input type="email" class="form-control @error('correocliente') is-invalid @enderror" id="correoclienteE" name="correoclienteE" value="{{ old('correoclienteE', $cliente->correocliente )}}" autocomplete="correocliente" autofocus>
+                                                <input type="email" class="form-control @error('correocliente') is-invalid @enderror" id="correoclienteE" name="correocliente" value="{{ old('correocliente', $cliente->correocliente )}}" autocomplete="correocliente" autofocus>
                                                 @error('correocliente')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
