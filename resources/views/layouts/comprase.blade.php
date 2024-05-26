@@ -414,9 +414,9 @@
     $("#cuerpoCompra").on("click", "#btnDelCompra", function(){
         let id = $(this).attr("key");
         $("#productosExistentes button[cod='"+id+"']").prop("disabled",false);
-
-        tablaDatos = tablaDatos.filter(objeto => objeto.id !== id);
-                    
+        console.log("original " +JSON.stringify(tablaDatos) )
+        tablaDatos = tablaDatos.filter(objeto => objeto.id !== parseInt(id));
+        console.log("nuevo " +JSON.stringify(tablaDatos) )       
         //renderiza la tabla
         showTable();
     });
