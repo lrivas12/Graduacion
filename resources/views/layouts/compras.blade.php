@@ -485,10 +485,10 @@ document.addEventListener('DOMContentLoaded', function () {
 <script>
 
 document.getElementById('btnAddProducto').addEventListener('click', function() {
-        var precioproducto = document.getElementById('precioproducto').value;
+        var precioInput = document.getElementById('precioproducto').value;
 
         // Validar si el campo de precio está vacío o es menor que cero
-        if (precioproducto === '' || parseFloat(precioproducto) <= 0 && precioproducto <=costocompra) {
+        if (precioInput === '' || parseFloat(precioInput) <= 0 && precioInput <=costocompra) {
             // Mostrar advertencia con Sweet Alert si el campo de precio es inválido
             Swal.fire({
                 icon: 'warning',
