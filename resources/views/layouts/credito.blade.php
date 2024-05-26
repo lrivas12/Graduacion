@@ -1,6 +1,12 @@
 @extends('layouts.index')
 
-@section('title', 'Credito')
+@section('title')
+    @if($pagos->cantidaddetallepago == 0)
+    Historial de Abonados
+    @else
+    Registrando Abono
+    @endif
+@stop
 
 @section('css')
     <style>
@@ -80,8 +86,12 @@
                     @method('PUT')
                     <div class="row">
                         <div class="col-md-4">
+                            <label for="numerocredito">N° de Factura: <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" name="numerofactura" id="numerofactura" value="{{$pagos->factura->id}}" readonly>
+                        </div>
+                        <div class="col-md-4">
                             <label for="numerocredito">N° de Crédito: <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" name="numerocredito" id="numerocredito" value="{{$pagos->factura->id}}" readonly>
+                            <input type="text" class="form-control" name="numerocredito" id="numerocredito" value="{{$pagos->id}}" readonly>
                         </div>
                         <div class="col-md-4">
                             <label for="fechacredito">Fecha Crédito: <span class="text-danger">*</span></label>
@@ -173,12 +183,15 @@
         });
 
         document.addEventListener('DOMContentLoaded', function () {
-        if (document.getElementById('saldoPendiente').textContent == 0) { // validaciones en caso de que el saldo pendiente sea cero
-            let botonAgregar = document.getElementById('btnAgregarBono');
-            let montoAbono = document.getElementById('cantidaddetallepago');
-            botonAgregar.setAttribute("disabled", ""); // desactivar el boton agregar en caso de que el saldo pendiente sea cero
-            montoAbono.setAttribute("disabled", ""); // desactivar el input de Monto Abono
-        }
+        saldosPendienteArray = document.querySelectorAll('#saldoPendiente'); // ya que pueden ser varios los abonos, debemos de recorrer todos esos abonos.
+        saldosPendienteArray.forEach(saldoPendiente => {
+            if (saldoPendiente.textContent == 0) { // en caso de que el ultimo abono actual sea cero, bloqueamos el boton de agregar y el input para agregar monto
+                let botonAgregar = document.getElementById('btnAgregarBono');
+                let montoAbono = document.getElementById('cantidaddetallepago');
+                botonAgregar.setAttribute("disabled", ""); // desactivar el boton agregar en caso de que el saldo pendiente sea cero
+                montoAbono.setAttribute("disabled", ""); // desactivar el input de Monto Abono
+            }
+        });
         // Función para mostrar mensajes de SweetAlert2
         function showAlert(icon, title, text, isError, position) {
             const options = {
@@ -265,6 +278,15 @@
             document.getElementById("errorMontoAbono").innerText = "Ingrese un monto válido (mayor o igual a cero y hasta dos decimales).";
         } else {
             document.getElementById("errorMontoAbono").innerText = "";
+        }
+    }
+
+    function actualizarEstadoBoton(saldodetallepago) {
+        var btnAgregarBono = document.getElementById('btnAgregarBono');
+        if (saldodetallepago == 0) {
+            btnAgregarBono.disabled = false;
+        } else {
+            btnAgregarBono.disabled = true;
         }
     }
 </script>

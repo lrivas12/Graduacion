@@ -26,6 +26,7 @@
                         <tr>
                             <th>#</th>
                             <th>Fecha</th>
+                            <th>Proveedor</th>
                             <th>Total</th>
                         </tr>
                     </thead>
@@ -35,6 +36,7 @@
                            
                             <td>{{$compra->id}}</td>
                             <td>{{\Carbon\Carbon::parse ($compra->fechacompra)->format('d/m/Y')}}</td>
+                            <td>{{$compra->razonsocialproveedor}}</td>
                             <td>C$ {{number_format($compra->totalcompra, 2, '.', ',')}}</td>
                         </tr>
                     @endforeach

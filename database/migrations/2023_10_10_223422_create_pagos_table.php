@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('pagos', function (Blueprint $table) {
             $table->id();
             $table->date('fechapago');
-            $table->integer('cantidadpago');
+            $table->float('cantidadpago');
             $table->boolean('estadopago');
             $table->unsignedBigInteger('facturas_id');
             $table->foreign('facturas_id')->references('id')->on('facturas');            
