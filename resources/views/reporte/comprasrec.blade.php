@@ -26,7 +26,6 @@
                 <thead class="thead-dark text-center">
                     <tr>
                         <th style="color: white;">Fecha de Compra</th>
-                        <th style="color: white;">Proveedor</th>
                         <th style="color: white;">Total de Compra</th>
                         <th style="color: white;">Cantidad comprada</th>
                     </tr>
@@ -35,7 +34,6 @@
                     @foreach ($comprasrecientes as $compra)
                         <tr>
                             <td>{{ $compra->fechacompra }}</td>
-                            <td>{{$compra->razonsocialproveedor}}</td>
                             <td>C$ {{ $compra->totalcompra }}</td>
                             <td>{{ $cantidadporcompra->where('compras_id', $compra->id)->first()->cantidad_total_prod ?? 0 }}</td>
                         </tr>

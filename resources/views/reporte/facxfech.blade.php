@@ -26,8 +26,7 @@
                 <table id="producto" class="table table-bordered">
                     <thead class="thead-dark text-center">
                         <tr>
-                            <th>N. Factura</th>
-                            <th>Cliente</th>
+                            <th>#</th>
                             <th>Fecha</th>
                             <th>Tipo venta</th>
                             <th>Total</th>
@@ -36,8 +35,8 @@
                     <tbody>
                         @foreach ($ventasporfecha as $venta)
                         <tr class="text-center">
+                           
                             <td>{{$venta->id}}</td>
-                            <td>{{ $venta->nombrecliente}}  {{ $venta->apellidocliente}} </td>
                             <td>{{\Carbon\Carbon::parse ($venta->fechafactura)->format('d-m-Y')}}</td>
                             <td>{{$venta->tipoventa}}</td>
                             <td>C$ {{number_format($venta->totalventa, 2, '.', ',')}}</td>

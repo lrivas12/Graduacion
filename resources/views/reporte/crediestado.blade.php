@@ -10,31 +10,34 @@
         }
     </style>
 
+
+    <div class="titulo">
+        <br>
+        <label for="titulo" for="titulo" class="tituloreporte">Estado de Cuenta
+            {{ $datocliente->nombrecliente }} {{ $datocliente->apellidocliente }}
+        </label>
+        <br>
+
+    </div>
     <div class="content" id="content">
         <div class="cardprodgen" id="cardprodgen">
             <div class="table-responsive">
-                <div class="titulo">
-                    <br>
-                    <label for="titulo" for="titulo" class="tituloreporte">Estado de Cuenta General
-                    </label>
-                    <br>
-                </div>
                 <table id="producto" class="table table-bordered">
                     <thead class="thead-dark text-center">
                         <tr>
+                            <th>Fecha</th>
                             <th>Cliente</th>
-                            <th>Total Credito</th>
-                            <th>Saldo Deuda</th>
+                            <th>Total</th>
+                            <th>Saldo Pendiente</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($datosCliente['cliente_id'] as $index => $cliente_id) 
-                        {{-- usamos la key cliente_id arriba para poder determinar la cantidad de iteraciones dependiendo la cantidad de registros guardados en ESA key --}}
-                            <tr>
-                                <td>{{ $datosCliente['nombrecliente'][$index] }}
-                                    {{ $datosCliente['apellidocliente'][$index] }}</td>
-                                <td>{{ $datosCliente['totalventa'][$index] }}</td>
-                                <td>{{ $datosCliente['saldo_deuda'][$index] }}</td>
+                        @foreach ($pagos as $pago)
+                            <tr class="text-center">
+                                <td>{{ \Carbon\Carbon::parse($pago->fechapago)->format('d/m/Y') }}</td>
+                                <td>{{ $pago->nombrecliente }} {{ $pago->apellidocliente }}</td>
+                                <td>C$ {{ $pago->totalventa }}</td>
+                                <td>C$ {{ $pago->deuda_pendiente }}</td>
                             </tr>
                         @endforeach
                     </tbody>

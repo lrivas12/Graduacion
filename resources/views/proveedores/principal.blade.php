@@ -187,7 +187,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="numerorucproveedor">Número RUC proveedor: </label>
-                                            <input type="text" class="form-control @error('numerorucproveedor') is-invalid @enderror" id="numerorucproveedor" name="numerorucproveedor" value="{{ old('numerorucproveedor', $proveedor->numerorucproveedor) }}" autocomplete="numerorucproveedor" autofocus>
+                                            <input type="text" class="form-control @error('numerorucproveedor') is-invalid @enderror" id="numerorucproveedor" name="numerorucproveedor" value="{{ old('numerorucproveedor', $proveedor->numerorucproveedor) }}" required autocomplete="numerorucproveedor" autofocus>
                                             @error('numerorucproveedor')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
