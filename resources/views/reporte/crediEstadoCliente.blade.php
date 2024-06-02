@@ -14,7 +14,7 @@
             <div class="table-responsive">
                 <div class="titulo">
                     <br>
-                    <label for="titulo" for="titulo" class="tituloreporte">Historial de abonos creditos pendientes de
+                    <label for="titulo" for="titulo" class="tituloreporte">Historial de abonos créditos pendientes de
                         {{ $datocliente->nombrecliente }} {{ $datocliente->apellidocliente }}
                     </label>
                     <br>

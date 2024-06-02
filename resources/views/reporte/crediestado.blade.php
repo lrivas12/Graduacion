@@ -23,7 +23,7 @@
                     <thead class="thead-dark text-center">
                         <tr>
                             <th>Cliente</th>
-                            <th>Total Credito</th>
+                            <th>Total Crédito</th>
                             <th>Saldo Deuda</th>
                         </tr>
                     </thead>
