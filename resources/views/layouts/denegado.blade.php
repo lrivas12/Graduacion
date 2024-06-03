@@ -90,7 +90,7 @@
 @section('content')
 <br><br>
             <div class="text-center">
-                <img src="vendor/adminlte/dist/img/denegado.jpg" class="imagen" alt="" style="max-width: 50%;">
+                <img src="public/vendor/adminlte/dist/img/denegado.jpg" class="imagen" alt="" style="max-width: 50%;">
                 <h1>¡No tienes permiso para acceder a esta página!</h1>
             </div>
         </div>

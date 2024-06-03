@@ -90,7 +90,7 @@
 @section('content')
 <br><br>
             <div class="text-center">
-                <img src="vendor/adminlte/dist/img/errorq.jpg" class="imagen" style="max-width: 50%;">
+                <img src="public/vendor/adminlte/dist/img/errorq.jpg" class="imagen" style="max-width: 50%;">
                 <h1>¡La página a la que desea acceder no existe!</h1>
             </div>
         </div>
