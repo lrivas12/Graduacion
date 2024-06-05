@@ -341,6 +341,7 @@
                             <table id="producto" class="table table-bordered">
                                 <thead class="thead-dark text-center">
                                     <tr>
+                                        <th>ID</th>
                                         <th>Proveedor</th>
                                         <th>Fecha</th>
                                         <th>Total</th>
@@ -349,6 +350,7 @@
                                 <tbody>
                                     @foreach ($todoscompra as $compra)
                                         <tr class="text-center">
+                                            <td>{{$compra->id}}</td>
                                             <td>{{ $compra->razonsocialproveedor }}</td>
                                             <td>{{ \Carbon\Carbon::parse($compra->fechacompra)->format('d/m/Y') }}</td>
                                             <td>C$ {{ number_format($compra->totalcompra, 2, '.', ',') }}</td>
