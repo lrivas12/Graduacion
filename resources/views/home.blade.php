@@ -27,7 +27,7 @@
     $user = Auth::user();
     ?>
     <section class="section">
-        <h1><i class="fas fa-store"></i> Bienvenido a {{ $empresa->nombreempresa }}</h1>
+        <h1><i class="fas fa-store"></i> Bienvenido a {{ $empresa ? $empresa->nombreempresa : "Moto Repuestos Flor" }}</h1>
         <br>
         <h5><i class="fas fa-user"></i> {{ $user->usuario }}</h5>
     </section>

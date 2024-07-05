@@ -350,7 +350,7 @@
                                 <tbody>
                                     @foreach ($todoscompra as $compra)
                                         <tr class="text-center">
-                                            <td>{{$compra->id}}</td>
+                                            <td>{{ $compra->id }}</td>
                                             <td>{{ $compra->razonsocialproveedor }}</td>
                                             <td>{{ \Carbon\Carbon::parse($compra->fechacompra)->format('d/m/Y') }}</td>
                                             <td>C$ {{ number_format($compra->totalcompra, 2, '.', ',') }}</td>
@@ -417,15 +417,17 @@
                                     </tr>
                                 </thead>
                                 <tbody id="estadosDeCuenta">
-                                    @foreach ($datosCliente['cliente_id'] as $index => $cliente_id)
-                                        {{-- usamos la key cliente_id arriba para poder determinar la cantidad de iteraciones dependiendo la cantidad de registros guardados en ESA key --}}
-                                        <tr class="text-center">
-                                            <td>{{ $datosCliente['nombrecliente'][$index] }}
-                                                {{ $datosCliente['apellidocliente'][$index] }}</td>
-                                            <td>{{ $datosCliente['totalventa'][$index] }}</td>
-                                            <td>{{ $datosCliente['saldo_deuda'][$index] }}</td>
-                                        </tr>
-                                    @endforeach
+                                    @if(count($datosCliente) > 0)
+                                        @foreach ($datosCliente['cliente_id'] as $index => $cliente_id)
+                                            {{-- usamos la key cliente_id arriba para poder determinar la cantidad de iteraciones dependiendo la cantidad de registros guardados en ESA key --}}
+                                            <tr class="text-center">
+                                                <td>{{ $datosCliente['nombrecliente'][$index] }}
+                                                    {{ $datosCliente['apellidocliente'][$index] }}</td>
+                                                <td>{{ $datosCliente['totalventa'][$index] }}</td>
+                                                <td>{{ $datosCliente['saldo_deuda'][$index] }}</td>
+                                            </tr>
+                                        @endforeach
+                                    @endif
                                 </tbody>
                             </table>
                         </div>

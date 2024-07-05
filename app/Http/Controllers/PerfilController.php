@@ -60,7 +60,7 @@ class PerfilController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        $user = Auth::user();
+        $user = User::where('id', Auth()->id())->first();
         $validator = Validator::make($request->all(), [
             'usuario' => 'required|string|max:255|unique:users,usuario,' . $user->id,
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
@@ -88,14 +88,14 @@ class PerfilController extends Controller
 
 
         if ($request->hasFile('foto')) {
-            if (Storage::disk('public')->exists($user->foto)) {
-                Storage::disk('public')->delete($user->foto);
+            if (!is_null($user->foto) && Storage::disk('public')->exists('usuarios/' . $user->foto)) {
+                Storage::disk('public')->delete('usuarios/' . $user->foto);
             }
 
             $uploadedFile = $request->file('foto');
             $photoName = $request->input('usuario') . '.' . $uploadedFile->getClientOriginalExtension();
             $photoPath = $uploadedFile->storeAs('public/usuarios', $photoName);
-            $user->foto = $photoPath;
+            $user->foto = $photoName;
         }
         $user->save();
 
