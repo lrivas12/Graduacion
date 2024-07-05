@@ -91,82 +91,80 @@
 @stop
 
 @section('content_header')
-    @foreach ($empresas as $emp) 
-        <section class="sectionT">
-                <h1><i class="fas fa-store"></i> {{$emp->nombreempresa}} </h1>
-                <i class="btn far fa-question-circle" title="Ayuda" data-toggle="modal" data-target="#myModal"></i>
-        </section>
-        <hr class="my-2" />
-   
+    <section class="sectionT">
+        <h1><i class="fas fa-store"></i> {{ $empresa->nombreempresa }} </h1>
+        <i class="btn far fa-question-circle" title="Ayuda" data-toggle="modal" data-target="#myModal"></i>
+    </section>
+    <hr class="my-2" />
 @stop
 
 
 @section('content')
 
-<div class="modal" id="myModal">
-    <div class="modal-dialog">
-      <div class="modal-content d-flex align-items-center" style="max-width: 100%; height: auto;">
-        
-        <!-- Contenido del modal -->
-        <div class="modal-body">
-            <img src="{{asset('/vendor/adminlte/dist/img/AyudaEmpresa.jpg')}}" class="img-fluid" alt="Ayuda Empresa" style="max-width: 1000px; height: auto;">
+    <div class="modal" id="myModal">
+        <div class="modal-dialog">
+            <div class="modal-content d-flex align-items-center" style="max-width: 100%; height: auto;">
+
+                <!-- Contenido del modal -->
+                <div class="modal-body">
+                    <img src="{{ asset('/vendor/adminlte/dist/img/AyudaEmpresa.jpg') }}" class="img-fluid"
+                        alt="Ayuda Empresa" style="max-width: 1000px; height: auto;">
+                </div>
+                <!-- Botón de cierre del modal -->
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+            </div>
         </div>
-        <!-- Botón de cierre del modal -->
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
-        </div>
-      </div>
     </div>
 
-<section class="sectionT3">
-    <div class="header">
-        <h3><i class="fas fa-store"></i> Información del negocio </h3>
-    </div>
+    <section class="sectionT3">
+        <div class="header">
+            <h3><i class="fas fa-store"></i> Información del negocio </h3>
+        </div>
     </section>
-        <div class="card">
-            <div class="overflow-auto">
-                <div class="card-body">
+    <div class="card">
+        <div class="overflow-auto">
+            <div class="card-body">
+                <br>
+                <div class="text-center">
+                    @isset($empresa->logo)
+                        <div class="form-group">
+                            <img src="{{ asset($empresa->logo) }}" alt="Logo de la empresa" style="max-width: 300px;">
+                        </div>
+                    @endisset
                     <br>
-                    <div class="text-center">
-                        @if ($emp->logo)
-                            <div class="form-group">
-                                <img src="{{ asset($emp->logo) }}" alt="Logo de la empresa" style="max-width: 300px;">
-                            </div>
-                        @endif 
-                        <br>
-                        <div class="form-group row">
-                            <div class="col-md-6">
-                                <h3><i class="fas fa-store"></i> Nombre del negocio:</h3>
-                                <h4>{{$emp->nombreempresa}} </h4>
-                            </div>
-                            <br>
-                            <div class="col-md-6">
-                                <h3><i class="fas fa-id-badge"></i> N° RUC del negocio:</h3>
-                                <h4>{{$emp->rucempresa}}</h4>
-                            </div>
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <h3><i class="fas fa-store"></i> Nombre del negocio:</h3>
+                            <h4>{{ $empresa->nombreempresa }} </h4>
                         </div>
                         <br>
-                        <div class="form-group row">
-                            <div class="col-md-6">
-                                <h3><i class="fas fa-phone-alt"></i> Contacto del negocio:</h3>
-                                <h4>{{$emp->contactoempresa}}</h4>
-                            </div>
-                            <br>
-                            <div class="col-md-6">
-                                <h3><i class="far fa-address-card"></i> Dirección del negocio:</h3>
-                                <h4>{{$emp->direccionempresa}}</h4>
-                            </div>
+                        <div class="col-md-6">
+                            <h3><i class="fas fa-id-badge"></i> N° RUC del negocio:</h3>
+                            <h4>{{ $empresa->rucempresa }}</h4>
                         </div>
-                        <br>
-                        <button id="updateButton" class="btn btn-warning btn1" onclick="mostrarFormulario()"><i
-                                class="fas fa-edit"></i>
-                            Actualizar
-                            Datos del negocio</button>
                     </div>
+                    <br>
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <h3><i class="fas fa-phone-alt"></i> Contacto del negocio:</h3>
+                            <h4>{{ $empresa->contactoempresa }}</h4>
+                        </div>
+                        <br>
+                        <div class="col-md-6">
+                            <h3><i class="far fa-address-card"></i> Dirección del negocio:</h3>
+                            <h4>{{ $empresa->direccionempresa }}</h4>
+                        </div>
+                    </div>
+                    <br>
+                    <button id="updateButton" class="btn btn-warning btn1" onclick="mostrarFormulario()"><i
+                            class="fas fa-edit"></i>
+                        Actualizar
+                        Datos del negocio</button>
                 </div>
             </div>
         </div>
+    </div>
     <br>
-    @endforeach
     <div class="card">
         <div class="overflow-auto">
             <div class="card-body hidden" id="updateFormCard" style="display:none">
@@ -174,23 +172,23 @@
                     <h3>Datos de la Empresa</h3>
                 </div>
                 <br>
-                <form method="POST" action="{{ route('empresa.update', $emp->id) }}" enctype="multipart/form-data">
+                <form method="POST" action="{{ route('empresa.update', $empresa->id) }}" enctype="multipart/form-data">
                     @csrf
 
                     <label style="font-style: italic; ">
-                        Los campos marcados con  <span style=" color: red;">*</span> son obligatorios</span>
+                        Los campos marcados con <span style=" color: red;">*</span> son obligatorios</span>
                     </label>
-                    
+
                     @method('PUT')
                     <div class="form-group row">
                         <div class="col-md-6">
                             <label for="logo">{{ __('Logo Actual') }}</label><br>
-                            @if ($emp->logo)
-                                <img src="{{ asset($emp->logo) }}" alt="Logo actual de la empresa"
-                                    style="max-width: 200px;"><br>
-                            @else
-                                <p>No hay logo actual</p>
-                            @endif
+                            @isset ($empresa->logo)
+                            <img src="{{ asset($empresa->logo) }}" alt="Logo actual de la empresa"
+                                style="max-width: 200px;"><br>
+                        @else
+                            <p>No hay logo actual</p>
+                            @endisset
                         </div>
                         <br>
                         <div class="col-md-6">
@@ -209,7 +207,7 @@
                                 for="nombreempresa">{{ __('Nombre de la empresa: ') }}</label>
                             <input id="nombreempresa" type="text"
                                 class="form-control @error('nombreempresa') is-invalid @enderror" name="nombreempresa"
-                                value="{{ old('nombreempresa', $emp->nombreempresa) }}" required
+                                value="{{ old('nombreempresa', $empresa->nombreempresa) }}" required
                                 autocomplete="nombreempresa" autofocus>
                             @error('nombreempresa')
                                 <span class="invalid-feedback" role="alert">
@@ -223,7 +221,7 @@
                             <span class="text-danger">*</span><label for="rucempresa">{{ __('N° RUC: ') }}</label>
                             <input id="rucempresa" type="text"
                                 class="form-control @error('rucempresa') is-invalid @enderror" name="rucempresa"
-                                value="{{ old('rucempresa', $emp->rucempresa) }}" required autocomplete="rucempresa">
+                                value="{{ old('rucempresa', $empresa->rucempresa) }}" required autocomplete="rucempresa">
                             @error('rucempresa')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -236,7 +234,7 @@
                             <span class="text-danger">*</span><label for="contactoempresa">{{ __('Contacto: ') }}</label>
                             <input id="contactoempresa" type="text"
                                 class="form-control @error('contactoempresa') is-invalid @enderror" name="contactoempresa"
-                                value="{{ old('contactoempresa', $emp->contactoempresa) }}" required
+                                value="{{ old('contactoempresa', $empresa->contactoempresa) }}" required
                                 autocomplete="contactoempresa">
                             @error('contactoempresa')
                                 <span class="invalid-feedback" role="alert">
@@ -249,9 +247,9 @@
                         <div class="col-md-6">
                             <label for="direccionempresa">{{ __('Dirección: ') }}</label>
                             <input id="direccionempresa" type="text"
-                                class="form-control @error('direccionempresa') is-invalid @enderror" name="direccionempresa"
-                                value="{{ old('direccionempresa', $emp->direccionempresa) }}" required
-                                autocomplete="direccionempresa">
+                                class="form-control @error('direccionempresa') is-invalid @enderror"
+                                name="direccionempresa" value="{{ old('direccionempresa', $empresa->direccionempresa) }}"
+                                required autocomplete="direccionempresa">
                             @error('direccionempresa')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>

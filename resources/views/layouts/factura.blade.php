@@ -397,6 +397,8 @@
                                                             value="{{ old('saldo', '0') }}" id="saldo"
                                                             name="saldo" readonly>
                                                     </div>
+                                                    <div id="saldoError"
+                                                    style="color: red; font-style: italic;"></div>
                                                 </div>
                                             </div>
 
@@ -432,7 +434,7 @@
     <script>
         //variables que pueden ser utilizadas en todas las funciones del script
         var tablaDatos = [];
-        var cantidadproducto, pago, saldo, tipoVenta, totaldescuento = 0,
+        var cantidadproducto, pago, saldo, tipoVenta, totalConDescuento = 0,
             descuento = 0; //propias de ventas
 
          
@@ -797,6 +799,7 @@
             }
             showTable(); // Muestra la tabla actualizada de ventas
             $("#total").val(totalSD);
+            $("#saldo").val(totalSD);
 
             //vacia las cajas de texto de la card de los productos
             $("#seleccionarProducto").attr("nombre", "");
@@ -906,9 +909,9 @@
 
             } else {
                 // Calcular el nuevo total con descuento
-                totaldescuento = totalSD - descuento;
+                totalConDescuento = totalSD - descuento;
                 // Actualizar el elemento en el HTML para mostrar el total con descuento
-                $("#total").val(totaldescuento.toFixed(2));
+                $("#total").val(totalConDescuento.toFixed(2));
                 recalcularSaldoPendiente($("#adelanto").val());
             }
         };
@@ -937,10 +940,17 @@
         //funciones propiamente de ventas
         function recalcularSaldoPendiente(adelanto) {
             let saldoPen;
-            if (totaldescuento) {
-                saldoPen = (totaldescuento - adelanto).toFixed(2);
+            $("#saldoError").html("");
+            // console.log("totalConDescuento dentro de recalcularSaldoPendiente:" + totalConDescuento);
+            if (totalConDescuento) {
+                console.log("Entra a la condicion:" + totalConDescuento + "adelanto es:" + adelanto)
+                saldoPen = (totalConDescuento - adelanto).toFixed(2);
             } else {
+                console.log("No entra a la condicion:" + totalConDescuento  + "adelanto es:" + adelanto)
                 saldoPen = (totalSD - adelanto).toFixed(2);
+            }
+            if (adelanto && saldoPen < 0) { // el saldo pendiente no deberia ser igual o menor que cero cuando es compra al credito
+                return $("#saldoError").html("El saldo pendiente no puede ser menor a cero si es venta al crédito y si hay adelanto aplicado.");
             }
             // Actualizar el elemento en el HTML para mostrar el saldo pendiente
             $("#saldo").val(saldoPen);

@@ -52,7 +52,8 @@
     @php
         // debemos user base64_encode para convertir todo el valor de logo de la tabla empresas a string
         // la imagen era la que daba problemas con los reportes
-        $imagenEmpresa = base64_encode(file_get_contents(public_path($empresa->logo)));
+        $imagenEmpresa = null;
+        if ($empresa->logo) $imagenEmpresa = base64_encode(file_get_contents(public_path($empresa->logo)));
     @endphp
     <div class="header" style="text-align: center;">
         <img src="data:image/png;base64,{{ $imagenEmpresa }}" id="logo" alt="Logo de la empresa"

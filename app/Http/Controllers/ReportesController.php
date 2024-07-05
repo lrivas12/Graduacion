@@ -204,9 +204,9 @@ class ReportesController extends Controller
         $totalcompras = $comprasrecientes->sum('totalcompra');
 
         $cantidadporcompra = detallecompra::select('compra_id', DB::raw('SUM(cantidadcompra) as cantidad_total_prod'))
-        ->join('proveedores', 'compras.proveedor_id', '=', 'proveedores.id')
-        ->select('compras.*', 'proveedores.razonsocialproveedor')    
-        ->whereIn('compras_id', function ($query) use ($fechaInicio, $fechaFin) {
+            ->join('proveedores', 'compras.proveedor_id', '=', 'proveedores.id')
+            ->select('compras.*', 'proveedores.razonsocialproveedor')
+            ->whereIn('compras_id', function ($query) use ($fechaInicio, $fechaFin) {
                 $query->select('id')
                     ->from('compras')
                     ->whereBetween('fechacompra', [$fechaInicio, $fechaFin]);
@@ -250,7 +250,7 @@ class ReportesController extends Controller
             if (!in_array($factura->id, $facturasChequeadas)) { // evitamos que quiera volver a agregar más registros de la misma factura
                 $pagos[] = self::consultarEstadoCuentaCliente($datocliente->id, $factura->id);
                 $facturasChequeadas[] = $factura->id;
-                $total_deuda += self::obtenerTotalDeuda($factura)->saldodetallepago;
+                $total_deuda += (int) self::obtenerTotalDeuda($factura)->saldodetallepago;
             }
         }
         $pdf = PDF::loadView('reporte.crediEstadoCliente', ['pagos' => $pagos, 'datocliente' => $datocliente, 'total_deuda' => $total_deuda]);
@@ -277,8 +277,9 @@ class ReportesController extends Controller
 
     private function obtenerTotalDeuda($factura)
     {
-        return detallepago::select('detallepagos.saldodetallepago')
-            ->where('detallepagos.pagos_id', $factura->id)
+        return pago::join('detallepagos', 'pagos.id', '=', 'detallepagos.pagos_id')
+            ->select('detallepagos.saldodetallepago')
+            ->where('pagos.facturas_id', $factura->id)
             ->orderBy('detallepagos.saldodetallepago', 'asc')
             ->limit(1)
             ->first();
@@ -314,13 +315,15 @@ class ReportesController extends Controller
                 'clientes.nombrecliente',
                 'clientes.apellidocliente',
                 'facturas.totalventa',
+                // 'facturas.id',
                 DB::raw('SUM(detallepagos.saldodetallepago) as saldo_deuda')
             )
             ->groupBy(
                 'clientes.id',
                 'clientes.nombrecliente',
                 'clientes.apellidocliente',
-                'facturas.totalventa'
+                'facturas.totalventa',
+                // 'facturas.id',
             )
             ->orderBy('clientes.id', 'asc')
             ->get();

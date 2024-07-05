@@ -179,11 +179,14 @@ class UsuarioController extends Controller
         }
 
         if ($request->hasFile('foto')) {
-            if (!is_null($user->foto) && Storage::disk('public')->exists($user->foto)) {
-                Storage::disk('public')->delete($user->foto);
+            if (!is_null($user->foto) && Storage::disk('public')->exists('usuarios/' . $user->foto)) {
+                Storage::disk('public')->delete('usuarios/' . $user->foto);
             }
-
-            $user->foto = $request->file('foto')->storeAs('public/usuarios', $user->usuario . '.' . $request->file('foto')->getClientOriginalExtension());
+            // $user->foto = $request->file('foto')->storeAs('public/usuarios', $user->usuario . '.' . $request->file('foto')->getClientOriginalExtension());
+            $uploadedFile = $request->file('foto');
+            $photoName = $user->usuario . '.' . $uploadedFile->getClientOriginalExtension();
+            $photoPath = $uploadedFile->storeAs('public/usuarios', $photoName); 
+            $user->foto = $photoName; 
         }
 
         $user->save();
