@@ -96,7 +96,8 @@ class UsuarioController extends Controller
             $uploadedFile = $request->file('foto');
             $photoName = Str::slug($users->usuario) . '.' . $uploadedFile->getClientOriginalExtension();
             $photoPath = $uploadedFile->storeAs('public/usuarios', $photoName);
-            $users->foto = $photoPath;
+            // $users->foto = $photoPath;
+            $users->foto = $photoName; 
         }
 
         $users->save();
